@@ -15,7 +15,7 @@ configurations {
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 subprojects {
