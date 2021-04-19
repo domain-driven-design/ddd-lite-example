@@ -1,6 +1,5 @@
 package com.example.frontend.rest;
 
-import com.example.domain.article.model.TagArticle;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
 import com.example.frontend.service.ArticleApplicationService;

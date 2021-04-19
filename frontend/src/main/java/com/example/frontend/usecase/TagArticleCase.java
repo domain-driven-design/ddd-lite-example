@@ -1,6 +1,6 @@
 package com.example.frontend.usecase;
 
-import com.example.domain.article.model.TagArticle;
+import com.example.domain.article.model.ArticleTag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,11 +26,11 @@ public class TagArticleCase {
         private String articleId;
         private Instant lastModifiedAt;
 
-        public static Response from(TagArticle tagArticle) {
+        public static Response from(ArticleTag articleTag) {
             return Response.builder()
-                    .tagId(tagArticle.getTag().getId())
-                    .articleId(tagArticle.getArticle().getId())
-                    .lastModifiedAt(tagArticle.getLastModifiedAt())
+                    .tagId(articleTag.getTag().getId())
+                    .articleId(articleTag.getArticle().getId())
+                    .lastModifiedAt(articleTag.getLastModifiedAt())
                     .build();
         }
     }

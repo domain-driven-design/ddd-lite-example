@@ -2,7 +2,7 @@ package com.example.frontend.service;
 
 import com.example.domain.article.model.Article;
 import com.example.domain.article.model.Tag;
-import com.example.domain.article.model.TagArticle;
+import com.example.domain.article.model.ArticleTag;
 import com.example.domain.article.repository.ArticleRepository;
 import com.example.domain.article.repository.TagArticleRepository;
 import com.example.domain.article.service.ArticleService;
@@ -54,17 +54,17 @@ public class ArticleApplicationService {
         Article article = service.getById(id);
         Tag tag = tagService.getById(tagId);
 
-        TagArticle tagArticle = service.addTag(article, tag, user);
-        return TagArticleCase.Response.from(tagArticle);
+        ArticleTag articleTag = service.addTag(article, tag, user);
+        return TagArticleCase.Response.from(articleTag);
     }
 
     public List<GetArticleTagsCase.Response> getTags(String id) {
         Article article = service.getById(id);
-        List<TagArticle> tagArticles = tagArticleRepository.findAll(Example.of(TagArticle.builder()
+        List<ArticleTag> articleTags = tagArticleRepository.findAll(Example.of(ArticleTag.builder()
                 .article(article)
                 .build()));
 
-        return tagArticles.stream().map(GetArticleTagsCase.Response::from)
+        return articleTags.stream().map(GetArticleTagsCase.Response::from)
                 .collect(Collectors.toList());
     }
 }

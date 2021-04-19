@@ -23,7 +23,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @Entity
 @Table(name = "tag_article")
-public class TagArticle {
+public class ArticleTag {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")

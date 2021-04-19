@@ -4,7 +4,7 @@ import com.example.domain.article.exception.ArticleException;
 import com.example.domain.article.exception.TagArticleException;
 import com.example.domain.article.model.Article;
 import com.example.domain.article.model.Tag;
-import com.example.domain.article.model.TagArticle;
+import com.example.domain.article.model.ArticleTag;
 import com.example.domain.article.repository.ArticleRepository;
 import com.example.domain.article.repository.TagArticleRepository;
 import com.example.domain.user.model.User;
@@ -47,24 +47,24 @@ public class ArticleService {
     }
 
 
-    public TagArticle addTag(Article article, Tag tag, User user) {
-        TagArticle tagArticle = TagArticle.builder()
+    public ArticleTag addTag(Article article, Tag tag, User user) {
+        ArticleTag articleTag = ArticleTag.builder()
                 .tag(tag)
                 .article(article)
                 .createdBy(user.getId())
                 .lastModifiedAt(Instant.now())
                 .build();
-        validateUnique(tagArticle);
-        return tagArticleRepository.save(tagArticle);
+        validateUnique(articleTag);
+        return tagArticleRepository.save(articleTag);
     }
 
-    private void validateUnique(TagArticle tagArticle) {
-        List<TagArticle> alreadyExistTagArticles = tagArticleRepository.findAll(Example.of(TagArticle.builder()
-                .tag(tagArticle.getTag())
-                .article(tagArticle.getArticle())
+    private void validateUnique(ArticleTag articleTag) {
+        List<ArticleTag> alreadyExistArticleTags = tagArticleRepository.findAll(Example.of(ArticleTag.builder()
+                .tag(articleTag.getTag())
+                .article(articleTag.getArticle())
                 .build()));
 
-        if (alreadyExistTagArticles.size() > 0) {
+        if (alreadyExistArticleTags.size() > 0) {
             throw TagArticleException.alreadyExist();
         }
     }
