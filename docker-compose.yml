@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:5.7.30
+    container_name: demo-mysql
+    restart: always
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_DATABASE: demo
+      MYSQL_ROOT_PASSWORD: root
+  redis:
+    image: redis
+    container_name: demo-redis
+    restart: always
+    command: redis-server --appendonly yes
+    ports:
+      - 6379:6379

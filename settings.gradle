@@ -1,0 +1,6 @@
+rootProject.name = 'demo'
+include 'bootsrap'
+include 'admin'
+include 'domain'
+include 'frontend'
+
