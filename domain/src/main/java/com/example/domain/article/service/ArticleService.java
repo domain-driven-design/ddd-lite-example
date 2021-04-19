@@ -46,11 +46,10 @@ public class ArticleService {
         repository.delete(article);
     }
 
-
     public ArticleTag addTag(Article article, Tag tag, User user) {
         ArticleTag articleTag = ArticleTag.builder()
-                .tag(tag)
-                .article(article)
+                .tagId(tag.getId())
+                .articleId(article.getId())
                 .createdBy(user.getId())
                 .lastModifiedAt(Instant.now())
                 .build();
@@ -60,8 +59,8 @@ public class ArticleService {
 
     private void validateUnique(ArticleTag articleTag) {
         List<ArticleTag> alreadyExistArticleTags = tagArticleRepository.findAll(Example.of(ArticleTag.builder()
-                .tag(articleTag.getTag())
-                .article(articleTag.getArticle())
+                .tagId(articleTag.getTagId())
+                .articleId(articleTag.getArticleId())
                 .build()));
 
         if (alreadyExistArticleTags.size() > 0) {
