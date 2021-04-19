@@ -4,8 +4,8 @@ import com.example.domain.article.model.Article;
 import com.example.domain.article.model.Tag;
 import com.example.domain.article.model.TagArticle;
 import com.example.domain.article.repository.ArticleRepository;
+import com.example.domain.article.repository.TagArticleRepository;
 import com.example.domain.article.service.ArticleService;
-import com.example.domain.article.service.TagArticleService;
 import com.example.domain.article.service.TagService;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.user.model.User;
@@ -16,6 +16,7 @@ import com.example.frontend.usecase.GetArticleTagsCase;
 import com.example.frontend.usecase.GetArticlesCase;
 import com.example.frontend.usecase.TagArticleCase;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class ArticleApplicationService {
     private final UserService userService;
     private final ArticleRepository repository;
     private final TagService tagService;
-    private final TagArticleService tagArticleService;
+    private final TagArticleRepository tagArticleRepository;
 
     public CreateArticleCase.Response create(CreateArticleCase.Request request, Authorize authorize) {
         User user = userService.getById(authorize.getUserId());
@@ -53,13 +54,15 @@ public class ArticleApplicationService {
         Article article = service.getById(id);
         Tag tag = tagService.getById(tagId);
 
-        TagArticle tagArticle = tagArticleService.bind(tag, article, user);
+        TagArticle tagArticle = service.addTag(article, tag, user);
         return TagArticleCase.Response.from(tagArticle);
     }
 
     public List<GetArticleTagsCase.Response> getTags(String id) {
         Article article = service.getById(id);
-        List<TagArticle> tagArticles = tagArticleService.getByArticle(article);
+        List<TagArticle> tagArticles = tagArticleRepository.findAll(Example.of(TagArticle.builder()
+                .article(article)
+                .build()));
 
         return tagArticles.stream().map(GetArticleTagsCase.Response::from)
                 .collect(Collectors.toList());
