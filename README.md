@@ -48,3 +48,10 @@ relation
     - resource(identify)
     - resource对该relation权限（查看，撤销，创建）
     - ...
+    
+    
+    
+## 命名规则
+
+- 聚合内的对象都以聚合根名为前缀
+    
