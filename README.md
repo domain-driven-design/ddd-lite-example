@@ -35,23 +35,30 @@ ps：
 - 代码规范：checkstyle
 - 异步任务
 
-## 概念
-实体：可见资源。当一个实体属于另一个实体，生命周期随拥有者
-关系证明：实体间关系的证明，生命周期彼此独立
-
-resource
-    - ...
-    - ...
-    - resource
-relation
-    - resource(identify)
-    - resource(identify)
-    - resource对该relation权限（查看，撤销，创建）
-    - ...
-    
-    
-    
 ## 命名规则
-
 - 聚合内的对象都以聚合根名为前缀
+
+  ## 测试策略
+  #### application 集成测试
+  - happy path
+  #### domain 单元测试（mock数据库）
+  - 测试业务逻辑异常
+
+## 数据库规范
+  - id UUID
+  - 默认加上外键索引
+  - 默认不要外键约束
+  - created_by, created_at, updated_at必有，updated_by可选
+  ```sql
+  CREATE TABLE `article`
+  (
+  `id`         varchar(36)  not null primary key,
+  `title`      varchar(100) not null,
+  `content`    text         not null,
+  `created_by` varchar(36)  not null,
+  `updated_by` varchar(36)  not null,
+  `created_at` timestamp(3) not null,
+  `updated_at` timestamp(3) not null
+  );
+  ```
     
