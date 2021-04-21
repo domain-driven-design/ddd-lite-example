@@ -6,6 +6,8 @@ import com.example.domain.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+
 @Service
 @AllArgsConstructor
 public class UserService {
@@ -20,6 +22,8 @@ public class UserService {
                 .name(name)
                 .email(email)
                 .password(password)
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
                 .build();
         validateConflicted(user);
         return repository.save(user);

@@ -21,7 +21,7 @@ public class GetArticleTagsCase {
             return Response.builder()
                     .id(tag.getId())
                     .name(tag.getName())
-                    .bindAt(articleTag.getLastModifiedAt())
+                    .bindAt(articleTag.getCreatedAt())
                     .build();
         }
     }

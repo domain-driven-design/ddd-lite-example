@@ -20,22 +20,21 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tag_article")
+@Table(name = "article_tag")
 public class ArticleTag {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
-    @Column
     private String tagId;
 
     @Column(name = "article_id")
     private String articleId;
 
-    @Column
     private String createdBy;
 
-    @Column
-    private Instant lastModifiedAt;
+    private Instant createdAt;
+
+    private Instant updatedAt;
 }

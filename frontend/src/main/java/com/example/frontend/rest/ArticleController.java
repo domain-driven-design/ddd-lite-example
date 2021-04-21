@@ -46,7 +46,7 @@ public class ArticleController {
     }
 
     @GetMapping()
-    public Page<GetArticlesCase.Response> getArticles(@PageableDefault(sort = "lastModifiedAt") Pageable pageable) {
+    public Page<GetArticlesCase.Response> getArticles(@PageableDefault(sort = "updatedAt") Pageable pageable) {
         return applicationService.getByPage(pageable);
     }
 

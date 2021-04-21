@@ -27,12 +27,11 @@ public class Tag {
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
-    @Column
     private String name;
 
-    @Column
     private String createdBy;
 
-    @Column
-    private Instant lastModifiedAt;
+    private Instant createdAt;
+
+    private Instant updatedAt;
 }

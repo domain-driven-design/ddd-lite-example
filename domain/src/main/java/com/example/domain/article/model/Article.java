@@ -30,17 +30,15 @@ public class Article {
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
-    @Column
     private String title;
 
-    @Column
     private String content;
 
-    @Column
     private String createdBy;
 
-    @Column
-    private Instant lastModifiedAt;
+    private Instant createdAt;
+
+    private Instant updatedAt;
 
     @OneToMany
     @JoinColumn(name = "article_id")

@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -26,13 +27,13 @@ public class User {
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
-    @Column
     private String name;
 
-    @Column
     private String email;
 
-
-    @Column
     private String password;
+
+    private Instant createdAt;
+
+    private Instant updatedAt;
 }

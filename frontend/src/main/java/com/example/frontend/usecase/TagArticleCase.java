@@ -24,13 +24,13 @@ public class TagArticleCase {
     public static class Response {
         private String tagId;
         private String articleId;
-        private Instant lastModifiedAt;
+        private Instant createdAt;
 
         public static Response from(ArticleTag articleTag) {
             return Response.builder()
                     .tagId(articleTag.getTagId())
                     .articleId(articleTag.getArticleId())
-                    .lastModifiedAt(articleTag.getLastModifiedAt())
+                    .createdAt(articleTag.getCreatedAt())
                     .build();
         }
     }

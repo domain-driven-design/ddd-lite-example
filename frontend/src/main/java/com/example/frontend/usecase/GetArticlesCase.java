@@ -15,14 +15,16 @@ public class GetArticlesCase {
         private String id;
         private String title;
         private String content;
-        private Instant lastModifiedAt;
+        private Instant createdAt;
+        private Instant updatedAt;
 
         public static Response from(Article article) {
             return Response.builder()
                     .id(article.getId())
                     .title(article.getTitle())
                     .content(article.getContent())
-                    .lastModifiedAt(article.getLastModifiedAt())
+                    .createdAt(article.getCreatedAt())
+                    .updatedAt(article.getUpdatedAt())
                     .build();
         }
     }

@@ -22,7 +22,8 @@ public class TagService {
         Tag tag = Tag.builder()
                 .name(name)
                 .createdBy(user.getId())
-                .lastModifiedAt(Instant.now())
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
                 .build();
         return repository.save(tag);
     }

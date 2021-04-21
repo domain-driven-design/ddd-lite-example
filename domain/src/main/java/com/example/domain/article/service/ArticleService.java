@@ -30,7 +30,8 @@ public class ArticleService {
                 .title(title)
                 .content(content)
                 .createdBy(user.getId())
-                .lastModifiedAt(Instant.now())
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
                 .build();
         return repository.save(article);
     }
@@ -38,7 +39,7 @@ public class ArticleService {
     public Article update(Article article, String title, String content) {
         article.setTitle(title);
         article.setContent(content);
-        article.setLastModifiedAt(Instant.now());
+        article.setUpdatedAt(Instant.now());
         return repository.save(article);
     }
 
@@ -51,7 +52,8 @@ public class ArticleService {
                 .tagId(tag.getId())
                 .articleId(article.getId())
                 .createdBy(user.getId())
-                .lastModifiedAt(Instant.now())
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
                 .build();
         validateUnique(articleTag);
         return tagArticleRepository.save(articleTag);

@@ -14,13 +14,15 @@ public class GetTagsCase {
     public static class Response {
         private String id;
         private String name;
-        private Instant lastModifiedAt;
+        private Instant createdAt;
+        private Instant updatedAt;
 
         public static Response from(Tag tag) {
             return Response.builder()
                     .id(tag.getId())
                     .name(tag.getName())
-                    .lastModifiedAt(tag.getLastModifiedAt())
+                    .createdAt(tag.getCreatedAt())
+                    .updatedAt(tag.getUpdatedAt())
                     .build();
         }
     }
