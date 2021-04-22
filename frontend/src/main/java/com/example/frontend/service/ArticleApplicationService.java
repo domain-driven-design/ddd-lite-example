@@ -6,10 +6,7 @@ import com.example.domain.article.model.Tag;
 import com.example.domain.article.repository.ArticleRepository;
 import com.example.domain.article.repository.TagRepository;
 import com.example.domain.article.service.ArticleService;
-import com.example.domain.article.service.TagService;
 import com.example.domain.auth.model.Authorize;
-import com.example.domain.user.model.User;
-import com.example.domain.user.service.UserService;
 import com.example.frontend.usecase.CreateArticleCase;
 import com.example.frontend.usecase.GetArticleDetailCase;
 import com.example.frontend.usecase.GetArticleTagsCase;
@@ -31,19 +28,21 @@ import static java.util.stream.Collectors.toMap;
 @AllArgsConstructor
 public class ArticleApplicationService {
     private final ArticleService service;
-    private final UserService userService;
     private final ArticleRepository repository;
-    private final TagService tagService;
     private final TagRepository tagRepository;
 
     public CreateArticleCase.Response create(CreateArticleCase.Request request, Authorize authorize) {
-        User user = userService.getById(authorize.getUserId());
-        Article article = service.create(request.getTitle(), request.getContent(), user);
+        Article article = service.create(request.getTitle(), request.getContent(), authorize.getId());
+
+        for (String tagId : request.getTagIds()) {
+            service.addTag(article.getId(), tagId, authorize.getId());
+        }
+
         return CreateArticleCase.Response.from(article);
     }
 
     public GetArticleDetailCase.Response getDetail(String id) {
-        Article article = service.getById(id);
+        Article article = service.get(id);
         return GetArticleDetailCase.Response.from(article);
     }
 
@@ -53,16 +52,12 @@ public class ArticleApplicationService {
     }
 
     public TagArticleCase.Response tagArticle(String id, String tagId, Authorize authorize) {
-        User user = userService.getById(authorize.getUserId());
-        Article article = service.getById(id);
-        Tag tag = tagService.getById(tagId);
-
-        ArticleTag articleTag = service.addTag(article, tag, user);
+        ArticleTag articleTag = service.addTag(id, tagId, authorize.getUserId());
         return TagArticleCase.Response.from(articleTag);
     }
 
     public List<GetArticleTagsCase.Response> getTags(String id) {
-        Article article = service.getById(id);
+        Article article = service.get(id);
         List<ArticleTag> articleTags = article.getTags();
         Map<String, Tag> tagMap = tagRepository.findAllById(
                 articleTags.stream()

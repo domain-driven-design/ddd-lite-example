@@ -23,13 +23,12 @@ public class TagApplicationService {
     private final TagRepository repository;
 
     public CreateTagCase.Response create(CreateTagCase.Request request, Authorize authorize) {
-        User user = userService.getById(authorize.getUserId());
-        Tag tag = service.create(request.getName(), user);
+        Tag tag = service.create(request.getName(), authorize.getUserId());
         return CreateTagCase.Response.from(tag);
     }
 
     public GetTagDetailCase.Response getDetail(String id) {
-        Tag tag = service.getById(id);
+        Tag tag = service.get(id);
         return GetTagDetailCase.Response.from(tag);
     }
 
