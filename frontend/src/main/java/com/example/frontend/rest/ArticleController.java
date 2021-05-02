@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,9 +33,8 @@ public class ArticleController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public CreateArticleCase.Response createArticle(@RequestParam(value = "token") String token,
-                                                    @RequestBody CreateArticleCase.Request request) {
-        Authorize authorize = authorizeService.getById(token);
+    public CreateArticleCase.Response createArticle(@RequestBody CreateArticleCase.Request request) {
+        Authorize authorize = authorizeService.current();
         return applicationService.create(request, authorize);
     }
 
@@ -52,10 +50,9 @@ public class ArticleController {
 
     @PostMapping("/{id}/tags/{tagId}")
     @ResponseStatus(CREATED)
-    public TagArticleCase.Response createArticle(@RequestParam(value = "token") String token,
-                                                 @PathVariable("id") String id,
+    public TagArticleCase.Response createArticle(@PathVariable("id") String id,
                                                  @PathVariable("tagId") String tagId) {
-        Authorize authorize = authorizeService.getById(token);
+        Authorize authorize = authorizeService.current();
         return applicationService.tagArticle(id, tagId, authorize);
     }
 

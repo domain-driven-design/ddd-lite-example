@@ -32,10 +32,10 @@ public class ArticleApplicationService {
     private final TagRepository tagRepository;
 
     public CreateArticleCase.Response create(CreateArticleCase.Request request, Authorize authorize) {
-        Article article = service.create(request.getTitle(), request.getContent(), authorize.getId());
+        Article article = service.create(request.getTitle(), request.getContent(), authorize.getUserId());
 
         for (String tagId : request.getTagIds()) {
-            service.addTag(article.getId(), tagId, authorize.getId());
+            service.addTag(article.getId(), tagId, authorize.getUserId());
         }
 
         return CreateArticleCase.Response.from(article);

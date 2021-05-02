@@ -2,11 +2,13 @@ package com.example.domain.auth.repository;
 
 import com.example.domain.auth.model.Authorize;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Repository
 @AllArgsConstructor
 public class AuthorizeRepository {
@@ -25,7 +27,7 @@ public class AuthorizeRepository {
 
     public Authorize get(String id) {
         String key = generateKey(id);
-        String userId = redisTemplate.boundValueOps(generateKey(id)).get();
+        String userId = redisTemplate.opsForValue().get(key);
         Long expire = redisTemplate.getExpire(key);
         return Authorize.builder()
                 .id(id)

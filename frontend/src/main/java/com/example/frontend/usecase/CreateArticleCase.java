@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreateArticleCase {
@@ -17,7 +18,7 @@ public class CreateArticleCase {
     public static class Request {
         private String title;
         private String content;
-        private List<String> tagIds;
+        private List<String> tagIds = new ArrayList<>();
     }
 
     @Getter
