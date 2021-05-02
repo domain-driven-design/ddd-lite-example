@@ -1,6 +1,5 @@
-rootProject.name = 'demo'
+rootProject.name = 'ddd-lite-example'
 include 'bootsrap'
 include 'admin'
 include 'domain'
 include 'frontend'
-
