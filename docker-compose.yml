@@ -10,6 +10,10 @@ services:
     environment:
       MYSQL_DATABASE: demo
       MYSQL_ROOT_PASSWORD: root
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_general_ci
+      - --lower_case_table_names=1
   redis:
     image: redis
     container_name: demo-redis
