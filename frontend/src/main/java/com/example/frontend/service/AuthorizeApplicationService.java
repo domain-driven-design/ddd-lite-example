@@ -26,4 +26,9 @@ public class AuthorizeApplicationService {
         Authorize authorize = service.create(user);
         return LoginCase.Response.from(authorize);
     }
+
+    public void logout() {
+        Authorize authorize = service.current();
+        service.delete(authorize.getId());
+    }
 }

@@ -36,6 +36,10 @@ public class AuthorizeRepository {
                 .build();
     }
 
+    public void delete(String id) {
+        redisTemplate.delete(generateKey(id));
+    }
+
     private String generateKey(String id) {
         return "token:" + id;
     }

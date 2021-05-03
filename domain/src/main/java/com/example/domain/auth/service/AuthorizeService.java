@@ -26,11 +26,15 @@ public class AuthorizeService {
 
     public Authorize current() {
         Authorize authorize = AuthorizeContextHolder.getContext();
-        if (authorize.getUserId() == null) {
+        if (authorize == null || authorize.getUserId() == null) {
             throw AuthorizeException.Unauthorized();
         }
 
         return authorize;
+    }
+
+    public void delete(String id) {
+        repository.delete(id);
     }
 
     private String generateToken(String userId) {

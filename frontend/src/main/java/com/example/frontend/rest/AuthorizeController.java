@@ -3,6 +3,7 @@ package com.example.frontend.rest;
 import com.example.frontend.service.AuthorizeApplicationService;
 import com.example.frontend.usecase.LoginCase;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,5 +22,10 @@ public class AuthorizeController {
     @ResponseStatus(CREATED)
     public LoginCase.Response login(@RequestBody LoginCase.Request request) {
         return applicationService.login(request);
+    }
+
+    @DeleteMapping
+    public void logout() {
+        applicationService.logout();
     }
 }
