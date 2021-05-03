@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 @Repository
 @AllArgsConstructor
 public class AuthorizeRepository {
-    public static final long DEFAULT_EXPIRE = 60 * 10;
+    public static final long DEFAULT_EXPIRE = 24 * 60 * 60;
     private final RedisTemplate<String, String> redisTemplate;
 
     public Authorize create(String id, String userId) {
