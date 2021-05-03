@@ -1,5 +1,7 @@
 package com.example.frontend.rest;
 
+import com.example.domain.auth.model.Authorize;
+import com.example.domain.auth.service.AuthorizeService;
 import com.example.frontend.service.UserApplicationService;
 import com.example.frontend.usecase.GetUserDetailCase;
 import com.example.frontend.usecase.RegisterCase;
@@ -19,11 +21,18 @@ import static org.springframework.http.HttpStatus.CREATED;
 @AllArgsConstructor
 public class UserController {
     private final UserApplicationService applicationService;
+    private final AuthorizeService authorizeService;
 
     @PostMapping
     @ResponseStatus(CREATED)
     public RegisterCase.Response register(@RequestBody RegisterCase.Request request) {
         return applicationService.register(request);
+    }
+
+    @GetMapping("/me")
+    public GetUserDetailCase.Response getMyDetail() {
+        Authorize authorize = authorizeService.current();
+        return applicationService.getUserDetail(authorize.getUserId());
     }
 
     @GetMapping("/{id}")

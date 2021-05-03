@@ -21,11 +21,13 @@ public class LoginCase {
     @Setter
     @Builder
     public static class Response {
+        private String userId;
         private String token;
         private long expire;
 
         public static Response from(Authorize authorize) {
             return Response.builder()
+                    .userId(authorize.getUserId())
                     .token(authorize.getId())
                     .expire(authorize.getExpire())
                     .build();

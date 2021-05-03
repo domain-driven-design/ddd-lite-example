@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+
 public class GetUserDetailCase {
     @Getter
     @Setter
@@ -13,12 +15,14 @@ public class GetUserDetailCase {
         private String id;
         private String name;
         private String email;
+        private Instant createdAt;
 
         public static Response from(User user) {
             return Response.builder()
                     .id(user.getId())
                     .name(user.getName())
                     .email(user.getEmail())
+                    .createdAt(user.getCreatedAt())
                     .build();
         }
     }
