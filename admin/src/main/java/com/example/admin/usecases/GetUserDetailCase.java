@@ -1,4 +1,4 @@
-package com.example.frontend.usecase;
+package com.example.admin.usecases;
 
 import com.example.domain.user.model.User;
 import lombok.Builder;

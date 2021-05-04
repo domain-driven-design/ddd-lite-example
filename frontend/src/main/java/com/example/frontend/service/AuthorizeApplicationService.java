@@ -5,6 +5,7 @@ import com.example.domain.auth.service.AuthorizeService;
 import com.example.domain.user.exception.UserException;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.UserRepository;
+import com.example.frontend.usecase.GetUserProfileCase;
 import com.example.frontend.usecase.LoginCase;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -30,5 +31,10 @@ public class AuthorizeApplicationService {
     public void logout() {
         Authorize authorize = service.current();
         service.delete(authorize.getId());
+    }
+
+    public GetUserProfileCase.Response getProfile() {
+        Authorize authorize = service.current();
+        return GetUserProfileCase.Response.from(authorize);
     }
 }

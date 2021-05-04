@@ -1,4 +1,4 @@
-package com.example.frontend;
+package com.example.domain.common.config;
 
 
 import com.example.domain.auth.AuthorizeContextHolder;

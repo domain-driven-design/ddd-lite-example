@@ -4,7 +4,6 @@ import com.example.domain.article.model.Tag;
 import com.example.domain.article.repository.TagRepository;
 import com.example.domain.article.service.TagService;
 import com.example.domain.auth.model.Authorize;
-import com.example.domain.user.model.User;
 import com.example.domain.user.service.UserService;
 import com.example.frontend.usecase.CreateTagCase;
 import com.example.frontend.usecase.GetTagDetailCase;

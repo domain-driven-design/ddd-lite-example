@@ -25,7 +25,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@RequestMapping("articles")
+@RequestMapping("/articles")
 @AllArgsConstructor
 public class ArticleController {
     private final ArticleApplicationService applicationService;

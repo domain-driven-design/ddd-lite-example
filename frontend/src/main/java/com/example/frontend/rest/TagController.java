@@ -20,7 +20,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@RequestMapping("tags")
+@RequestMapping("/tags")
 @AllArgsConstructor
 public class TagController {
     private final TagApplicationService applicationService;
