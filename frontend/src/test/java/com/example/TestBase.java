@@ -1,6 +1,8 @@
 package com.example;
 
 import com.example.config.ResetDbListener;
+import com.example.domain.auth.model.Authorize;
+import com.example.domain.auth.service.AuthorizeService;
 import com.example.domain.user.model.User;
 import com.example.domain.user.service.UserService;
 import io.restassured.RestAssured;
@@ -32,6 +34,8 @@ public abstract class TestBase {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthorizeService authorizeService;
 
     @BeforeEach
     public void setUp() {
@@ -44,5 +48,9 @@ public abstract class TestBase {
 
     public User prepareUser(String name, String email, String password) {
         return userService.create(name, email, password);
+    }
+
+    public Authorize prepareAuthorize(User user) {
+        return authorizeService.create(user);
     }
 }

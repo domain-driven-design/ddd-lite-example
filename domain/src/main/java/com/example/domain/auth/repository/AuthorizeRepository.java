@@ -25,6 +25,7 @@ public class AuthorizeRepository {
                 .build();
     }
 
+    // TODO  为什么没存对象呢？
     public Authorize get(String id) {
         String key = generateKey(id);
         String userId = redisTemplate.opsForValue().get(key);

@@ -28,7 +28,7 @@ class UserControllerTest extends TestBase {
         response.then().statusCode(201)
                 .body("name", is("test1"))
                 .body("id", isA(String.class))
-                .body("email", is("test1"))
+                .body("email", is("test1@email.com"))
                 .body("name", is("test1"));
     }
 }

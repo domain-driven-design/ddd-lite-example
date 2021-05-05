@@ -48,14 +48,16 @@ public class ArticleController {
         return applicationService.getByPage(pageable);
     }
 
+    // TODO create 不用 PATH 参数
     @PostMapping("/{id}/tags/{tagId}")
     @ResponseStatus(CREATED)
-    public TagArticleCase.Response createArticle(@PathVariable("id") String id,
+    public TagArticleCase.Response AddArticleTag(@PathVariable("id") String id,
                                                  @PathVariable("tagId") String tagId) {
         Authorize authorize = authorizeService.current();
         return applicationService.tagArticle(id, tagId, authorize);
     }
 
+    // TODO 合并到文章详情
     @GetMapping("/{id}/tags")
     public List<GetArticleTagsCase.Response> getTags(@PathVariable("id") String id) {
         return applicationService.getTags(id);
