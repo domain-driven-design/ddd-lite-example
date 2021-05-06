@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.Is.isA;
 
@@ -58,9 +58,10 @@ class TagControllerTest extends TestBase {
                 .header("Authorization", "Bearer " + authorize.getId())
                 .when()
                 .get("/tags/" + testTag.getId());
-        response.then().statusCode(201)
+        response.then().statusCode(200)
                 .body("id", is(testTag.getId()))
                 .body("name", is(testTag.getName()))
+                // TODO 时间格式精确度不一致
                 .body("createdAt", is(testTag.getCreatedAt()))
                 .body("updatedAt", is(testTag.getUpdatedAt()));
     }
@@ -77,7 +78,7 @@ class TagControllerTest extends TestBase {
                 .when()
                 .get("/tags");
         response.then().statusCode(200)
-                .body("$.size()", is(1))
-                .body("name", hasItem("testTag"));
+                .body("$.size()", is(2))
+                .body("name", hasItems("testTag1", "testTag2"));
     }
 }

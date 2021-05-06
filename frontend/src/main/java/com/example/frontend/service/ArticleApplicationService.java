@@ -51,8 +51,8 @@ public class ArticleApplicationService {
                 .map(GetArticlesCase.Response::from);
     }
 
-    public TagArticleCase.Response tagArticle(String id, String tagId, Authorize authorize) {
-        ArticleTag articleTag = service.addTag(id, tagId, authorize.getUserId());
+    public TagArticleCase.Response tagArticle(String id, TagArticleCase.Request request, Authorize authorize) {
+        ArticleTag articleTag = service.addTag(id, request.getTagId(), authorize.getUserId());
         return TagArticleCase.Response.from(articleTag);
     }
 

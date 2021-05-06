@@ -19,11 +19,8 @@ ps：
 - bootstrap 项目启动
 
 ## 待实现
-- Authority
 - user 的role区分（普通用户与管理员）
-- user 对 article 的管理
 - admin 对 article 的管理
-- article 与 tag （多对多）
 - exception体系
 - 软删除（查询过滤，关联信息处理）
 - 测试规范（api测试，单元测试）
@@ -38,17 +35,18 @@ ps：
 ## 命名规则
 - 聚合内的对象都以聚合根名为前缀
 
-  ## 测试策略
-  #### application 集成测试
-  - happy path
-  #### domain 单元测试（mock数据库）
-  - 测试业务逻辑异常
+## 测试策略
+#### application 集成测试
+- happy path
+#### domain 单元测试（mock数据库）
+- 测试业务逻辑异常
 
 ## 数据库规范
   - id UUID
   - 默认加上外键索引
   - 默认不要外键约束
   - created_by, created_at, updated_at必有，updated_by可选
+  - 大数据量查询排序，加索引
   ```sql
   CREATE TABLE `article`
   (
@@ -61,4 +59,13 @@ ps：
   `updated_at` timestamp(3) not null
   );
   ```
-    
+
+## 想讨论的问题
+- 统一拦截authority到上下文中是否合理？
+- application service中只有domain service，封装查询到domain service
+- bean注入方式
+- 数据库字符集设置
+- 管理员和用户如何区分？
+- 在什么情况下使用id，articleId，tagId？
+- request和response中的时间用时间戳int？
+- 增删改查权限
