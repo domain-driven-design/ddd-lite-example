@@ -12,7 +12,7 @@ import com.example.frontend.usecase.GetArticleDetailCase;
 import com.example.frontend.usecase.GetArticleTagsCase;
 import com.example.frontend.usecase.GetArticlesCase;
 import com.example.frontend.usecase.TagArticleCase;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,11 +25,13 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toMap;
 
 @Service
-@AllArgsConstructor
 public class ArticleApplicationService {
-    private final ArticleService service;
-    private final ArticleRepository repository;
-    private final TagRepository tagRepository;
+    @Autowired
+    private ArticleService service;
+    @Autowired
+    private ArticleRepository repository;
+    @Autowired
+    private TagRepository tagRepository;
 
     public CreateArticleCase.Response create(CreateArticleCase.Request request, Authorize authorize) {
         Article article = service.create(request.getTitle(), request.getContent(), authorize.getUserId());

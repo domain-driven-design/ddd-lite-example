@@ -3,17 +3,17 @@ package com.example.domain.article.service;
 import com.example.domain.article.exception.TagException;
 import com.example.domain.article.model.Tag;
 import com.example.domain.article.repository.TagRepository;
-import com.example.domain.user.model.User;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
 @Service
-@AllArgsConstructor
 public class TagService {
-    private final TagRepository repository;
-    private final ArticleService articleService;
+    @Autowired
+    private TagRepository repository;
+    @Autowired
+    private ArticleService articleService;
 
     public Tag get(String id) {
         return this._get(id);

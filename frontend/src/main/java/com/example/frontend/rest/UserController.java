@@ -1,12 +1,8 @@
 package com.example.frontend.rest;
 
-import com.example.domain.auth.model.Authorize;
-import com.example.domain.auth.service.AuthorizeService;
 import com.example.frontend.service.UserApplicationService;
-import com.example.frontend.usecase.GetUserProfileCase;
 import com.example.frontend.usecase.RegisterCase;
-import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +13,9 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("/users")
-@AllArgsConstructor
 public class UserController {
-    private final UserApplicationService applicationService;
+    @Autowired
+    private UserApplicationService applicationService;
 
     @PostMapping
     @ResponseStatus(CREATED)

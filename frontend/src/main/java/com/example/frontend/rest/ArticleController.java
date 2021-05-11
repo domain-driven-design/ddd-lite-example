@@ -8,7 +8,7 @@ import com.example.frontend.usecase.GetArticleDetailCase;
 import com.example.frontend.usecase.GetArticleTagsCase;
 import com.example.frontend.usecase.GetArticlesCase;
 import com.example.frontend.usecase.TagArticleCase;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -26,10 +26,11 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("/articles")
-@AllArgsConstructor
 public class ArticleController {
-    private final ArticleApplicationService applicationService;
-    private final AuthorizeService authorizeService;
+    @Autowired
+    private ArticleApplicationService applicationService;
+    @Autowired
+    private AuthorizeService authorizeService;
 
     @PostMapping
     @ResponseStatus(CREATED)

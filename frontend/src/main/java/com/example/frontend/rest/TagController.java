@@ -1,12 +1,12 @@
 package com.example.frontend.rest;
 
-import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.AuthorizeContextHolder;
+import com.example.domain.auth.model.Authorize;
 import com.example.frontend.service.TagApplicationService;
 import com.example.frontend.usecase.CreateTagCase;
 import com.example.frontend.usecase.GetTagDetailCase;
 import com.example.frontend.usecase.GetTagsCase;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,9 +21,9 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("/tags")
-@AllArgsConstructor
 public class TagController {
-    private final TagApplicationService applicationService;
+    @Autowired
+    private TagApplicationService applicationService;
 
     @PostMapping
     @ResponseStatus(CREATED)

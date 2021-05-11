@@ -9,8 +9,8 @@ import com.example.domain.article.model.Tag;
 import com.example.domain.article.repository.ArticleRepository;
 import com.example.domain.article.repository.ArticleTagRepository;
 import com.example.domain.article.repository.TagRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +19,13 @@ import java.util.List;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class ArticleService {
-    private final ArticleRepository repository;
-    private final ArticleTagRepository articleTagRepository;
-    private final TagRepository tagRepository;
+    @Autowired
+    private ArticleRepository repository;
+    @Autowired
+    private ArticleTagRepository articleTagRepository;
+    @Autowired
+    private TagRepository tagRepository;
 
     public Article get(String id) {
         return this._get(id);

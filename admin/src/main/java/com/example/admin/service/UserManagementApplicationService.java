@@ -4,16 +4,16 @@ import com.example.admin.usecases.GetUserDetailCase;
 import com.example.admin.usecases.GetUsersCase;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class UserManagementApplicationService {
-    private final UserRepository repository;
+    @Autowired
+    private UserRepository repository;
 
     public List<GetUsersCase.Response> getUsers() {
         return repository.findAll().stream()

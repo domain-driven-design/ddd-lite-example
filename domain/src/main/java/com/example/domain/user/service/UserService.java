@@ -4,6 +4,7 @@ import com.example.domain.user.exception.UserException;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -11,7 +12,8 @@ import java.time.Instant;
 @Service
 @AllArgsConstructor
 public class UserService {
-    private final UserRepository repository;
+    @Autowired
+    private UserRepository repository;
 
     public User getById(String id) {
         return repository.findById(id).orElseThrow(UserException::notFound);
