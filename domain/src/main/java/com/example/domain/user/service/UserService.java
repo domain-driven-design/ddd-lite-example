@@ -26,6 +26,7 @@ public class UserService {
                 .password(password)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
+                .role(User.UserRole.USER)
                 .build();
         validateConflicted(user);
         return repository.save(user);

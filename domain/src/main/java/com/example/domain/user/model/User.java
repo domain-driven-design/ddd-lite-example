@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -36,4 +37,11 @@ public class User {
     private Instant createdAt;
 
     private Instant updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
+    public enum UserRole {
+        ADMIN, USER
+    }
 }
