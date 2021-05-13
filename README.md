@@ -8,7 +8,8 @@ ps：
     - rest
     - service
     - usecase
-- forntend 提供给用户面使用的 API
+- business 提供给用户面使用的 API
+- open
 - domain 领域
     - user 
         - modal
@@ -63,9 +64,8 @@ ps：
 ## 想讨论的问题
 - 统一拦截authority到上下文中是否合理？
 - application service中只有domain service，封装查询到domain service
-- bean注入方式
-- 数据库字符集设置
-- 管理员和用户如何区分？
+- 数据库字符集设置(set names)
+- 管理员添加方式？管理员可添加其他管理员？
 - 在什么情况下使用id，articleId，tagId？
-- request和response中的时间用时间戳int？
+- request和response中的时间用时间戳(配置格式)
 - 增删改查权限

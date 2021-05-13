@@ -43,7 +43,7 @@ public class ArticleService {
     }
 
     public Article update(String id, String title, String content, String updateBy) {
-        // TODO 是否验证修改权限
+        // TODO 验证修改权限
         Article article = this._get(id);
         article.setTitle(title);
         article.setContent(content);
@@ -52,14 +52,13 @@ public class ArticleService {
     }
 
     public void delete(String id) {
-        // TODO 是否验证article存在？
         repository.deleteById(id);
     }
 
     public ArticleTag addTag(String id, String tagId, String createdBy) {
         Article article = this._get(id);
         Tag tag = tagRepository.findById(tagId).orElseThrow(TagException::notFound);
-        // TODO 是否验证addTag权限？
+        // TODO 验证addTag权限
 
         ArticleTag articleTag = ArticleTag.builder()
                 .tagId(tag.getId())

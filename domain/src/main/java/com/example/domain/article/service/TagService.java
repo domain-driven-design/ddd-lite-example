@@ -12,8 +12,6 @@ import java.time.Instant;
 public class TagService {
     @Autowired
     private TagRepository repository;
-    @Autowired
-    private ArticleService articleService;
 
     public Tag get(String id) {
         return this._get(id);
@@ -34,8 +32,6 @@ public class TagService {
     }
 
     public void delete(String id, String deleteBy) {
-        // TODO 是否验证delete权限？
-        articleService.cleanRelatedTags(id, deleteBy);
         repository.deleteById(id);
     }
 }

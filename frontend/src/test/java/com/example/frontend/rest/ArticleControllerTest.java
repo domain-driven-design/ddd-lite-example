@@ -60,7 +60,7 @@ class ArticleControllerTest extends TestBase {
                 .body("title", is("testArticle"))
                 .body("content", is("testArticleContent"));
 
-        // TODO 创建完成后，需要到数据库查询确认吗？
+        // TODO 创建完成后，需要到数据库查询确认
 
     }
 
@@ -91,7 +91,6 @@ class ArticleControllerTest extends TestBase {
                 .header("Authorization", "Bearer " + authorize.getId())
                 .when()
                 .get("/articles");
-        // TODO 需要json转换为对象检验吗？字符串硬编码容易出问题
         response.then().statusCode(200)
                 .body("content.size", is(2))
                 .body("content.title", hasItems("testArticle1", "testArticle1"))
@@ -106,13 +105,12 @@ class ArticleControllerTest extends TestBase {
         );
         Response response = given()
                 .contentType("application/json")
-                // TODO request 为什么不直接用Request对象？
                 .body(new HashMap<String, Object>() {
                     {
                         put("tagId", testTag.getId());
                     }
                 })
-                // TODO 测试中Authorization统一设置？
+                // TODO 测试中Authorization统一设置
                 .header("Authorization", "Bearer " + authorize.getId())
                 .when()
                 .post("/articles/" + article.getId() + "/tags");
