@@ -1,16 +1,23 @@
 package com.example.frontend.rest;
 
 import com.example.TestBase;
+import com.example.domain.auth.model.Authorize;
+import com.example.domain.user.model.User;
+import com.example.domain.user.service.UserService;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.Is.isA;
 
 class UserControllerTest extends TestBase {
+    @Autowired
+    private UserService userService;
 
     @Test
     void should_register_a_user() {
@@ -30,5 +37,64 @@ class UserControllerTest extends TestBase {
                 .body("id", isA(String.class))
                 .body("email", is("test1@email.com"))
                 .body("name", is("test1"));
+    }
+
+    @Test
+    void should_get_user_detail() {
+        User user = this.prepareUser("anyName", "anyEmail", "anyPassword");
+        Authorize authorize = this.prepareAuthorize(user);
+
+        Response response = given()
+                .header("Authorization", "Bearer " + authorize.getId())
+                .when()
+                .get("/users/me");
+        response.then().statusCode(200)
+                .body("id", is(user.getId()))
+                .body("name", is(user.getName()))
+                .body("email", is(user.getEmail()));
+
+    }
+
+    @Test
+    void should_update_user() {
+        User user = this.prepareUser("anyName", "anyEmail", "anyPassword");
+        Authorize authorize = this.prepareAuthorize(user);
+        String newName = "newName";
+
+        Response response = given()
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + authorize.getId())
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("name", newName);
+                    }
+                })
+                .when()
+                .put("/users/me");
+        response.then().statusCode(200)
+                .body("id", is(user.getId()))
+                .body("name", is(newName));
+
+        User updatedUser = userService.get(user.getId());
+        assertThat(updatedUser.getName(), is(newName));
+    }
+
+    @Test
+    void should_reset_password() {
+        User user = this.prepareUser("anyName", "anyEmail", "anyPassword");
+        Authorize authorize = this.prepareAuthorize(user);
+        String newPassword = "newPassword";
+
+        Response response = given()
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + authorize.getId())
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("password", newPassword);
+                    }
+                })
+                .when()
+                .put("/users/me");
+
     }
 }

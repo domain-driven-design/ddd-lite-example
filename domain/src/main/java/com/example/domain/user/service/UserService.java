@@ -15,10 +15,15 @@ public class UserService {
     @Autowired
     private UserRepository repository;
 
-    public User getById(String id) {
+    public User get(String id) {
+        return _get(id);
+    }
+
+    private User _get(String id) {
         return repository.findById(id).orElseThrow(UserException::notFound);
     }
 
+    // TODO 编码password
     public User create(String name, String email, String password) {
         User user = User.builder()
                 .name(name)
@@ -32,6 +37,32 @@ public class UserService {
         return repository.save(user);
     }
 
+    public User update(String id, String name, String operatorId) {
+        User user = _get(id);
+
+        if (!id.equals(operatorId)) {
+            throw UserException.noPermissionUpdate();
+        }
+
+        user.setName(name);
+        user.setUpdatedAt(Instant.now());
+        return repository.save(user);
+    }
+
+    public User resetPassword(String id, String password, String operatorId) {
+        User user = _get(id);
+
+        if (!id.equals(operatorId)) {
+            throw UserException.noPermissionUpdate();
+        }
+
+        user.setPassword(password);
+        user.setUpdatedAt(Instant.now());
+        return repository.save(user);
+    }
+
+
+    // TODO 是否在domain service检查唯一性？
     private void validateConflicted(User user) {
         if (repository.existsByEmail(user.getEmail())) {
             throw UserException.emailConflicted();
