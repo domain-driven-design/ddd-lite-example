@@ -19,22 +19,15 @@ ps：
     - article
 - bootstrap 项目启动
 
-## 待实现
-- user 的role区分（普通用户与管理员）
-- admin 对 article 的管理
-- exception体系
-- 软删除（查询过滤，关联信息处理）
-- 测试规范（api测试，单元测试）
-- 外部系统对接（如微信/支付宝）
-- 数据库规范：字段命名...
-- 数据库性能：索引
-- 缓存
-- 安全审计（重要操作记录）
-- 代码规范：checkstyle
-- 异步任务
+## 依赖关系
+- application service 只依赖domain service，封装查询到domain service
+- domain service 依赖聚合内的repository
 
 ## 命名规则
 - 聚合内的对象都以聚合根名为前缀
+- Response 使用 from 方法生成输出 
+- domain service 内方法使用get，create，update，delete...，省略聚合主体名
+- public方法不在类内被使用，抽取同名加下划线的private方法，如：get，_get
 
 ## 测试策略
 #### application 集成测试
@@ -61,9 +54,31 @@ ps：
   );
   ```
 
-## 想讨论的问题
-- 统一拦截authority到上下文中是否合理？
-- application service中只有domain service，封装查询到domain service
+## 风格说明
+
+1. 命名风格避免冗余，例如 domainService.action(String id, ...., String operatorId)，连起来需要形成一句话
+2. 如果注解为默认行为，不显示添加，比如 @Column 如果满足字段规，则省略
+3. ApplicationServe 形参顺序为，被操作对象的 id、request、operatorId
+
+## redis 使用规范
+
+1. 禁止使用 scan\keys 会造成性能低下 http://doc.redisfans.com/key/scan.html
+2. 禁止存放需要持久化的数据，因为可能需要清理 redis 数据
+
+## 待实现
+- exception体系
+- 测试规范（api测试，单元测试）
+- 外部系统对接（如微信/支付宝）
+- 数据库规范：字段命名...
+- 数据库性能：索引
+- 缓存
+- 安全审计（重要操作记录）
+- 代码规范：checkstyle
+- 异步任务
+- admin 对 article 的管理
+
+## 待讨论
+- 软删除（查询过滤，关联信息处理）
 - 数据库字符集设置(set names)
 - 管理员添加方式？管理员可添加其他管理员？
 - 在什么情况下使用id，articleId，tagId？
