@@ -42,9 +42,13 @@ public class ArticleService {
         return repository.save(article);
     }
 
-    public Article update(String id, String title, String content, String updateBy) {
-        // TODO 验证修改权限
+    public Article update(String id, String title, String content, String operateBy) {
         Article article = this._get(id);
+
+        if (!article.getCreatedBy().equals(operateBy)) {
+            throw ArticleException.noPermissionUpdate();
+        }
+
         article.setTitle(title);
         article.setContent(content);
         article.setUpdatedAt(Instant.now());
@@ -72,6 +76,7 @@ public class ArticleService {
     }
 
     public void deleteTag(String id, String tagId, String deleteBy) {
+
         // TODO 验证删除权限
         articleTagRepository.deleteById(tagId);
     }
