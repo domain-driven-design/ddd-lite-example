@@ -31,21 +31,25 @@ public class ArticleService {
         return this._get(id);
     }
 
-    public Article create(String title, String content, String createdBy) {
+    private Article _get(String id) {
+        return repository.findById(id).orElseThrow(ArticleException::notFound);
+    }
+
+    public Article create(String title, String content, String operatorId) {
         Article article = Article.builder()
                 .title(title)
                 .content(content)
-                .createdBy(createdBy)
+                .createdBy(operatorId)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
         return repository.save(article);
     }
 
-    public Article update(String id, String title, String content, String operateBy) {
+    public Article update(String id, String title, String content, String operatorId) {
         Article article = this._get(id);
 
-        if (!article.getCreatedBy().equals(operateBy)) {
+        if (!article.getCreatedBy().equals(operatorId)) {
             throw ArticleException.noPermissionUpdate();
         }
 
@@ -55,11 +59,11 @@ public class ArticleService {
         return repository.save(article);
     }
 
-    public void delete(String id) {
+    public void delete(String id, String operatorId) {
         repository.deleteById(id);
     }
 
-    public ArticleTag addTag(String id, String tagId, String createdBy) {
+    public ArticleTag addTag(String id, String tagId, String operatorId) {
         Article article = this._get(id);
         Tag tag = tagRepository.findById(tagId).orElseThrow(TagException::notFound);
         // TODO 验证addTag权限
@@ -67,7 +71,7 @@ public class ArticleService {
         ArticleTag articleTag = ArticleTag.builder()
                 .tagId(tag.getId())
                 .articleId(article.getId())
-                .createdBy(createdBy)
+                .createdBy(operatorId)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
@@ -75,19 +79,10 @@ public class ArticleService {
         return articleTagRepository.save(articleTag);
     }
 
-    public void deleteTag(String id, String tagId, String deleteBy) {
+    public void deleteTag(String id, String tagId, String operatorId) {
 
         // TODO 验证删除权限
         articleTagRepository.deleteById(tagId);
-    }
-
-    public void cleanRelatedTags(String tagId, String deleteBy) {
-        // TODO 验证删除权限
-        articleTagRepository.deleteAllByTagId(tagId);
-    }
-
-    private Article _get(String id) {
-        return repository.findById(id).orElseThrow(ArticleException::notFound);
     }
 
     private void validateUnique(ArticleTag articleTag) {

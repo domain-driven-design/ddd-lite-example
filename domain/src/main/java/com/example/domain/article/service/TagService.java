@@ -21,17 +21,24 @@ public class TagService {
         return repository.findById(id).orElseThrow(TagException::notFound);
     }
 
-    public Tag create(String name, String createdBy) {
+    public Tag create(String name, String operatorId) {
         Tag tag = Tag.builder()
                 .name(name)
-                .createdBy(createdBy)
+                .createdBy(operatorId)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
         return repository.save(tag);
     }
 
-    public void delete(String id, String deleteBy) {
+    public Tag update(String id, String name, String operatorId) {
+        Tag tag = _get(id);
+        tag.setName(name);
+        tag.setUpdatedAt(Instant.now());
+        return repository.save(tag);
+    }
+
+    public void delete(String id, String operatorId) {
         repository.deleteById(id);
     }
 }
