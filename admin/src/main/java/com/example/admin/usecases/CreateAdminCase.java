@@ -15,6 +15,7 @@ public class CreateAdminCase {
     @AllArgsConstructor
     public static class Request {
         private String name;
+        private String password;
     }
 
     @Getter

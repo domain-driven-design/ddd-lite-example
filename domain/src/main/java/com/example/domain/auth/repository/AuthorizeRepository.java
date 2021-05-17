@@ -13,28 +13,19 @@ import java.util.concurrent.TimeUnit;
 public class AuthorizeRepository {
     public static final long DEFAULT_EXPIRE = 24 * 60 * 60;
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTemplate<String, Authorize> redisTemplate;
 
-    public Authorize create(String id, String userId) {
-        redisTemplate.boundValueOps(generateKey(id))
-                .set(userId, DEFAULT_EXPIRE, TimeUnit.SECONDS);
-        return Authorize.builder()
-                .id(id)
-                .userId(userId)
-                .expire(DEFAULT_EXPIRE)
-                .build();
+    public Authorize create(Authorize authorize) {
+        authorize.setExpire(DEFAULT_EXPIRE);
+        redisTemplate.boundValueOps(generateKey(authorize.getId()))
+                .set(authorize, DEFAULT_EXPIRE, TimeUnit.SECONDS);
+        return  authorize;
     }
 
     // TODO  为什么没存对象呢？
     public Authorize get(String id) {
         String key = generateKey(id);
-        String userId = redisTemplate.opsForValue().get(key);
-        Long expire = redisTemplate.getExpire(key);
-        return Authorize.builder()
-                .id(id)
-                .userId(userId)
-                .expire(expire)
-                .build();
+        return redisTemplate.opsForValue().get(key);
     }
 
     public void delete(String id) {

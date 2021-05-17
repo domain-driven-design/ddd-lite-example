@@ -21,7 +21,12 @@ public class AuthorizeService {
     private AuthorizeRepository repository;
 
     public Authorize create(User user) {
-        return repository.create(generateToken(user.getId()), user.getId());
+        Authorize authorize = Authorize.builder()
+                .id(generateToken(user.getId()))
+                .userId(user.getId())
+                .role(user.getRole())
+                .build();
+        return repository.create(authorize);
     }
 
     public Authorize current() {

@@ -8,10 +8,10 @@ import com.example.domain.user.model.User;
 import com.example.domain.user.repository.UserRepository;
 import com.example.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserManagementApplicationService {
@@ -21,10 +21,9 @@ public class UserManagementApplicationService {
     @Autowired
     private UserService userService;
 
-    public List<GetUsersCase.Response> getUsers() {
-        return repository.findAll().stream()
-                .map(GetUsersCase.Response::from)
-                .collect(Collectors.toList());
+    public Page<GetUsersCase.Response> getUsers(Pageable pageable) {
+        return repository.findAll(Example.of(User.builder().role(User.UserRole.USER).build()), pageable)
+                .map(GetUsersCase.Response::from);
     }
 
     public GetUserDetailCase.Response getUserDetail(String id) {
@@ -33,7 +32,7 @@ public class UserManagementApplicationService {
     }
 
     public CreateAdminCase.Response createAdmin(CreateAdminCase.Request request, Authorize authorize) {
-        User admin = userService.createAdmin(request.getName(), authorize.getUserId());
+        User admin = userService.createAdmin(request.getName(), request.getPassword(), authorize.getUserId());
         return CreateAdminCase.Response.from(admin);
     }
 }

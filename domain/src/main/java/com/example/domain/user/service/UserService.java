@@ -37,10 +37,11 @@ public class UserService {
         return repository.save(user);
     }
 
-    public User createAdmin(String name, String operatorId) {
+    public User createAdmin(String name, String password, String operatorId) {
         // TODO 检查operator是admin吗？role检查在外层已被路由拦截过
         User admin = User.builder()
                 .name(name)
+                .password(password)
                 .role(User.UserRole.ADMIN)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
