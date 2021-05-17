@@ -37,6 +37,17 @@ public class UserService {
         return repository.save(user);
     }
 
+    public User createAdmin(String name, String operatorId) {
+        // TODO 检查operator是admin吗？role检查在外层已被路由拦截过
+        User admin = User.builder()
+                .name(name)
+                .role(User.UserRole.ADMIN)
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+       return repository.save(admin);
+    }
+
     public User update(String id, String name, String operatorId) {
         User user = _get(id);
 
