@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class TagService {
@@ -19,6 +20,10 @@ public class TagService {
 
     private Tag _get(String id) {
         return repository.findById(id).orElseThrow(TagException::notFound);
+    }
+
+    public List<Tag> find(List<String> ids) {
+        return repository.findAllById(ids);
     }
 
     public Tag create(String name, String operatorId) {

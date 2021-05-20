@@ -3,9 +3,8 @@ package com.example.frontend.service;
 import com.example.domain.article.model.Article;
 import com.example.domain.article.model.ArticleTag;
 import com.example.domain.article.model.Tag;
-import com.example.domain.article.repository.ArticleRepository;
-import com.example.domain.article.repository.TagRepository;
 import com.example.domain.article.service.ArticleService;
+import com.example.domain.article.service.TagService;
 import com.example.domain.auth.model.Authorize;
 import com.example.frontend.usecase.CreateArticleCase;
 import com.example.frontend.usecase.GetArticleDetailCase;
@@ -28,10 +27,9 @@ import static java.util.stream.Collectors.toMap;
 public class ArticleApplicationService {
     @Autowired
     private ArticleService service;
+
     @Autowired
-    private ArticleRepository repository;
-    @Autowired
-    private TagRepository tagRepository;
+    private TagService tagService;
 
     public CreateArticleCase.Response create(CreateArticleCase.Request request, Authorize authorize) {
         Article article = service.create(request.getTitle(), request.getContent(), authorize.getUserId());
@@ -49,7 +47,7 @@ public class ArticleApplicationService {
     }
 
     public Page<GetArticlesCase.Response> getByPage(Pageable pageable) {
-        return repository.findAll(pageable)
+        return service.getAll(null, pageable)
                 .map(GetArticlesCase.Response::from);
     }
 
@@ -61,7 +59,7 @@ public class ArticleApplicationService {
     public List<GetArticleTagsCase.Response> getTags(String id) {
         Article article = service.get(id);
         List<ArticleTag> articleTags = article.getTags();
-        Map<String, Tag> tagMap = tagRepository.findAllById(
+        Map<String, Tag> tagMap = tagService.find(
                 articleTags.stream()
                         .map(ArticleTag::getTagId)
                         .collect(Collectors.toList()))

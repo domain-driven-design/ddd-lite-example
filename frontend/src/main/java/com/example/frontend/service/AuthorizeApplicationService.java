@@ -5,6 +5,7 @@ import com.example.domain.auth.service.AuthorizeService;
 import com.example.domain.user.exception.UserException;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.UserRepository;
+import com.example.domain.user.service.UserService;
 import com.example.frontend.usecase.GetUserProfileCase;
 import com.example.frontend.usecase.LoginCase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +16,15 @@ import org.springframework.stereotype.Service;
 public class AuthorizeApplicationService {
     @Autowired
     private AuthorizeService service;
+
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     public LoginCase.Response login(LoginCase.Request request) {
-        User user = userRepository.findOne(Example.of(User.builder()
+        User user = userService.get(Example.of(User.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())
-                .build()))
-                .orElseThrow(UserException::notFound);
+                .build()));
 
         Authorize authorize = service.create(user);
         return LoginCase.Response.from(authorize);

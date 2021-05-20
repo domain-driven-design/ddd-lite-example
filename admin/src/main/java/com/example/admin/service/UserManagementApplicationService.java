@@ -5,29 +5,27 @@ import com.example.admin.usecases.GetUserDetailCase;
 import com.example.admin.usecases.GetUsersCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.user.model.User;
-import com.example.domain.user.repository.UserRepository;
 import com.example.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserManagementApplicationService {
     @Autowired
-    private UserRepository repository;
-
-    @Autowired
     private UserService userService;
 
     public Page<GetUsersCase.Response> getUsers(Pageable pageable) {
-        return repository.findAll(Example.of(User.builder().role(User.UserRole.USER).build()), pageable)
+        Specification<User> spec = (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get(User.Fields.role), User.UserRole.USER);
+        return userService.findAll(spec, pageable)
                 .map(GetUsersCase.Response::from);
     }
 
     public GetUserDetailCase.Response getUserDetail(String id) {
-        User user = repository.getOne(id);
+        User user = userService.get(id);
         return GetUserDetailCase.Response.from(user);
     }
 

@@ -5,9 +5,16 @@ import com.example.domain.user.model.User;
 import com.example.domain.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -21,6 +28,14 @@ public class UserService {
 
     private User _get(String id) {
         return repository.findById(id).orElseThrow(UserException::notFound);
+    }
+
+    public User get(Example<User> example) {
+        return repository.findOne(example).orElseThrow(UserException::notFound);
+    }
+
+    public Page<User> findAll(Specification<User> spec, Pageable pageable) {
+        return repository.findAll(spec, pageable);
     }
 
     // TODO 编码password
@@ -76,7 +91,7 @@ public class UserService {
 
     // TODO 是否在domain service检查唯一性？
     private void validateConflicted(User user) {
-        if (repository.existsByEmail(user.getEmail())) {
+        if (repository.exists(Example.of(User.builder().email(user.getEmail()).build()))) {
             throw UserException.emailConflicted();
         }
     }

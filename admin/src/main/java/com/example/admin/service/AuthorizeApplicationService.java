@@ -3,9 +3,8 @@ package com.example.admin.service;
 import com.example.admin.usecases.LoginCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
-import com.example.domain.user.exception.UserException;
 import com.example.domain.user.model.User;
-import com.example.domain.user.repository.UserRepository;
+import com.example.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -14,16 +13,16 @@ import org.springframework.stereotype.Service;
 public class AuthorizeApplicationService {
     @Autowired
     private AuthorizeService service;
+
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     public LoginCase.Response login(LoginCase.Request request) {
-        User user = userRepository.findOne(Example.of(User.builder()
+        User user = userService.get(Example.of(User.builder()
                 .name(request.getName())
                 .password(request.getPassword())
                 .role(User.UserRole.ADMIN)
-                .build()))
-                .orElseThrow(UserException::notFound);
+                .build()));
 
         Authorize authorize = service.create(user);
         return LoginCase.Response.from(authorize);

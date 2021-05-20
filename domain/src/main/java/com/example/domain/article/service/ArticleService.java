@@ -12,6 +12,9 @@ import com.example.domain.article.repository.TagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -33,6 +36,10 @@ public class ArticleService {
 
     private Article _get(String id) {
         return repository.findById(id).orElseThrow(ArticleException::notFound);
+    }
+
+    public Page<Article> getAll(Specification<Article> spec, Pageable pageable) {
+        return repository.findAll(spec, pageable);
     }
 
     public Article create(String title, String content, String operatorId) {

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -22,6 +23,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
+@FieldNameConstants
 public class User {
     @Id
     @GeneratedValue(generator = "system-uuid")
