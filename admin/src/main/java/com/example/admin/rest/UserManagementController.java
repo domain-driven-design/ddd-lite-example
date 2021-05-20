@@ -4,6 +4,7 @@ import com.example.admin.service.UserManagementApplicationService;
 import com.example.admin.usecases.CreateAdminCase;
 import com.example.admin.usecases.GetUserDetailCase;
 import com.example.admin.usecases.GetUsersCase;
+import com.example.admin.usecases.SuggestUsersCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +33,11 @@ public class UserManagementController {
     @GetMapping
     public Page<GetUsersCase.Response> getUsers(Pageable pageable) {
         return applicationService.getUsers(pageable);
+    }
+
+    @GetMapping("/suggest")
+    public Page<SuggestUsersCase.Response> suggestUsers(@RequestParam String keyword, Pageable pageable) {
+        return applicationService.suggestUsers(keyword, pageable);
     }
 
     @GetMapping("/{id}")

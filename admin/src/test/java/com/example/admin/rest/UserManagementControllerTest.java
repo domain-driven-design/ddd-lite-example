@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 import static io.restassured.RestAssured.given;
@@ -52,6 +51,36 @@ class UserManagementControllerTest extends TestBase {
                 .body("content.size", is(2))
                 .body("content.name", hasItems("anyName", "anyName"))
                 .body("content.email", hasItems("anyEmail0", "anyEmail1"));
+    }
+
+
+    @Test
+    void should_suggest_users() {
+        // Given
+        userService.create("anyName", "anyEmail0", "anyPassword");
+        userService.create("anyName", "anyEmail1", "anyPassword");
+
+        Response response0 = given()
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + authorize.getId())
+                .param("keyword", "any")
+                .when()
+                .get("/management/users/suggest");
+        response0.then().statusCode(200)
+                .body("content.size", is(2))
+                .body("content.name", hasItems("anyName", "anyName"))
+                .body("content.email", hasItems("anyEmail0", "anyEmail1"));
+
+        Response response1 = given()
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + authorize.getId())
+                .param("keyword", "Email0")
+                .when()
+                .get("/management/users/suggest");
+        response1.then().statusCode(200)
+                .body("content.size", is(1))
+                .body("content.name", hasItems("anyName"))
+                .body("content.email", hasItems("anyEmail0"));
     }
 
 
