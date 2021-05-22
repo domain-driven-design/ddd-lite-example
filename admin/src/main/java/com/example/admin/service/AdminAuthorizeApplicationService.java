@@ -10,7 +10,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthorizeApplicationService {
+public class AdminAuthorizeApplicationService {
     @Autowired
     private AuthorizeService service;
 

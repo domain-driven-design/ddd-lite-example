@@ -9,7 +9,7 @@ import java.util.HashMap;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.isA;
 
-class AuthorizeControllerTest extends TestBase {
+class AdminAuthorizeControllerTest extends TestBase {
 
     @Test
     void should_log_in() {
