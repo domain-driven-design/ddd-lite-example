@@ -82,17 +82,17 @@ ps：
 
 ## 业务
 知乎 -- 问答社区
-原型图
-https://www.axure.com/
-
-- 用户
+原型图：https://dbcrji.axshare.com
+- user
+    - 注册
+    - 登录
+    - 提出问题
+    - 回答问题
     - 关注问题
     - 点赞回答
     - 收藏回答
-- 问答
-    - user 创建问题
-    - user 回复
-    - admin 审核问题
-- 账号体系
-    - 个人资料
+- admin
+    - 注册
+    - 登录
+    - 审核问题
 
