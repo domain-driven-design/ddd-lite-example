@@ -1,9 +1,10 @@
 CREATE TABLE user
 (
-    `id`   varchar(36) not null primary key,
-    `name` varchar(36) not null,
-    `email` varchar(50) not null,
-    `password` varchar(100) not null,
-    `created_at` timestamp(3) not null default current_timestamp(3),
-    `updated_at` timestamp(3) not null default current_timestamp(3) on update current_timestamp(3)
+    `id`         VARCHAR(36)  NOT NULL PRIMARY KEY,
+    `name`       VARCHAR(50)  NOT NULL,
+    `email`      VARCHAR(50),
+    `password`   VARCHAR(100) NOT NULL,
+    `role`       VARCHAR(10)  NOT NULL,
+    `created_at` TIMESTAMP(3) NOT NULL,
+    `updated_at` TIMESTAMP(3) NOT NULL
 );
