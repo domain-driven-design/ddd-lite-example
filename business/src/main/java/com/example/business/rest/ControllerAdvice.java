@@ -1,4 +1,4 @@
-package com.example.frontend.rest;
+package com.example.business.rest;
 
 import com.example.domain.common.BaseException;
 import lombok.extern.slf4j.Slf4j;

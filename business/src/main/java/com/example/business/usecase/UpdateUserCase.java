@@ -1,24 +1,32 @@
-package com.example.frontend.usecase;
+package com.example.business.usecase;
 
 import com.example.domain.user.model.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-public class GetUserDetailCase {
+public class UpdateUserCase {
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Request {
+        private String name;
+    }
+
     @Getter
     @Setter
     @Builder
     public static class Response {
         private String id;
         private String name;
-        private String email;
 
         public static Response from(User user) {
             return Response.builder()
                     .id(user.getId())
                     .name(user.getName())
-                    .email(user.getEmail())
                     .build();
         }
     }

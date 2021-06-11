@@ -6,9 +6,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties
-public class FrontendTestApplication {
+public class BusinessTestApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FrontendTestApplication.class, args);
+        SpringApplication.run(BusinessTestApplication.class, args);
     }
 }

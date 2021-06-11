@@ -1,34 +1,23 @@
-package com.example.frontend.usecase;
+package com.example.business.usecase;
 
 import com.example.domain.auth.model.Authorize;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-public class LoginCase {
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Request {
-        private String email;
-        private String password;
-    }
-
+public class GetUserProfileCase {
     @Getter
     @Setter
     @Builder
     public static class Response {
+        private String id;
         private String userId;
-        private String token;
-        private long expire;
+        private Long expire;
 
         public static Response from(Authorize authorize) {
             return Response.builder()
+                    .id(authorize.getId())
                     .userId(authorize.getUserId())
-                    .token(authorize.getId())
                     .expire(authorize.getExpire())
                     .build();
         }

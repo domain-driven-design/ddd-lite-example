@@ -4,5 +4,5 @@ repositories {
 
 dependencies {
     implementation project(':admin')
-    implementation project(':frontend')
+    implementation project(':business')
 }

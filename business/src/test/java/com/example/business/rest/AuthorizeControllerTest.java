@@ -1,4 +1,4 @@
-package com.example.frontend.rest;
+package com.example.business.rest;
 
 import com.example.TestBase;
 import com.example.domain.user.model.User;

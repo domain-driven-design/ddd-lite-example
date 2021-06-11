@@ -1,8 +1,8 @@
-package com.example.frontend.rest;
+package com.example.business.rest;
 
-import com.example.frontend.service.AuthorizeApplicationService;
-import com.example.frontend.usecase.GetUserProfileCase;
-import com.example.frontend.usecase.LoginCase;
+import com.example.business.service.AuthorizeApplicationService;
+import com.example.business.usecase.GetUserProfileCase;
+import com.example.business.usecase.LoginCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,12 +1,12 @@
-package com.example.frontend.rest;
+package com.example.business.rest;
 
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
-import com.example.frontend.service.UserApplicationService;
-import com.example.frontend.usecase.GetUserDetailCase;
-import com.example.frontend.usecase.RegisterCase;
-import com.example.frontend.usecase.ResetPasswordCase;
-import com.example.frontend.usecase.UpdateUserCase;
+import com.example.business.service.UserApplicationService;
+import com.example.business.usecase.GetUserDetailCase;
+import com.example.business.usecase.RegisterCase;
+import com.example.business.usecase.ResetPasswordCase;
+import com.example.business.usecase.UpdateUserCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

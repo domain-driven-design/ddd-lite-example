@@ -1,13 +1,11 @@
-package com.example.frontend.service;
+package com.example.business.service;
 
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
-import com.example.domain.user.exception.UserException;
 import com.example.domain.user.model.User;
-import com.example.domain.user.repository.UserRepository;
 import com.example.domain.user.service.UserService;
-import com.example.frontend.usecase.GetUserProfileCase;
-import com.example.frontend.usecase.LoginCase;
+import com.example.business.usecase.GetUserProfileCase;
+import com.example.business.usecase.LoginCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;

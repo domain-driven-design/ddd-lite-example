@@ -18,7 +18,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-@SpringBootTest(webEnvironment = RANDOM_PORT, classes = {FrontendTestApplication.class})
+@SpringBootTest(webEnvironment = RANDOM_PORT, classes = {BusinessTestApplication.class})
 @TestExecutionListeners({
         DependencyInjectionTestExecutionListener.class,
         ResetDbListener.class,
