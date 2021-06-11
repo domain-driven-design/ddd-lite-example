@@ -16,7 +16,6 @@ ps：
         - repository
         - service
     - auth
-    - article
 - bootstrap 项目启动
 
 ## 依赖关系
@@ -81,18 +80,7 @@ ps：
 
 
 ## 业务
-知乎 -- 问答社区
-原型图：https://dbcrji.axshare.com
-- user
-    - 注册
-    - 登录
-    - 提出问题
-    - 回答问题
-    - 关注问题
-    - 点赞回答
-    - 收藏回答
-- admin
-    - 注册
-    - 登录
-    - 审核问题
+问答社区
+核心：问题，回答
+支撑：圈子
 
