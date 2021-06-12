@@ -2,6 +2,7 @@ package com.example.business.service;
 
 import com.example.business.usecase.CreateAnswerCase;
 import com.example.business.usecase.CreateQuestionCase;
+import com.example.business.usecase.GetAnswerCase;
 import com.example.business.usecase.GetQuestionCase;
 import com.example.business.usecase.GetQuestionDetailCase;
 import com.example.business.usecase.UpdateQuestionCase;
@@ -12,6 +13,7 @@ import com.example.domain.question.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,5 +48,13 @@ public class QuestionApplicationService {
     public CreateAnswerCase.Response createAnswer(String id, CreateAnswerCase.Request request, Authorize authorize) {
         Answer answer = questionService.addAnswer(id, request.getContent(), authorize.getUserId());
         return CreateAnswerCase.Response.from(answer);
+    }
+
+    public Page<GetAnswerCase.Response> getAnswersByPage(String id, Pageable pageable) {
+        Specification<Answer> specification = (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get(Answer.Fields.questionId), id);
+        Page<Answer> answerPage = questionService.findAllAnswers(specification, pageable);
+
+        return answerPage.map(GetAnswerCase.Response::from);
     }
 }

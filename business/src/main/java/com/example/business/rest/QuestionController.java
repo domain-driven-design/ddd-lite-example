@@ -3,6 +3,7 @@ package com.example.business.rest;
 import com.example.business.service.QuestionApplicationService;
 import com.example.business.usecase.CreateAnswerCase;
 import com.example.business.usecase.CreateQuestionCase;
+import com.example.business.usecase.GetAnswerCase;
 import com.example.business.usecase.GetQuestionCase;
 import com.example.business.usecase.GetQuestionDetailCase;
 import com.example.business.usecase.UpdateQuestionCase;
@@ -68,5 +69,11 @@ public class QuestionController {
                                                   @RequestBody CreateAnswerCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.createAnswer(id, request, authorize);
+    }
+
+    @GetMapping("/{id}/answers")
+    public Page<GetAnswerCase.Response> getAnswersByPage(@PathVariable String id,
+                                                         @PageableDefault Pageable pageable) {
+        return applicationService.getAnswersByPage(id, pageable);
     }
 }

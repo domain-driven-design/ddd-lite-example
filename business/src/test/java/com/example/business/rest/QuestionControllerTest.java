@@ -159,6 +159,24 @@ class QuestionControllerTest extends TestBase {
         ));
 
         assertThat(answerOptional.isPresent(), is(true));
+    }
 
+    @Test
+    void should_get_all_answers_by_page() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Question question = questionService.create("anyTitle", "anyDescription", user.getId());
+
+        User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
+        Answer answer0 = questionService.addAnswer(question.getId(), "content0", user.getId());
+        Answer answer1 = questionService.addAnswer(question.getId(), "content1", otherUser.getId());
+
+        Response response = givenDefault()
+                .param("sort", "createdAt")
+                .when()
+                .get("/questions/" + question.getId() + "/answers");
+
+        response.then().statusCode(200)
+                .body("content.size", is(2))
+                .body("content.content", hasItems(answer0.getContent(), answer1.getContent()));
     }
 }

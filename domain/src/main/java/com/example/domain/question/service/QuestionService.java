@@ -83,4 +83,8 @@ public class QuestionService {
 
         return answerRepository.save(answer);
     }
+
+    public Page<Answer> findAllAnswers(Specification<Answer> spec, Pageable pageable) {
+        return answerRepository.findAll(spec, pageable);
+    }
 }
