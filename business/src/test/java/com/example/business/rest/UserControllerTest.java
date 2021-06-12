@@ -1,7 +1,6 @@
 package com.example.business.rest;
 
 import com.example.TestBase;
-import com.example.domain.auth.model.Authorize;
 import com.example.domain.user.model.User;
 import com.example.domain.user.service.UserService;
 import io.restassured.response.Response;
@@ -41,11 +40,9 @@ class UserControllerTest extends TestBase {
 
     @Test
     void should_get_user_detail() {
-        User user = this.prepareUser("anyName", "anyEmail", "anyPassword");
-        Authorize authorize = this.prepareAuthorize(user, "anyPassword");
+        User user = this.prepareUser("anyName", "anyEmail");
 
-        Response response = given()
-                .header("Authorization", "Bearer " + authorize.getId())
+        Response response = givenWithAuthorize(user)
                 .when()
                 .get("/users/me");
         response.then().statusCode(200)
@@ -57,13 +54,10 @@ class UserControllerTest extends TestBase {
 
     @Test
     void should_update_user() {
-        User user = this.prepareUser("anyName", "anyEmail", "anyPassword");
-        Authorize authorize = this.prepareAuthorize(user, "anyPassword");
+        User user = this.prepareUser("anyName", "anyEmail");
         String newName = "newName";
 
-        Response response = given()
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + authorize.getId())
+        Response response = givenWithAuthorize(user)
                 .body(new HashMap<String, Object>() {
                     {
                         put("name", newName);
@@ -81,13 +75,10 @@ class UserControllerTest extends TestBase {
 
     @Test
     void should_reset_password() {
-        User user = this.prepareUser("anyName", "anyEmail", "anyPassword");
-        Authorize authorize = this.prepareAuthorize(user, "anyPassword");
+        User user = this.prepareUser("anyName", "anyEmail");
         String newPassword = "newPassword";
 
-        given()
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + authorize.getId())
+        givenWithAuthorize(user)
                 .body(new HashMap<String, Object>() {
                     {
                         put("password", newPassword);

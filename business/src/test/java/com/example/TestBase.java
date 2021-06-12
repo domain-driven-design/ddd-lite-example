@@ -6,6 +6,7 @@ import com.example.domain.auth.service.AuthorizeService;
 import com.example.domain.user.model.User;
 import com.example.domain.user.service.UserService;
 import io.restassured.RestAssured;
+import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +17,7 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
+import static io.restassured.RestAssured.given;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = {BusinessTestApplication.class})
@@ -27,7 +29,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public abstract class TestBase {
-
     @LocalServerPort
     private int port;
 
@@ -46,11 +47,15 @@ public abstract class TestBase {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
-    public User prepareUser(String name, String email, String password) {
-        return userService.create(name, email, password);
+    public User prepareUser(String name, String email) {
+        return userService.create(name, email, "password");
     }
 
-    public Authorize prepareAuthorize(User user, String password) {
-        return authorizeService.create(user, password);
+    public RequestSpecification givenWithAuthorize(User user) {
+        Authorize authorize = authorizeService.create(user, "password");
+        return given()
+                .header("Authorization", "Bearer " + authorize.getId())
+                .contentType("application/json");
+
     }
 }
