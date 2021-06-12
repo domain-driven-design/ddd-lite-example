@@ -42,7 +42,7 @@ class UserControllerTest extends TestBase {
     @Test
     void should_get_user_detail() {
         User user = this.prepareUser("anyName", "anyEmail", "anyPassword");
-        Authorize authorize = this.prepareAuthorize(user);
+        Authorize authorize = this.prepareAuthorize(user, "anyPassword");
 
         Response response = given()
                 .header("Authorization", "Bearer " + authorize.getId())
@@ -58,7 +58,7 @@ class UserControllerTest extends TestBase {
     @Test
     void should_update_user() {
         User user = this.prepareUser("anyName", "anyEmail", "anyPassword");
-        Authorize authorize = this.prepareAuthorize(user);
+        Authorize authorize = this.prepareAuthorize(user, "anyPassword");
         String newName = "newName";
 
         Response response = given()
@@ -82,7 +82,7 @@ class UserControllerTest extends TestBase {
     @Test
     void should_reset_password() {
         User user = this.prepareUser("anyName", "anyEmail", "anyPassword");
-        Authorize authorize = this.prepareAuthorize(user);
+        Authorize authorize = this.prepareAuthorize(user, "anyPassword");
         String newPassword = "newPassword";
 
         Response response = given()

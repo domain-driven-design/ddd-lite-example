@@ -16,7 +16,7 @@ public class UserApplicationService {
     private UserService service;
 
     public RegisterCase.Response register(RegisterCase.Request request) {
-        // TODO 验证凭据信息是否可用，如：email
+        // TODO verificationCode
         User user = service.create(request.getName(), request.getEmail(), request.getPassword());
 
         return RegisterCase.Response.from(user);

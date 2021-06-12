@@ -50,7 +50,7 @@ public abstract class TestBase {
         return userService.create(name, email, password);
     }
 
-    public Authorize prepareAuthorize(User user) {
-        return authorizeService.create(user);
+    public Authorize prepareAuthorize(User user, String password) {
+        return authorizeService.create(user, password);
     }
 }

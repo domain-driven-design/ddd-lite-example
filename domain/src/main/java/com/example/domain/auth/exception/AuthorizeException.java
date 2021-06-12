@@ -1,11 +1,17 @@
 package com.example.domain.auth.exception;
 
-public class AuthorizeException extends RuntimeException {
-    public AuthorizeException(String message) {
-        super(message);
+import com.example.domain.common.BaseException;
+
+public class AuthorizeException extends BaseException {
+    public AuthorizeException(Type type, String message) {
+        super(type, message);
     }
 
     public static AuthorizeException Unauthorized() {
-        return new AuthorizeException("unauthorized");
+        return new AuthorizeException(BaseException.Type.UNAUTHORIZED, "unauthorized");
+    }
+
+    public static AuthorizeException invalidCredential() {
+        return new AuthorizeException(BaseException.Type.UNAUTHORIZED, "invalid_credential");
     }
 }

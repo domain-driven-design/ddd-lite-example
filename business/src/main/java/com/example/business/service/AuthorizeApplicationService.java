@@ -21,10 +21,10 @@ public class AuthorizeApplicationService {
     public LoginCase.Response login(LoginCase.Request request) {
         User user = userService.get(Example.of(User.builder()
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .role(User.UserRole.USER)
                 .build()));
 
-        Authorize authorize = service.create(user);
+        Authorize authorize = service.create(user, request.getPassword());
         return LoginCase.Response.from(authorize);
     }
 

@@ -16,6 +16,7 @@ public class RegisterCase {
         private String name;
         private String email;
         private String password;
+        // TODO verificationCode
     }
 
     @Getter

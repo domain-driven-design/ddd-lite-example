@@ -4,6 +4,7 @@ import com.example.domain.user.exception.UserException;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -11,10 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Predicate;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -38,12 +36,11 @@ public class UserService {
         return repository.findAll(spec, pageable);
     }
 
-    // TODO 编码password
     public User create(String name, String email, String password) {
         User user = User.builder()
                 .name(name)
                 .email(email)
-                .password(password)
+                .password(BCrypt.hashpw(password, BCrypt.gensalt()))
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .role(User.UserRole.USER)
@@ -61,7 +58,7 @@ public class UserService {
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
-       return repository.save(admin);
+        return repository.save(admin);
     }
 
     public User update(String id, String name, String operatorId) {

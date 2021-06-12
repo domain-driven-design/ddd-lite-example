@@ -8,6 +8,7 @@ import com.example.domain.user.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,11 @@ public class AuthorizeService {
     @Autowired
     private AuthorizeRepository repository;
 
-    public Authorize create(User user) {
+    public Authorize create(User user, String password) {
+        if (!BCrypt.checkpw(password, user.getPassword())) {
+            throw AuthorizeException.invalidCredential();
+        }
+
         Authorize authorize = Authorize.builder()
                 .id(generateToken(user.getId()))
                 .userId(user.getId())

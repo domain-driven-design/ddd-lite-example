@@ -50,6 +50,6 @@ public abstract class TestBase {
     public Authorize prepareAuthorize() {
         User admin = userRepository.findOne(Example.of(User.builder().name("admin").role(User.UserRole.ADMIN).build()))
                 .get();
-        return authorizeService.create(admin);
+        return authorizeService.create(admin, "password");
     }
 }
