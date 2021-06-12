@@ -64,4 +64,8 @@ public class QuestionApplicationService {
 
         return UpdateAnswerCase.Response.from(answer);
     }
+
+    public void deleteAnswer(String id, String answerId, Authorize authorize) {
+        questionService.deleteAnswer(id, answerId, authorize.getUserId());
+    }
 }

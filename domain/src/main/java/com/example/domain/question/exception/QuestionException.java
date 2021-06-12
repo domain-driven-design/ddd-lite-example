@@ -18,4 +18,9 @@ public class QuestionException extends BaseException {
     public static QuestionException answerNotFound() {
         return new QuestionException(Type.NOT_FOUND, "answer_not_found");
     }
+
+    public static QuestionException answerForbidden() {
+        return new QuestionException(Type.FORBIDDEN, "answer_operation_forbidden");
+
+    }
 }

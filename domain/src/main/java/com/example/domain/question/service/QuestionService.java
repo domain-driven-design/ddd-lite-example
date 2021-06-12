@@ -98,10 +98,26 @@ public class QuestionService {
         // TODO 业务验证 影响answer修改的question状态
 
         Answer answer = _getAnswer(answerId);
+        if (!answer.getCreatedBy().equals(operatorId)) {
+            throw QuestionException.answerForbidden();
+        }
 
         answer.setContent(content);
         answer.setUpdatedAt(Instant.now());
 
         return answerRepository.save(answer);
+    }
+
+    public void deleteAnswer(String id, String answerId, String operatorId) {
+        // TODO id 不需要
+
+        Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
+        if (!optionalAnswer.isPresent()) {
+            return;
+        }
+        if (!optionalAnswer.get().getCreatedBy().equals(operatorId)) {
+            throw QuestionException.answerForbidden();
+        }
+        answerRepository.deleteById(answerId);
     }
 }

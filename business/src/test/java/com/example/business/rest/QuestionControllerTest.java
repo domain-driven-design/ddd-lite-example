@@ -194,7 +194,7 @@ class QuestionControllerTest extends TestBase {
                     }
                 })
                 .when()
-                .post("/questions/" + question.getId() + "/answers/" + answer.getId());
+                .put("/questions/" + question.getId() + "/answers/" + answer.getId());
         response.then().statusCode(200)
                 .body("id", isA(String.class))
                 .body("content", is(newContent));
@@ -202,5 +202,19 @@ class QuestionControllerTest extends TestBase {
         Answer updatedAnswer = answerRepository.findById(answer.getId()).get();
 
         assertThat(updatedAnswer.getContent(), is(newContent));
+    }
+
+    @Test
+    void should_delete_answer() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Question question = questionService.create("anyTitle", "anyDescription", user.getId());
+        Answer answer = questionService.addAnswer(question.getId(), "content", user.getId());
+
+        Response response = givenWithAuthorize(user)
+                .when()
+                .delete("/questions/" + question.getId() + "/answers/" + answer.getId());
+        response.then().statusCode(200);
+
+        assertThat(answerRepository.findById(answer.getId()).isPresent(), is(false));
     }
 }

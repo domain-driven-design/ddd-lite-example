@@ -78,11 +78,18 @@ public class QuestionController {
         return applicationService.getAnswersByPage(id, pageable);
     }
 
-    @PostMapping("/{id}/answers/{answerId}")
+    @PutMapping("/{id}/answers/{answerId}")
     public UpdateAnswerCase.Response createAnswer(@PathVariable String id,
                                                   @PathVariable String answerId,
                                                   @RequestBody UpdateAnswerCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.updateAnswer(id, answerId, request, authorize);
+    }
+
+    @DeleteMapping("/{id}/answers/{answerId}")
+    public void deleteAnswer(@PathVariable String id,
+                             @PathVariable String answerId) {
+        Authorize authorize = authorizeService.current();
+        applicationService.deleteAnswer(id, answerId, authorize);
     }
 }
