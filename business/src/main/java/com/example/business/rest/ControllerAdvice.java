@@ -3,6 +3,7 @@ package com.example.business.rest;
 import com.example.domain.common.BaseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -22,11 +23,10 @@ public class ControllerAdvice {
     }};
 
     @ExceptionHandler(BaseException.class)
-    public Map handleBaseException(BaseException ex) {
-        log.error("业务异常： ", ex);
-        Map map = new HashMap();
-        map.put("code", codeMap.get(ex.getType()));
-        map.put("msg", ex.getMessage());
-        return map;
+    public Object handleBaseException(BaseException ex) {
+        log.error("业务异常：{}", ex.getMessage());
+        Map<String, String> map = new HashMap<>();
+        map.put("message", ex.getMessage());
+        return ResponseEntity.status(codeMap.get(ex.getType())).body(map);
     }
 }
