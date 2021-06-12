@@ -68,6 +68,10 @@ public class QuestionService {
         repository.deleteById(id);
     }
 
+    private Answer _getAnswer(String answerId) {
+        return answerRepository.findById(answerId).orElseThrow(QuestionException::answerNotFound);
+    }
+
     public Answer addAnswer(String id, String content, String operatorId) {
         Question question = _get(id);
 
@@ -86,5 +90,18 @@ public class QuestionService {
 
     public Page<Answer> findAllAnswers(Specification<Answer> spec, Pageable pageable) {
         return answerRepository.findAll(spec, pageable);
+    }
+
+    public Answer updateAnswer(String id, String answerId, String content, String operatorId) {
+        Question question = _get(id);
+
+        // TODO 业务验证 影响answer修改的question状态
+
+        Answer answer = _getAnswer(answerId);
+
+        answer.setContent(content);
+        answer.setUpdatedAt(Instant.now());
+
+        return answerRepository.save(answer);
     }
 }

@@ -5,6 +5,7 @@ import com.example.business.usecase.CreateQuestionCase;
 import com.example.business.usecase.GetAnswerCase;
 import com.example.business.usecase.GetQuestionCase;
 import com.example.business.usecase.GetQuestionDetailCase;
+import com.example.business.usecase.UpdateAnswerCase;
 import com.example.business.usecase.UpdateQuestionCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.question.model.Answer;
@@ -56,5 +57,11 @@ public class QuestionApplicationService {
         Page<Answer> answerPage = questionService.findAllAnswers(specification, pageable);
 
         return answerPage.map(GetAnswerCase.Response::from);
+    }
+
+    public UpdateAnswerCase.Response updateAnswer(String id, String answerId, UpdateAnswerCase.Request request, Authorize authorize) {
+        Answer answer = questionService.updateAnswer(id, answerId, request.getContent(), authorize.getUserId());
+
+        return UpdateAnswerCase.Response.from(answer);
     }
 }

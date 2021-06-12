@@ -6,6 +6,7 @@ import com.example.business.usecase.CreateQuestionCase;
 import com.example.business.usecase.GetAnswerCase;
 import com.example.business.usecase.GetQuestionCase;
 import com.example.business.usecase.GetQuestionDetailCase;
+import com.example.business.usecase.UpdateAnswerCase;
 import com.example.business.usecase.UpdateQuestionCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
@@ -75,5 +76,13 @@ public class QuestionController {
     public Page<GetAnswerCase.Response> getAnswersByPage(@PathVariable String id,
                                                          @PageableDefault Pageable pageable) {
         return applicationService.getAnswersByPage(id, pageable);
+    }
+
+    @PostMapping("/{id}/answers/{answerId}")
+    public UpdateAnswerCase.Response createAnswer(@PathVariable String id,
+                                                  @PathVariable String answerId,
+                                                  @RequestBody UpdateAnswerCase.Request request) {
+        Authorize authorize = authorizeService.current();
+        return applicationService.updateAnswer(id, answerId, request, authorize);
     }
 }

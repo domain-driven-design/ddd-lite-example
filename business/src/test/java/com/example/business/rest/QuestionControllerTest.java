@@ -179,4 +179,28 @@ class QuestionControllerTest extends TestBase {
                 .body("content.size", is(2))
                 .body("content.content", hasItems(answer0.getContent(), answer1.getContent()));
     }
+
+    @Test
+    void should_update_answer() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Question question = questionService.create("anyTitle", "anyDescription", user.getId());
+        Answer answer = questionService.addAnswer(question.getId(), "content", user.getId());
+        String newContent = "newContent";
+
+        Response response = givenWithAuthorize(user)
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("content", newContent);
+                    }
+                })
+                .when()
+                .post("/questions/" + question.getId() + "/answers/" + answer.getId());
+        response.then().statusCode(200)
+                .body("id", isA(String.class))
+                .body("content", is(newContent));
+
+        Answer updatedAnswer = answerRepository.findById(answer.getId()).get();
+
+        assertThat(updatedAnswer.getContent(), is(newContent));
+    }
 }
