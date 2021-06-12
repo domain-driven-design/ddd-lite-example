@@ -1,0 +1,36 @@
+package com.example.business.usecase;
+
+import com.example.domain.question.model.Question;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+public class UpdateQuestionCase {
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Request {
+        private String title;
+        private String description;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class Response {
+        private String id;
+        private String title;
+        private String description;
+
+        public static Response from(Question question) {
+            return Response.builder()
+                    .id(question.getId())
+                    .title(question.getTitle())
+                    .description(question.getDescription())
+                    .build();
+        }
+    }
+}

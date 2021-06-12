@@ -58,4 +58,9 @@ public abstract class TestBase {
                 .contentType("application/json");
 
     }
+
+    public RequestSpecification givenDefault() {
+        return given()
+                .contentType("application/json");
+    }
 }
