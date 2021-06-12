@@ -68,7 +68,7 @@ public class UserService {
             throw UserException.noPermissionUpdate();
         }
 
-        user.setPassword(password);
+        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         user.setUpdatedAt(Instant.now());
         return repository.save(user);
     }

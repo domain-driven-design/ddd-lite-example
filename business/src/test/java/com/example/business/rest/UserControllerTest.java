@@ -85,7 +85,7 @@ class UserControllerTest extends TestBase {
         Authorize authorize = this.prepareAuthorize(user, "anyPassword");
         String newPassword = "newPassword";
 
-        Response response = given()
+        given()
                 .contentType("application/json")
                 .header("Authorization", "Bearer " + authorize.getId())
                 .body(new HashMap<String, Object>() {
@@ -94,7 +94,19 @@ class UserControllerTest extends TestBase {
                     }
                 })
                 .when()
-                .put("/users/me");
+                .put("/users/me/password")
+                .then().statusCode(200);
 
+        given()
+                .contentType("application/json")
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("email", user.getEmail());
+                        put("password", newPassword);
+                    }
+                })
+                .when()
+                .post("/authorizes")
+                .then().statusCode(201);
     }
 }
