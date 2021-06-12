@@ -1,0 +1,9 @@
+CREATE TABLE `answer`
+(
+    `id`          VARCHAR(36)  NOT NULL PRIMARY KEY,
+    `question_id` VARCHAR(36)  NOT NULL,
+    `content`     TEXT         NOT NULL,
+    `created_by`  VARCHAR(36)  NOT NULL,
+    `created_at`  TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at`  TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)
+);

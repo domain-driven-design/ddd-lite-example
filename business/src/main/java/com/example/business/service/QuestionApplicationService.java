@@ -1,10 +1,12 @@
 package com.example.business.service;
 
+import com.example.business.usecase.CreateAnswerCase;
 import com.example.business.usecase.CreateQuestionCase;
 import com.example.business.usecase.GetQuestionCase;
 import com.example.business.usecase.GetQuestionDetailCase;
 import com.example.business.usecase.UpdateQuestionCase;
 import com.example.domain.auth.model.Authorize;
+import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;
 import com.example.domain.question.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +41,10 @@ public class QuestionApplicationService {
 
     public void delete(String id, Authorize authorize) {
         questionService.delete(id, authorize.getUserId());
+    }
+
+    public CreateAnswerCase.Response createAnswer(String id, CreateAnswerCase.Request request, Authorize authorize) {
+        Answer answer = questionService.addAnswer(id, request.getContent(), authorize.getUserId());
+        return CreateAnswerCase.Response.from(answer);
     }
 }

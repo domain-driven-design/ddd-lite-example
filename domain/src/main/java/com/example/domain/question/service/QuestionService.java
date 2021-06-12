@@ -1,7 +1,9 @@
 package com.example.domain.question.service;
 
 import com.example.domain.question.exception.QuestionException;
+import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;
+import com.example.domain.question.repository.AnswerRepository;
 import com.example.domain.question.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +18,8 @@ import java.util.Optional;
 public class QuestionService {
     @Autowired
     private QuestionRepository repository;
+    @Autowired
+    private AnswerRepository answerRepository;
 
     public Question get(String id) {
         return _get(id);
@@ -64,4 +68,19 @@ public class QuestionService {
         repository.deleteById(id);
     }
 
+    public Answer addAnswer(String id, String content, String operatorId) {
+        Question question = _get(id);
+
+        // TODO 业务验证：一个operator只能在一个question有一个answer
+
+        Answer answer = Answer.builder()
+                .questionId(id)
+                .content(content)
+                .createdBy(operatorId)
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+
+        return answerRepository.save(answer);
+    }
 }

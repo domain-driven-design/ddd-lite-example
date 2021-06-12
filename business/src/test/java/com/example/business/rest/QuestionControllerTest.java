@@ -1,7 +1,9 @@
 package com.example.business.rest;
 
 import com.example.TestBase;
+import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;
+import com.example.domain.question.repository.AnswerRepository;
 import com.example.domain.question.repository.QuestionRepository;
 import com.example.domain.question.service.QuestionService;
 import com.example.domain.user.model.User;
@@ -23,6 +25,8 @@ class QuestionControllerTest extends TestBase {
     private QuestionRepository questionRepository;
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private AnswerRepository answerRepository;
 
     @Test
     void should_create_question() {
@@ -47,8 +51,6 @@ class QuestionControllerTest extends TestBase {
         Optional<Question> questionOptional = questionRepository.findOne(Example.of(Question
                 .builder()
                 .createdBy(user.getId())
-                .title(title)
-                .description(description)
                 .build()
         ));
 
@@ -129,5 +131,34 @@ class QuestionControllerTest extends TestBase {
         response.then().statusCode(200);
 
         assertThat(questionRepository.existsById(question.getId()), is(false));
+    }
+
+    @Test
+    void should_create_answer() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Question question = questionService.create("anyTitle", "anyDescription", user.getId());
+        String content = "content";
+
+        Response response = givenWithAuthorize(user)
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("content", content);
+                    }
+                })
+                .when()
+                .post("/questions/" + question.getId() + "/answers");
+        response.then().statusCode(201)
+                .body("id", isA(String.class))
+                .body("content", is(content));
+
+        Optional<Answer> answerOptional = answerRepository.findOne(Example.of(Answer
+                .builder()
+                .createdBy(user.getId())
+                .questionId(question.getId())
+                .build()
+        ));
+
+        assertThat(answerOptional.isPresent(), is(true));
+
     }
 }

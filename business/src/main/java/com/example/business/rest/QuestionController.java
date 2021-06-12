@@ -1,6 +1,7 @@
 package com.example.business.rest;
 
 import com.example.business.service.QuestionApplicationService;
+import com.example.business.usecase.CreateAnswerCase;
 import com.example.business.usecase.CreateQuestionCase;
 import com.example.business.usecase.GetQuestionCase;
 import com.example.business.usecase.GetQuestionDetailCase;
@@ -61,5 +62,11 @@ public class QuestionController {
         applicationService.delete(id, authorize);
     }
 
-
+    @PostMapping("/{id}/answers")
+    @ResponseStatus(CREATED)
+    public CreateAnswerCase.Response createAnswer(@PathVariable String id,
+                                                  @RequestBody CreateAnswerCase.Request request) {
+        Authorize authorize = authorizeService.current();
+        return applicationService.createAnswer(id, request, authorize);
+    }
 }

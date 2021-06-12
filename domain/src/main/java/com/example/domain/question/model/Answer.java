@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,17 +24,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "question")
+@Table(name = "answer")
 @FieldNameConstants
-public class Question {
+public class Answer {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
-    private String title;
+    @Column(name = "question_id")
+    private String questionId;
 
-    private String description;
+    private String content;
 
     private String createdBy;
 
@@ -41,7 +43,4 @@ public class Question {
 
     private Instant updatedAt;
 
-    @OneToMany
-    @JoinColumn(name = "question_id")
-    private List<Answer> answers;
 }
