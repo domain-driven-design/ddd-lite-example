@@ -6,12 +6,14 @@ import com.example.domain.question.model.Question;
 import com.example.domain.question.repository.AnswerRepository;
 import com.example.domain.question.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,14 +36,14 @@ public class QuestionService {
     }
 
     public Question create(String title, String description, String operatorId) {
-        Question article = Question.builder()
+        Question question = Question.builder()
                 .title(title)
                 .description(description)
                 .createdBy(operatorId)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
-        return repository.save(article);
+        return repository.save(question);
     }
 
     public Question update(String id, String title, String description, String operatorId) {
@@ -65,6 +67,9 @@ public class QuestionService {
         if (!optionalQuestion.get().getCreatedBy().equals(operatorId)) {
             throw QuestionException.forbidden();
         }
+
+        List<Answer> answers = answerRepository.findAll(Example.of(Answer.builder().questionId(id).build()));
+        answerRepository.deleteAll(answers);
         repository.deleteById(id);
     }
 

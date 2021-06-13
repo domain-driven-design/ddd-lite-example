@@ -13,10 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.Is.isA;
 
@@ -124,13 +126,20 @@ class QuestionControllerTest extends TestBase {
     void should_delete_question() {
         User user = this.prepareUser("anyName", "anyEmail");
         Question question = questionService.create("anyTitle", "anyDescription", user.getId());
+        String questionId = question.getId();
+
+        User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
+        questionService.addAnswer(questionId, "content0", user.getId());
+        questionService.addAnswer(questionId, "content1", otherUser.getId());
 
         Response response = givenWithAuthorize(user)
                 .when()
-                .delete("/questions/" + question.getId());
+                .delete("/questions/" + questionId);
         response.then().statusCode(200);
 
-        assertThat(questionRepository.existsById(question.getId()), is(false));
+        assertThat(questionRepository.existsById(questionId), is(false));
+        List<Answer> answers = answerRepository.findAll(Example.of(Answer.builder().questionId(questionId).build()));
+        assertThat(answers, hasSize(0));
     }
 
     @Test
