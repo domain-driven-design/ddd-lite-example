@@ -5,6 +5,7 @@ import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;
 import com.example.domain.group.repository.GroupMemberRepository;
 import com.example.domain.group.repository.GroupRepository;
+import com.example.domain.group.service.GroupService;
 import com.example.domain.user.model.User;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.Is.isA;
 
@@ -24,6 +27,8 @@ class GroupControllerTest extends TestBase {
     private GroupRepository groupRepository;
     @Autowired
     private GroupMemberRepository groupMemberRepository;
+    @Autowired
+    private GroupService groupService;
 
     @Test
     void should_create_group() {
@@ -60,5 +65,47 @@ class GroupControllerTest extends TestBase {
 
     }
 
+    @Test
+    void should_get_all_groups_by_page() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Group group0 = groupService.create("name0", "anyDescription", user.getId());
+        Group group1 = groupService.create("name1", "anyDescription", user.getId());
+        groupService.create("name2", "anyDescription", user.getId());
+
+
+        Response response = givenDefault()
+                .param("sort", "createdAt")
+                .param("sort", "name")
+                .param("size", 2)
+                .when()
+                .get("/groups");
+
+        response.then().statusCode(200)
+                .body("content.size", is(2))
+                .body("content.name", hasItems(group0.getName(), group1.getName()))
+                .body("content.members[0]", hasSize(1));
+
+    }
+
+    @Test
+    void should_get_all_mine_groups_by_page() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        User otherUser = this.prepareUser("otherName", "otherEmail");
+        Group group0 = groupService.create("name0", "anyDescription", user.getId());
+        groupService.create("name1", "anyDescription", otherUser.getId());
+        Group group2 = groupService.create("name2", "anyDescription", user.getId());
+
+
+        Response response = givenWithAuthorize(user)
+                .param("sort", "createdAt")
+                .param("sort", "name")
+                .param("size", 2)
+                .when()
+                .get("/groups/mine");
+
+        response.then().statusCode(200)
+                .body("content.size", is(2))
+                .body("content.name", hasItems(group0.getName(), group2.getName()));
+    }
 
 }
