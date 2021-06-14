@@ -56,7 +56,20 @@ public class GroupService {
                 .updatedAt(Instant.now())
                 .build();
 
-        return groupRepository.save(group);
+        Group createdGroup = groupRepository.save(group);
+
+        // TODO 业务规则？业务流程编排？
+        GroupMember groupMember = GroupMember.builder()
+                .role(GroupMember.GroupMemberRole.OWNER)
+                .groupId(createdGroup.getId())
+                .userId(operatorId)
+                .createdBy(operatorId)
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+        groupMemberRepository.save(groupMember);
+
+        return createdGroup;
     }
 
     public Group update(String id, String name, String description, String operatorId) {
