@@ -1,6 +1,7 @@
 package com.example.config;
 
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.database.QueryDataSet;
@@ -70,6 +71,9 @@ public class ResetDbService {
             for (String str : tableName) {
                 qds.addTable(str);
             }
+
+            conn.getConfig().setProperty(DatabaseConfig.PROPERTY_ESCAPE_PATTERN , "`?`");
+
             tempFile = new File(ROOT_URL + "temp.xml");
             FlatXmlDataSet.write(qds, new FileWriter(tempFile), "UTF-8");
         } catch (Exception e) {
