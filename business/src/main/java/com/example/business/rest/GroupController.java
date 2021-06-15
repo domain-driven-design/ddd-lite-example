@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
@@ -32,7 +34,7 @@ public class GroupController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public CreateGroupCase.Response createGroup(@RequestBody CreateGroupCase.Request request) {
+    public CreateGroupCase.Response createGroup(@RequestBody @Valid CreateGroupCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.createGroup(request, authorize);
     }
@@ -50,7 +52,7 @@ public class GroupController {
 
     @PutMapping("/{id}")
     public UpdateGroupCase.Response updateGroup(@PathVariable String id,
-                                                @RequestBody UpdateGroupCase.Request request) {
+                                                @RequestBody @Valid UpdateGroupCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.updateGroup(id, request, authorize);
     }

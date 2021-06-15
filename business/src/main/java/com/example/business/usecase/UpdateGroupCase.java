@@ -7,13 +7,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
 public class UpdateGroupCase {
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
+        @NotBlank(message = "group_name_required")
         private String name;
+        @NotBlank(message = "group_description_required")
         private String description;
     }
 

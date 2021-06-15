@@ -7,14 +7,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
 public class RegisterCase {
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
+        @NotBlank(message = "name_required")
         private String name;
+        @NotBlank(message = "email_required")
         private String email;
+        @NotBlank(message = "password_required")
         private String password;
         // TODO verificationCode
     }

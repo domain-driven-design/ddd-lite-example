@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
@@ -29,7 +31,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public RegisterCase.Response register(@RequestBody RegisterCase.Request request) {
+    public RegisterCase.Response register(@RequestBody @Valid RegisterCase.Request request) {
         return applicationService.register(request);
     }
 
@@ -40,13 +42,13 @@ public class UserController {
     }
 
     @PutMapping("/me")
-    public UpdateUserCase.Response update(@RequestBody UpdateUserCase.Request request) {
+    public UpdateUserCase.Response update(@RequestBody @Valid UpdateUserCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.update(request, authorize);
     }
 
     @PutMapping("/me/password")
-    public void resetPassword(@RequestBody ResetPasswordCase.Request request) {
+    public void resetPassword(@RequestBody @Valid ResetPasswordCase.Request request) {
         Authorize authorize = authorizeService.current();
         applicationService.resetPassword(request, authorize);
     }

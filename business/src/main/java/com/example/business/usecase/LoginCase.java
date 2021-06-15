@@ -7,13 +7,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
 public class LoginCase {
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
+        @NotBlank(message = "email_required")
         private String email;
+        @NotBlank(message = "password_required")
         private String password;
     }
 

@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
@@ -36,7 +38,7 @@ public class QuestionController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public CreateQuestionCase.Response createQuestion(@RequestBody CreateQuestionCase.Request request) {
+    public CreateQuestionCase.Response createQuestion(@RequestBody @Valid CreateQuestionCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.create(request, authorize);
     }
@@ -53,7 +55,7 @@ public class QuestionController {
 
     @PutMapping("/{id}")
     public UpdateQuestionCase.Response updateQuestion(@PathVariable String id,
-                                                      @RequestBody UpdateQuestionCase.Request request) {
+                                                      @RequestBody @Valid UpdateQuestionCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.update(id, request, authorize);
     }
@@ -67,7 +69,7 @@ public class QuestionController {
     @PostMapping("/{id}/answers")
     @ResponseStatus(CREATED)
     public CreateAnswerCase.Response createAnswer(@PathVariable String id,
-                                                  @RequestBody CreateAnswerCase.Request request) {
+                                                  @RequestBody @Valid CreateAnswerCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.createAnswer(id, request, authorize);
     }
@@ -81,7 +83,7 @@ public class QuestionController {
     @PutMapping("/{id}/answers/{answerId}")
     public UpdateAnswerCase.Response createAnswer(@PathVariable String id,
                                                   @PathVariable String answerId,
-                                                  @RequestBody UpdateAnswerCase.Request request) {
+                                                  @RequestBody @Valid UpdateAnswerCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.updateAnswer(id, answerId, request, authorize);
     }
