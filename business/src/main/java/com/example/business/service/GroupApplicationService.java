@@ -3,6 +3,7 @@ package com.example.business.service;
 import com.example.business.usecase.CreateGroupCase;
 import com.example.business.usecase.GetGroupCase;
 import com.example.business.usecase.GetMyGroupCase;
+import com.example.business.usecase.UpdateGroupCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;
@@ -22,18 +23,18 @@ public class GroupApplicationService {
     @Autowired
     private GroupService groupService;
 
-    public CreateGroupCase.Response create(CreateGroupCase.Request request, Authorize authorize) {
+    public CreateGroupCase.Response createGroup(CreateGroupCase.Request request, Authorize authorize) {
         Group group = groupService.create(request.getName(), request.getDescription(), authorize.getUserId());
         return CreateGroupCase.Response.from(group);
     }
 
-    public Page<GetGroupCase.Response> getByPage(Pageable pageable) {
+    public Page<GetGroupCase.Response> getGroupsByPage(Pageable pageable) {
         Page<Group> groupPage = groupService.findAll(null, pageable);
 
         return groupPage.map(GetGroupCase.Response::from);
     }
 
-    public Page<GetMyGroupCase.Response> getMineByPage(Pageable pageable, Authorize authorize) {
+    public Page<GetMyGroupCase.Response> getMineGroupsByPage(Pageable pageable, Authorize authorize) {
         Specification<Group> specification = (root, query, criteriaBuilder) -> {
             Join<Group, List<GroupMember>> join = root.join(Group.Fields.members, JoinType.LEFT);
             return criteriaBuilder.equal(join.get(GroupMember.Fields.userId), authorize.getUserId());
@@ -41,5 +42,10 @@ public class GroupApplicationService {
         Page<Group> groupPage = groupService.findAll(specification, pageable);
 
         return groupPage.map(GetMyGroupCase.Response::from);
+    }
+
+    public UpdateGroupCase.Response updateGroup(String id, UpdateGroupCase.Request request, Authorize authorize) {
+        Group group = groupService.update(id, request.getName(), request.getDescription(), authorize.getUserId());
+        return UpdateGroupCase.Response.from(group);
     }
 }

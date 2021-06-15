@@ -108,4 +108,32 @@ class GroupControllerTest extends TestBase {
                 .body("content.name", hasItems(group0.getName(), group2.getName()));
     }
 
+    @Test
+    void should_update_group() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Group group = groupService.create("name", "description", user.getId());
+
+        String newName = "newName";
+        String newDescription = "newDescription";
+
+        Response response = givenWithAuthorize(user)
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("name", newName);
+                        put("description", newDescription);
+                    }
+                })
+                .when()
+                .put("/groups/" + group.getId());
+        response.then().statusCode(200)
+                .body("id", isA(String.class))
+                .body("name", is(newName))
+                .body("description", is(newDescription));
+
+        Group updatedGroup = groupRepository.findById(group.getId()).get();
+        assertThat(updatedGroup.getName(), is(newName));
+        assertThat(updatedGroup.getDescription(), is(newDescription));
+
+    }
+
 }
