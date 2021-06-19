@@ -39,7 +39,7 @@ subprojects {
         implementation 'org.flywaydb:flyway-core'
         implementation "org.springframework.boot:spring-boot-starter-data-redis"
         implementation 'org.apache.commons:commons-lang3:3.0'
-        implementation 'org.mindrot:jbcrypt:0.4'
+        implementation 'org.springframework.security:spring-security-core:5.4.6'
 
         compileOnly 'org.projectlombok:lombok'
         developmentOnly 'org.springframework.boot:spring-boot-devtools'

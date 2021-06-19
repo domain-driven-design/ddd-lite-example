@@ -3,22 +3,23 @@ package com.example.domain.user.service;
 import com.example.domain.user.exception.UserException;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.UserRepository;
-import lombok.AllArgsConstructor;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
 @Service
-@AllArgsConstructor
 public class UserService {
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public User get(String id) {
         return _get(id);
@@ -40,7 +41,7 @@ public class UserService {
         User user = User.builder()
                 .name(name)
                 .email(email)
-                .password(BCrypt.hashpw(password, BCrypt.gensalt()))
+                .password(bCryptPasswordEncoder.encode(password))
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .role(User.UserRole.USER)
@@ -68,7 +69,7 @@ public class UserService {
             throw UserException.noPermissionUpdate();
         }
 
-        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+        user.setPassword(bCryptPasswordEncoder.encode(password));
         user.setUpdatedAt(Instant.now());
         return repository.save(user);
     }
