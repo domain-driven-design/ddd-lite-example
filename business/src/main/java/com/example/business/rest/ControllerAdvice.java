@@ -23,8 +23,8 @@ public class ControllerAdvice {
     }};
 
     @ExceptionHandler(BaseException.class)
-    public Object handleBaseException(BaseException ex) {
-        log.error("业务异常：{}", ex.getMessage());
+    public ResponseEntity<Map<String, String>> handleBaseException(BaseException ex) {
+        log.error("business exception：{}", ex.getMessage());
         Map<String, String> map = new HashMap<>();
         map.put("message", ex.getMessage());
         return ResponseEntity.status(codeMap.get(ex.getType())).body(map);
