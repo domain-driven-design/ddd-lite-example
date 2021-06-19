@@ -39,7 +39,6 @@ subprojects {
         implementation 'org.flywaydb:flyway-core'
         implementation "org.springframework.boot:spring-boot-starter-data-redis"
         implementation 'org.apache.commons:commons-lang3:3.0'
-        implementation 'commons-codec:commons-codec:1.15'
         implementation 'org.mindrot:jbcrypt:0.4'
 
         compileOnly 'org.projectlombok:lombok'
