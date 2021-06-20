@@ -4,6 +4,7 @@ import com.example.business.service.GroupApplicationService;
 import com.example.business.usecase.CreateGroupCase;
 import com.example.business.usecase.GetGroupCase;
 import com.example.business.usecase.GetMyGroupCase;
+import com.example.business.usecase.JoinGroupCase;
 import com.example.business.usecase.UpdateGroupCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
@@ -57,4 +58,10 @@ public class GroupController {
         return applicationService.updateGroup(id, request, authorize);
     }
 
+    @PostMapping("/{id}/members")
+    @ResponseStatus(CREATED)
+    public JoinGroupCase.Response joinGroup(@PathVariable String id) {
+        Authorize authorize = authorizeService.current();
+        return applicationService.joinGroup(id, authorize);
+    }
 }

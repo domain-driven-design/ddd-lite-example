@@ -3,6 +3,7 @@ package com.example.business.service;
 import com.example.business.usecase.CreateGroupCase;
 import com.example.business.usecase.GetGroupCase;
 import com.example.business.usecase.GetMyGroupCase;
+import com.example.business.usecase.JoinGroupCase;
 import com.example.business.usecase.UpdateGroupCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.group.model.Group;
@@ -47,5 +48,10 @@ public class GroupApplicationService {
     public UpdateGroupCase.Response updateGroup(String id, UpdateGroupCase.Request request, Authorize authorize) {
         Group group = groupService.update(id, request.getName(), request.getDescription(), authorize.getUserId());
         return UpdateGroupCase.Response.from(group);
+    }
+
+    public JoinGroupCase.Response joinGroup(String id, Authorize authorize) {
+        GroupMember member = groupService.addMember(id, authorize.getUserId());
+        return JoinGroupCase.Response.from(member);
     }
 }

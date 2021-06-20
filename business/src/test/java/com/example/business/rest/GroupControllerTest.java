@@ -58,7 +58,8 @@ class GroupControllerTest extends TestBase {
 
         assertThat(optionalGroup.isPresent(), is(true));
 
-        List<GroupMember> members = groupMemberRepository.findAll(Example.of(GroupMember.builder().groupId(optionalGroup.get().getId()).build()));
+        List<GroupMember> members = groupMemberRepository
+                .findAll(Example.of(GroupMember.builder().groupId(optionalGroup.get().getId()).build()));
         assertThat(members.size(), is(1));
         assertThat(members.get(0).getUserId(), is(user.getId()));
         assertThat(members.get(0).getRole(), is(GroupMember.GroupMemberRole.OWNER));
@@ -134,6 +135,29 @@ class GroupControllerTest extends TestBase {
         assertThat(updatedGroup.getName(), is(newName));
         assertThat(updatedGroup.getDescription(), is(newDescription));
 
+    }
+
+    @Test
+    void should_join_group() {
+        User creator = this.prepareUser("anyName", "anyEmail");
+        Group group = groupService.create("name", "description", creator.getId());
+
+        User user = this.prepareUser("otherName", "otherEmail");
+
+        Response response = givenWithAuthorize(user)
+                .when()
+                .post("/groups/" + group.getId() + "/members");
+        response.then().statusCode(201)
+                .body("groupId", is(group.getId()))
+                .body("userId", is(user.getId()))
+                .body("role", is(GroupMember.GroupMemberRole.MEMBER.name()));
+
+        Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
+                .groupId(group.getId())
+                .userId(user.getId())
+                .build()));
+        assertThat(optionalGroupMember.isPresent(), is(true));
+        assertThat(optionalGroupMember.get().getRole(), is(GroupMember.GroupMemberRole.MEMBER));
     }
 
 }

@@ -14,4 +14,8 @@ public class GroupException extends BaseException {
     public static GroupException forbidden() {
         return new GroupException(Type.FORBIDDEN, "group_operation_forbidden");
     }
+
+    public static GroupException memberConflict() {
+        return new GroupException(Type.CONFLICT, "group_member_conflict");
+    }
 }

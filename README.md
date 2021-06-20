@@ -74,6 +74,7 @@ ps：
 - 异步任务
 
 ## 待讨论
+- UserRole里的role：USER歧义。GroupMemberRole里的role：MEMBER歧义
 - 命名：Answer or QuestionAnswer
 - 数据库时间字段使用TIMESTAMP，或者时间戳数字
 - 软删除（查询过滤，关联信息处理）

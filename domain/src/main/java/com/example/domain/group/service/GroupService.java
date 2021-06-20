@@ -99,4 +99,30 @@ public class GroupService {
         groupMemberRepository.deleteById(id);
     }
 
+    public GroupMember addMember(String id, String operatorId) {
+        Group group = _get(id);
+
+        // TODO 根据以后的业务规则调整，被管理员移除后不得加入
+
+        // TODO 业务确认：一个group，一个user只能有一个member（）
+        boolean alreadyMember = groupMemberRepository.exists(Example.of(GroupMember.builder()
+                .groupId(id)
+                .userId(operatorId)
+                .build()));
+        if (alreadyMember) {
+            throw GroupException.memberConflict();
+        }
+
+        GroupMember member = GroupMember.builder()
+                .groupId(id)
+                .userId(operatorId)
+                .role(GroupMember.GroupMemberRole.MEMBER)
+                .createdBy(operatorId)
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+
+
+        return groupMemberRepository.save(member);
+    }
 }
