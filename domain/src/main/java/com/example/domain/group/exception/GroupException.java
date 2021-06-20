@@ -18,4 +18,8 @@ public class GroupException extends BaseException {
     public static GroupException memberConflict() {
         return new GroupException(Type.CONFLICT, "group_member_conflict");
     }
+
+    public static GroupException ownerCanNotExit() {
+        return new GroupException(Type.BAD_REQUEST, "group_owner_can_not_exit");
+    }
 }

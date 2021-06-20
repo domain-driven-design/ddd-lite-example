@@ -160,4 +160,23 @@ class GroupControllerTest extends TestBase {
         assertThat(optionalGroupMember.get().getRole(), is(GroupMember.GroupMemberRole.MEMBER));
     }
 
+    @Test
+    void should_exit_group() {
+        User creator = this.prepareUser("anyName", "anyEmail");
+        Group group = groupService.create("name", "description", creator.getId());
+
+        User user = this.prepareUser("otherName", "otherEmail");
+
+        Response response = givenWithAuthorize(user)
+                .when()
+                .delete("/groups/" + group.getId() + "/members");
+        response.then().statusCode(200);
+
+        Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
+                .groupId(group.getId())
+                .userId(user.getId())
+                .build()));
+        assertThat(optionalGroupMember.isPresent(), is(false));
+    }
+
 }

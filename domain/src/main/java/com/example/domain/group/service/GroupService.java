@@ -125,4 +125,23 @@ public class GroupService {
 
         return groupMemberRepository.save(member);
     }
+
+    public void deleteMember(String id, String operatorId) {
+        Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
+                .groupId(id)
+                .userId(operatorId)
+                .build()));
+        if (!optionalGroupMember.isPresent()) {
+            return;
+        }
+
+        GroupMember groupMember = optionalGroupMember.get();
+
+        if (groupMember.getRole().equals(GroupMember.GroupMemberRole.OWNER)) {
+            throw GroupException.ownerCanNotExit();
+        }
+
+        groupMemberRepository.delete(groupMember);
+
+    }
 }

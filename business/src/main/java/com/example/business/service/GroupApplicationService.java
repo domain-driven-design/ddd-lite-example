@@ -54,4 +54,8 @@ public class GroupApplicationService {
         GroupMember member = groupService.addMember(id, authorize.getUserId());
         return JoinGroupCase.Response.from(member);
     }
+
+    public void exitGroup(String id, Authorize authorize) {
+        groupService.deleteMember(id, authorize.getUserId());
+    }
 }
