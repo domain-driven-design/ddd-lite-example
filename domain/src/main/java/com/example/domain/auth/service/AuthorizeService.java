@@ -6,17 +6,19 @@ import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.repository.AuthorizeRepository;
 import com.example.domain.user.model.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 public class AuthorizeService {
-    @Autowired
-    private AuthorizeRepository repository;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AuthorizeRepository repository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public AuthorizeService(AuthorizeRepository repository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.repository = repository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     public Authorize create(User user, String password) {
         if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
