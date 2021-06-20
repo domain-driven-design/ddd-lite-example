@@ -23,13 +23,13 @@ import static org.mockito.ArgumentMatchers.argThat;
 class AuthorizeServiceTest {
 
     @Mock
-    AuthorizeRepository repository;
+    private AuthorizeRepository repository;
 
     @Mock
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @InjectMocks
-    AuthorizeService authorizeService;
+    private AuthorizeService authorizeService;
 
     @Test
     void should_create_authorize_when_password_is_correct() {

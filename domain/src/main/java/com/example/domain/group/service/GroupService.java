@@ -5,7 +5,6 @@ import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;
 import com.example.domain.group.repository.GroupMemberRepository;
 import com.example.domain.group.repository.GroupRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +17,13 @@ import java.util.Optional;
 
 @Service
 public class GroupService {
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private GroupMemberRepository groupMemberRepository;
+    private final GroupRepository groupRepository;
+    private final GroupMemberRepository groupMemberRepository;
+
+    public GroupService(GroupRepository groupRepository, GroupMemberRepository groupMemberRepository) {
+        this.groupRepository = groupRepository;
+        this.groupMemberRepository = groupMemberRepository;
+    }
 
     public Group get(String id) {
         return _get(id);
