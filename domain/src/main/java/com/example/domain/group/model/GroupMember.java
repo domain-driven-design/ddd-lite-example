@@ -46,6 +46,6 @@ public class GroupMember {
     private Instant updatedAt;
 
     public enum GroupMemberRole {
-        MEMBER, ADMIN, OWNER
+        NORMAL, ADMIN, OWNER
     }
 }

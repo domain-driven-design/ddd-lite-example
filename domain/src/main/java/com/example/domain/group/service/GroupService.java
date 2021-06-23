@@ -99,7 +99,7 @@ public class GroupService {
         groupMemberRepository.deleteById(id);
     }
 
-    public GroupMember addMember(String id, String operatorId) {
+    public GroupMember addNormalMember(String id, String operatorId) {
         Group group = _get(id);
 
         // TODO 根据以后的业务规则调整，被管理员移除后不得加入
@@ -116,7 +116,7 @@ public class GroupService {
         GroupMember member = GroupMember.builder()
                 .groupId(id)
                 .userId(operatorId)
-                .role(GroupMember.GroupMemberRole.MEMBER)
+                .role(GroupMember.GroupMemberRole.NORMAL)
                 .createdBy(operatorId)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
@@ -126,7 +126,7 @@ public class GroupService {
         return groupMemberRepository.save(member);
     }
 
-    public void deleteMember(String id, String operatorId) {
+    public void deleteNormalMember(String id, String operatorId) {
         Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
                 .groupId(id)
                 .userId(operatorId)

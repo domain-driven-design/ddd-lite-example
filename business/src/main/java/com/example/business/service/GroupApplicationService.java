@@ -51,11 +51,11 @@ public class GroupApplicationService {
     }
 
     public JoinGroupCase.Response joinGroup(String id, Authorize authorize) {
-        GroupMember member = groupService.addMember(id, authorize.getUserId());
+        GroupMember member = groupService.addNormalMember(id, authorize.getUserId());
         return JoinGroupCase.Response.from(member);
     }
 
     public void exitGroup(String id, Authorize authorize) {
-        groupService.deleteMember(id, authorize.getUserId());
+        groupService.deleteNormalMember(id, authorize.getUserId());
     }
 }

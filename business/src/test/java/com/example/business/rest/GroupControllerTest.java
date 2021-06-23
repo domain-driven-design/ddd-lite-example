@@ -150,14 +150,14 @@ class GroupControllerTest extends TestBase {
         response.then().statusCode(201)
                 .body("groupId", is(group.getId()))
                 .body("userId", is(user.getId()))
-                .body("role", is(GroupMember.GroupMemberRole.MEMBER.name()));
+                .body("role", is(GroupMember.GroupMemberRole.NORMAL.name()));
 
         Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
                 .groupId(group.getId())
                 .userId(user.getId())
                 .build()));
         assertThat(optionalGroupMember.isPresent(), is(true));
-        assertThat(optionalGroupMember.get().getRole(), is(GroupMember.GroupMemberRole.MEMBER));
+        assertThat(optionalGroupMember.get().getRole(), is(GroupMember.GroupMemberRole.NORMAL));
     }
 
     @Test
