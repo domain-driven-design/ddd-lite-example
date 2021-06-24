@@ -138,6 +138,7 @@ class QuestionControllerTest extends TestBase {
         response.then().statusCode(200);
 
         assertThat(questionRepository.existsById(questionId), is(false));
+
         List<Answer> answers = answerRepository.findAll(Example.of(Answer.builder().questionId(questionId).build()));
         assertThat(answers, hasSize(0));
     }

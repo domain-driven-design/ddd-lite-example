@@ -70,6 +70,7 @@ public class QuestionService {
 
         List<Answer> answers = answerRepository.findAll(Example.of(Answer.builder().questionId(id).build()));
         answerRepository.deleteAll(answers);
+
         repository.deleteById(id);
     }
 

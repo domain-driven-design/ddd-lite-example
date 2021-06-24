@@ -58,7 +58,6 @@ public class GroupService {
 
         Group createdGroup = groupRepository.save(group);
 
-        // TODO 业务规则？业务流程编排？
         GroupMember groupMember = GroupMember.builder()
                 .role(GroupMember.GroupMemberRole.OWNER)
                 .groupId(createdGroup.getId())
@@ -96,7 +95,8 @@ public class GroupService {
 
         List<GroupMember> members = groupMemberRepository.findAll(Example.of(GroupMember.builder().groupId(id).build()));
         groupMemberRepository.deleteAll(members);
-        groupMemberRepository.deleteById(id);
+
+        groupRepository.deleteById(id);
     }
 
     public GroupMember addNormalMember(String id, String operatorId) {
@@ -104,7 +104,6 @@ public class GroupService {
 
         // TODO 根据以后的业务规则调整，被管理员移除后不得加入
 
-        // TODO 业务确认：一个group，一个user只能有一个member（）
         boolean alreadyMember = groupMemberRepository.exists(Example.of(GroupMember.builder()
                 .groupId(id)
                 .userId(operatorId)

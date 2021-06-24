@@ -7,3 +7,8 @@ spring:
   redis:
     host: localhost
     port: 6379
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
