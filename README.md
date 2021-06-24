@@ -68,6 +68,7 @@ ps：
 - user 加哪些索引？
 - 索引，唯一约束命名规范
 - created_by 这样的经常用于查询的字段，在开始时就加上索引，还是需要时再加
+- 聚合根下的实体命名，比如：Group下的GroupMemberList是命名为groupMembers还是members？
 - UserRole里的role：USER歧义。GroupMemberRole里的role：MEMBER歧义
 - 命名：Answer or QuestionAnswer
 - 软删除（查询过滤，关联信息处理）

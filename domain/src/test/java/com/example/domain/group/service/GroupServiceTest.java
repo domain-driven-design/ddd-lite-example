@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Example;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -23,6 +24,7 @@ import static org.hamcrest.Matchers.isA;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -137,5 +139,43 @@ class GroupServiceTest {
 
         assertEquals("group_operation_forbidden", exception.getMessage());
         assertEquals(BaseException.Type.FORBIDDEN, exception.getType());
+    }
+
+    @Test
+    void should_add_normal_member_success() {
+        // given
+        Group group = Group.builder()
+                .id("test-group-id").name("test group").description("test group description")
+                .build();
+        Mockito.when(groupRepository.findById(eq("test-group-id"))).thenReturn(Optional.of(group));
+
+        //when
+        groupService.addNormalMember("test-group-id", "test-user");
+
+        // Then
+        Mockito.verify(groupMemberRepository).save(argThat((argument) -> {
+            assertEquals("test-group-id", argument.getGroupId());
+            assertEquals("test-user", argument.getUserId());
+            assertEquals(GroupMember.GroupMemberRole.NORMAL, argument.getRole());
+            return true;
+        }));
+    }
+
+    @Test
+    void should_add_normal_member_failed_if_already_exist() {
+        // given
+        Group group = Group.builder()
+                .id("test-group-id").name("test group").description("test group description")
+                .build();
+        Mockito.when(groupRepository.findById(eq("test-group-id"))).thenReturn(Optional.of(group));
+        Mockito.when(groupMemberRepository.exists(any())).thenReturn(true);
+
+        BaseException exception = assertThrows(GroupException.class, () -> {
+            //when
+            groupService.addNormalMember("test-group-id", "test-user");
+        });
+
+        assertEquals("group_member_conflict", exception.getMessage());
+        assertEquals(BaseException.Type.CONFLICT, exception.getType());
     }
 }
