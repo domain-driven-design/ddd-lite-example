@@ -64,12 +64,13 @@ public class QuestionService {
         if (!optionalQuestion.isPresent()) {
             return;
         }
-        if (!optionalQuestion.get().getCreatedBy().equals(operatorId)) {
+
+        Question question = optionalQuestion.get();
+        if (!question.getCreatedBy().equals(operatorId)) {
             throw QuestionException.forbidden();
         }
 
-        List<Answer> answers = answerRepository.findAll(Example.of(Answer.builder().questionId(id).build()));
-        answerRepository.deleteAll(answers);
+        answerRepository.deleteAll(question.getAnswers());
 
         repository.deleteById(id);
     }
