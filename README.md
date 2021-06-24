@@ -28,30 +28,13 @@ ps：
 - domain service 内方法使用get，create，update，delete...，省略聚合主体名
 - public方法不在类内被使用，抽取同名加下划线的private方法，如：get，_get
 
-## 测试策略
-#### application 集成测试
-- happy path
-#### domain 单元测试（mock数据库）
-- 测试业务逻辑异常
-
 ## 数据库规范
   - id UUID
   - 默认加上外键索引
   - 默认不要外键约束
   - created_by, created_at, updated_at必有，updated_by可选
   - 大数据量查询排序，加索引
-  ```sql
-  CREATE TABLE `article`
-  (
-  `id`         varchar(36)  not null primary key,
-  `title`      varchar(100) not null,
-  `content`    text         not null,
-  `created_by` varchar(36)  not null,
-  `updated_by` varchar(36)  not null,
-  `created_at` timestamp(3) not null,
-  `updated_at` timestamp(3) not null
-  );
-  ```
+  - 数据库唯一约束，兜底
 
 ## 风格说明
 
@@ -91,4 +74,3 @@ ps：
 
 1. 单元测试。覆盖基础的组件、工具类和领域服务，单元测试需要验证各种分支条件。
 2. API 测试。使用 E2E 测试实现 API 测试，API 测试的目标只是验证整体流程是否通畅，只测试正常流程即可。
-
