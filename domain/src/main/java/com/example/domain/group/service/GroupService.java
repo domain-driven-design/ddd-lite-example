@@ -83,22 +83,6 @@ public class GroupService {
         return groupRepository.save(group);
     }
 
-    public void delete(String id, String operatorId) {
-        Optional<Group> optionalGroup = groupRepository.findById(id);
-        if (!optionalGroup.isPresent()) {
-            return;
-        }
-
-        Group group = optionalGroup.get();
-
-        checkOwner(group, operatorId);
-
-        List<GroupMember> members = groupMemberRepository.findAll(Example.of(GroupMember.builder().groupId(id).build()));
-        groupMemberRepository.deleteAll(members);
-
-        groupRepository.deleteById(id);
-    }
-
     public GroupMember addNormalMember(String id, String operatorId) {
         Group group = _get(id);
 
@@ -126,6 +110,7 @@ public class GroupService {
     }
 
     public void deleteNormalMember(String id, String operatorId) {
+        // TODO check operator
         Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
                 .groupId(id)
                 .userId(operatorId)
