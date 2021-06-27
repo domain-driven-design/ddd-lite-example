@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -129,19 +130,21 @@ public class GroupService {
 
     }
 
-    private void checkMemberRole(String id, String userId, GroupMember.GroupMemberRole role) {
+    private GroupMember getMember(String id, String userId, GroupMember.GroupMemberRole role) {
         Optional<GroupMember> optionalOperator = findGroupMember(id, userId);
 
         if (!optionalOperator.isPresent() ||
                 !optionalOperator.get().getRole().equals(role)) {
             throw GroupException.forbidden();
         }
+
+        return optionalOperator.get();
     }
 
     // TODO 把升为管理员，和降为普通成员分别暴露接口？还是一个完整的change role？
     public GroupMember changeMemberRole(String id, String memberId,
                                         GroupMember.GroupMemberRole role, String operatorId) {
-        checkMemberRole(id, operatorId, GroupMember.GroupMemberRole.OWNER);
+        getMember(id, operatorId, GroupMember.GroupMemberRole.OWNER);
         GroupMember groupMember = groupMemberRepository
                 .findOne(Example.of(GroupMember.builder().groupId(id).id(memberId).build()))
                 .orElseThrow(GroupException::memberNotFound);
@@ -154,6 +157,24 @@ public class GroupService {
         groupMember.setRole(role);
         groupMember.setUpdatedAt(Instant.now());
 
+        return groupMemberRepository.save(groupMember);
+    }
+
+    @Transactional
+    public GroupMember changeOwner(String id, String memberId, String operatorId) {
+        GroupMember owner = getMember(id, operatorId, GroupMember.GroupMemberRole.OWNER);
+
+        GroupMember groupMember = groupMemberRepository
+                .findOne(Example.of(GroupMember.builder().groupId(id).id(memberId).build()))
+                .orElseThrow(GroupException::memberNotFound);
+
+        // TODO 业务确认，chang owner后旧owner是对调role？降级为admin/normal？还是移除？
+        owner.setRole(groupMember.getRole());
+        owner.setUpdatedAt(Instant.now());
+        groupMemberRepository.save(owner);
+
+        groupMember.setRole(GroupMember.GroupMemberRole.OWNER);
+        groupMember.setUpdatedAt(Instant.now());
         return groupMemberRepository.save(groupMember);
     }
 }

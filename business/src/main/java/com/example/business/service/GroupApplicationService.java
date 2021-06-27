@@ -3,6 +3,7 @@ package com.example.business.service;
 import com.example.business.usecase.CreateGroupCase;
 import com.example.business.usecase.GetGroupCase;
 import com.example.business.usecase.GetMyGroupCase;
+import com.example.business.usecase.ChangeGroupOwnerCase;
 import com.example.business.usecase.JoinGroupCase;
 import com.example.business.usecase.UpdateGroupCase;
 import com.example.business.usecase.UpdateGroupMemberCase;
@@ -66,5 +67,12 @@ public class GroupApplicationService {
         GroupMember groupMember = groupService.changeMemberRole(id, memberId, request.getRole(), authorize.getUserId());
 
         return UpdateGroupMemberCase.Response.from(groupMember);
+    }
+
+    public ChangeGroupOwnerCase.Response changeOwner(String id,
+                                                       ChangeGroupOwnerCase.Request request,
+                                                       Authorize authorize) {
+        GroupMember groupMember = groupService.changeOwner(id, request.getMemberId(), authorize.getUserId());
+        return ChangeGroupOwnerCase.Response.from(groupMember);
     }
 }

@@ -4,6 +4,7 @@ import com.example.business.service.GroupApplicationService;
 import com.example.business.usecase.CreateGroupCase;
 import com.example.business.usecase.GetGroupCase;
 import com.example.business.usecase.GetMyGroupCase;
+import com.example.business.usecase.ChangeGroupOwnerCase;
 import com.example.business.usecase.JoinGroupCase;
 import com.example.business.usecase.UpdateGroupMemberCase;
 import com.example.business.usecase.UpdateGroupCase;
@@ -80,6 +81,14 @@ public class GroupController {
                                                          @RequestBody @Valid UpdateGroupMemberCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.updateMember(id, memberId, request, authorize);
+    }
+
+    // TODO memberId or userId
+    @PutMapping("/{id}/members/owner")
+    public ChangeGroupOwnerCase.Response changeOwner(@PathVariable String id,
+                                                       @RequestBody @Valid ChangeGroupOwnerCase.Request request) {
+        Authorize authorize = authorizeService.current();
+        return applicationService.changeOwner(id, request, authorize);
     }
 
 }
