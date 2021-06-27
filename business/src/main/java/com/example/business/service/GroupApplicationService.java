@@ -75,4 +75,8 @@ public class GroupApplicationService {
         GroupMember groupMember = groupService.changeOwner(id, request.getMemberId(), authorize.getUserId());
         return ChangeGroupOwnerCase.Response.from(groupMember);
     }
+
+    public void removeMember(String id, String memberId, Authorize authorize) {
+        groupService.deleteMember(id, memberId, authorize.getUserId());
+    }
 }

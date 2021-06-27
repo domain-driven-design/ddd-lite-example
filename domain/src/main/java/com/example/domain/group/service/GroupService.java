@@ -83,11 +83,18 @@ public class GroupService {
         return groupRepository.save(group);
     }
 
-    private Optional<GroupMember> findGroupMember(String id, String userId) {
+    private Optional<GroupMember> findMember(String id, String userId) {
         return groupMemberRepository.findOne(Example.of(GroupMember.builder()
                 .groupId(id)
                 .userId(userId)
                 .build()));
+    }
+
+    // TODO 是否可以统一用groupId和userId定位member，只用memberId定位没有意义，还需要check是否是指定group
+    private GroupMember getMember(String id, String memberId) {
+        return groupMemberRepository
+                .findOne(Example.of(GroupMember.builder().groupId(id).id(memberId).build()))
+                .orElseThrow(GroupException::memberNotFound);
     }
 
     public GroupMember addNormalMember(String id, String operatorId) {
@@ -95,7 +102,7 @@ public class GroupService {
 
         // TODO 根据以后的业务规则调整，被管理员移除后不得加入
 
-        Optional<GroupMember> optionalGroupMember = findGroupMember(id, operatorId);
+        Optional<GroupMember> optionalGroupMember = findMember(id, operatorId);
         if (optionalGroupMember.isPresent()) {
             throw GroupException.memberConflict();
         }
@@ -115,7 +122,7 @@ public class GroupService {
 
     public void deleteNormalMember(String id, String operatorId) {
         // TODO check operator
-        Optional<GroupMember> optionalGroupMember = findGroupMember(id, operatorId);
+        Optional<GroupMember> optionalGroupMember = findMember(id, operatorId);
         if (!optionalGroupMember.isPresent()) {
             return;
         }
@@ -130,11 +137,10 @@ public class GroupService {
 
     }
 
-    private GroupMember getMember(String id, String userId, GroupMember.GroupMemberRole role) {
-        Optional<GroupMember> optionalOperator = findGroupMember(id, userId);
+    private GroupMember checkMemberRole(String id, String userId, GroupMember.GroupMemberRole role) {
+        Optional<GroupMember> optionalOperator = findMember(id, userId);
 
-        if (!optionalOperator.isPresent() ||
-                !optionalOperator.get().getRole().equals(role)) {
+        if (!optionalOperator.isPresent() || optionalOperator.get().getRole().compareTo(role) < 0) {
             throw GroupException.forbidden();
         }
 
@@ -144,10 +150,9 @@ public class GroupService {
     // TODO 把升为管理员，和降为普通成员分别暴露接口？还是一个完整的change role？
     public GroupMember changeMemberRole(String id, String memberId,
                                         GroupMember.GroupMemberRole role, String operatorId) {
-        getMember(id, operatorId, GroupMember.GroupMemberRole.OWNER);
-        GroupMember groupMember = groupMemberRepository
-                .findOne(Example.of(GroupMember.builder().groupId(id).id(memberId).build()))
-                .orElseThrow(GroupException::memberNotFound);
+        checkMemberRole(id, operatorId, GroupMember.GroupMemberRole.OWNER);
+
+        GroupMember groupMember = getMember(id, memberId);
 
         if (role.equals(GroupMember.GroupMemberRole.OWNER) ||
                 groupMember.getRole().equals(GroupMember.GroupMemberRole.OWNER)) {
@@ -162,12 +167,9 @@ public class GroupService {
 
     @Transactional
     public GroupMember changeOwner(String id, String memberId, String operatorId) {
-        GroupMember owner = getMember(id, operatorId, GroupMember.GroupMemberRole.OWNER);
+        GroupMember owner = checkMemberRole(id, operatorId, GroupMember.GroupMemberRole.OWNER);
 
-        GroupMember groupMember = groupMemberRepository
-                .findOne(Example.of(GroupMember.builder().groupId(id).id(memberId).build()))
-                .orElseThrow(GroupException::memberNotFound);
-
+        GroupMember groupMember = getMember(id, memberId);
         // TODO 业务确认，chang owner后旧owner是对调role？降级为admin/normal？还是移除？
         owner.setRole(groupMember.getRole());
         owner.setUpdatedAt(Instant.now());
@@ -176,5 +178,17 @@ public class GroupService {
         groupMember.setRole(GroupMember.GroupMemberRole.OWNER);
         groupMember.setUpdatedAt(Instant.now());
         return groupMemberRepository.save(groupMember);
+    }
+
+    public void deleteMember(String id, String memberId, String operatorId) {
+        GroupMember operator = checkMemberRole(id, operatorId, GroupMember.GroupMemberRole.ADMIN);
+
+        GroupMember groupMember = getMember(id, memberId);
+
+        if (operator.getRole().compareTo(groupMember.getRole()) <= 0) {
+            throw GroupException.forbidden();
+        }
+
+        groupMemberRepository.delete(groupMember);
     }
 }

@@ -1,13 +1,13 @@
 package com.example.business.rest;
 
 import com.example.business.service.GroupApplicationService;
+import com.example.business.usecase.ChangeGroupOwnerCase;
 import com.example.business.usecase.CreateGroupCase;
 import com.example.business.usecase.GetGroupCase;
 import com.example.business.usecase.GetMyGroupCase;
-import com.example.business.usecase.ChangeGroupOwnerCase;
 import com.example.business.usecase.JoinGroupCase;
-import com.example.business.usecase.UpdateGroupMemberCase;
 import com.example.business.usecase.UpdateGroupCase;
+import com.example.business.usecase.UpdateGroupMemberCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,8 +77,8 @@ public class GroupController {
     // TODO memberId or userId
     @PutMapping("/{id}/members/{memberId}")
     public UpdateGroupMemberCase.Response updateMember(@PathVariable String id,
-                                                         @PathVariable String memberId,
-                                                         @RequestBody @Valid UpdateGroupMemberCase.Request request) {
+                                                       @PathVariable String memberId,
+                                                       @RequestBody @Valid UpdateGroupMemberCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.updateMember(id, memberId, request, authorize);
     }
@@ -86,9 +86,15 @@ public class GroupController {
     // TODO memberId or userId
     @PutMapping("/{id}/members/owner")
     public ChangeGroupOwnerCase.Response changeOwner(@PathVariable String id,
-                                                       @RequestBody @Valid ChangeGroupOwnerCase.Request request) {
+                                                     @RequestBody @Valid ChangeGroupOwnerCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.changeOwner(id, request, authorize);
+    }
+
+    @DeleteMapping("/{id}/members/{memberId}")
+    public void removeMember(@PathVariable String id, @PathVariable String memberId) {
+        Authorize authorize = authorizeService.current();
+        applicationService.removeMember(id, memberId, authorize);
     }
 
 }

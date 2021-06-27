@@ -262,4 +262,23 @@ class GroupControllerTest extends TestBase {
 
     }
 
+    @Test
+    void should_remove_member() {
+        User creator = this.prepareUser("anyName", "anyEmail");
+        Group group = groupService.create("name", "description", creator.getId());
+
+        User user = this.prepareUser("otherName", "otherEmail");
+        GroupMember groupMember = groupService.addNormalMember(group.getId(), user.getId());
+
+        Response response = givenWithAuthorize(creator)
+                .when()
+                .delete("/groups/" + group.getId() + "/members/" + groupMember.getId());
+        response.then().statusCode(200);
+
+        Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
+                .groupId(group.getId())
+                .userId(user.getId())
+                .build()));
+        assertThat(optionalGroupMember.isPresent(), is(false));
+    }
 }
