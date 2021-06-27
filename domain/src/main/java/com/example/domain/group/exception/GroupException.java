@@ -22,4 +22,12 @@ public class GroupException extends BaseException {
     public static GroupException ownerCanNotExit() {
         return new GroupException(Type.BAD_REQUEST, "group_owner_can_not_exit");
     }
+
+    public static GroupException memberNotFound() {
+        return new GroupException(Type.NOT_FOUND, "group_member_not_found");
+    }
+
+    public static GroupException ownerCanNotChange() {
+        return new GroupException(Type.BAD_REQUEST, "group_member_not_change");
+    }
 }

@@ -13,7 +13,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -83,16 +82,20 @@ public class GroupService {
         return groupRepository.save(group);
     }
 
+    private Optional<GroupMember> findGroupMember(String id, String userId) {
+        return groupMemberRepository.findOne(Example.of(GroupMember.builder()
+                .groupId(id)
+                .userId(userId)
+                .build()));
+    }
+
     public GroupMember addNormalMember(String id, String operatorId) {
         Group group = _get(id);
 
         // TODO 根据以后的业务规则调整，被管理员移除后不得加入
 
-        boolean alreadyMember = groupMemberRepository.exists(Example.of(GroupMember.builder()
-                .groupId(id)
-                .userId(operatorId)
-                .build()));
-        if (alreadyMember) {
+        Optional<GroupMember> optionalGroupMember = findGroupMember(id, operatorId);
+        if (optionalGroupMember.isPresent()) {
             throw GroupException.memberConflict();
         }
 
@@ -111,10 +114,7 @@ public class GroupService {
 
     public void deleteNormalMember(String id, String operatorId) {
         // TODO check operator
-        Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
-                .groupId(id)
-                .userId(operatorId)
-                .build()));
+        Optional<GroupMember> optionalGroupMember = findGroupMember(id, operatorId);
         if (!optionalGroupMember.isPresent()) {
             return;
         }
@@ -127,5 +127,33 @@ public class GroupService {
 
         groupMemberRepository.delete(groupMember);
 
+    }
+
+    private void checkMemberRole(String id, String userId, GroupMember.GroupMemberRole role) {
+        Optional<GroupMember> optionalOperator = findGroupMember(id, userId);
+
+        if (!optionalOperator.isPresent() ||
+                !optionalOperator.get().getRole().equals(role)) {
+            throw GroupException.forbidden();
+        }
+    }
+
+    // TODO 把升为管理员，和降为普通成员分别暴露接口？还是一个完整的change role？
+    public GroupMember changeMemberRole(String id, String memberId,
+                                        GroupMember.GroupMemberRole role, String operatorId) {
+        checkMemberRole(id, operatorId, GroupMember.GroupMemberRole.OWNER);
+        GroupMember groupMember = groupMemberRepository
+                .findOne(Example.of(GroupMember.builder().groupId(id).id(memberId).build()))
+                .orElseThrow(GroupException::memberNotFound);
+
+        if (role.equals(GroupMember.GroupMemberRole.OWNER) ||
+                groupMember.getRole().equals(GroupMember.GroupMemberRole.OWNER)) {
+            throw GroupException.ownerCanNotChange();
+        }
+
+        groupMember.setRole(role);
+        groupMember.setUpdatedAt(Instant.now());
+
+        return groupMemberRepository.save(groupMember);
     }
 }

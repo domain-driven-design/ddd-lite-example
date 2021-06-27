@@ -21,7 +21,6 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isA;
-import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -100,7 +99,8 @@ class GroupServiceTest {
 
     @Test
     void should_update_group_success() {
-        GroupMember groupMember = GroupMember.builder().groupId("test-group-id").role(GroupMember.GroupMemberRole.OWNER).userId("test-user-id").build();
+        GroupMember groupMember = GroupMember.builder().groupId("test-group-id").role(GroupMember.GroupMemberRole.OWNER)
+                .userId("test-user-id").build();
         Group group = Group.builder()
                 .id("test-group-id").name("test group").description("test group description")
                 .members(Collections.singletonList(groupMember))
@@ -168,7 +168,8 @@ class GroupServiceTest {
                 .id("test-group-id").name("test group").description("test group description")
                 .build();
         Mockito.when(groupRepository.findById(eq("test-group-id"))).thenReturn(Optional.of(group));
-        Mockito.when(groupMemberRepository.exists(any())).thenReturn(true);
+        Mockito.when(groupMemberRepository.findOne(any(Example.class)))
+                .thenReturn(Optional.of(GroupMember.builder().build()));
 
         BaseException exception = assertThrows(GroupException.class, () -> {
             //when

@@ -5,6 +5,7 @@ import com.example.business.usecase.GetGroupCase;
 import com.example.business.usecase.GetMyGroupCase;
 import com.example.business.usecase.JoinGroupCase;
 import com.example.business.usecase.UpdateGroupCase;
+import com.example.business.usecase.UpdateGroupMemberCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;
@@ -57,5 +58,13 @@ public class GroupApplicationService {
 
     public void exitGroup(String id, Authorize authorize) {
         groupService.deleteNormalMember(id, authorize.getUserId());
+    }
+
+    public UpdateGroupMemberCase.Response updateMember(String id, String memberId,
+                                                       UpdateGroupMemberCase.Request request,
+                                                       Authorize authorize) {
+        GroupMember groupMember = groupService.changeMemberRole(id, memberId, request.getRole(), authorize.getUserId());
+
+        return UpdateGroupMemberCase.Response.from(groupMember);
     }
 }

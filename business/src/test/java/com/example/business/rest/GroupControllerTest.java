@@ -179,4 +179,51 @@ class GroupControllerTest extends TestBase {
         assertThat(optionalGroupMember.isPresent(), is(false));
     }
 
+    @Test
+    void should_change_member_role() {
+        User creator = this.prepareUser("anyName", "anyEmail");
+        Group group = groupService.create("name", "description", creator.getId());
+
+        User user = this.prepareUser("otherName", "otherEmail");
+        GroupMember groupMember = groupService.addNormalMember(group.getId(), user.getId());
+
+        Response response = givenWithAuthorize(creator)
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("role", GroupMember.GroupMemberRole.ADMIN);
+                    }
+                })                .when()
+                .put("/groups/" + group.getId() + "/members/" + groupMember.getId());
+        response.then().statusCode(200)
+                .body("groupId", is(group.getId()))
+                .body("userId", is(user.getId()))
+                .body("role", is(GroupMember.GroupMemberRole.ADMIN.name()));
+
+        Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
+                .groupId(group.getId())
+                .userId(user.getId())
+                .build()));
+        assertThat(optionalGroupMember.isPresent(), is(true));
+        assertThat(optionalGroupMember.get().getRole(), is(GroupMember.GroupMemberRole.ADMIN));
+
+        response = givenWithAuthorize(creator)
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("role", GroupMember.GroupMemberRole.NORMAL);
+                    }
+                })                .when()
+                .put("/groups/" + group.getId() + "/members/" + groupMember.getId());
+        response.then().statusCode(200)
+                .body("groupId", is(group.getId()))
+                .body("userId", is(user.getId()))
+                .body("role", is(GroupMember.GroupMemberRole.NORMAL.name()));
+
+        optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
+                .groupId(group.getId())
+                .userId(user.getId())
+                .build()));
+        assertThat(optionalGroupMember.isPresent(), is(true));
+        assertThat(optionalGroupMember.get().getRole(), is(GroupMember.GroupMemberRole.NORMAL));
+    }
+
 }

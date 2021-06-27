@@ -5,6 +5,7 @@ import com.example.business.usecase.CreateGroupCase;
 import com.example.business.usecase.GetGroupCase;
 import com.example.business.usecase.GetMyGroupCase;
 import com.example.business.usecase.JoinGroupCase;
+import com.example.business.usecase.UpdateGroupMemberCase;
 import com.example.business.usecase.UpdateGroupCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
@@ -71,4 +72,14 @@ public class GroupController {
         Authorize authorize = authorizeService.current();
         applicationService.exitGroup(id, authorize);
     }
+
+    // TODO memberId or userId
+    @PutMapping("/{id}/members/{memberId}")
+    public UpdateGroupMemberCase.Response updateMember(@PathVariable String id,
+                                                         @PathVariable String memberId,
+                                                         @RequestBody @Valid UpdateGroupMemberCase.Request request) {
+        Authorize authorize = authorizeService.current();
+        return applicationService.updateMember(id, memberId, request, authorize);
+    }
+
 }
