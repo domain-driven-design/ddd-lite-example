@@ -178,4 +178,56 @@ class GroupServiceTest {
         assertEquals("group_member_conflict", exception.getMessage());
         assertEquals(BaseException.Type.CONFLICT, exception.getType());
     }
+
+    @Test
+    void should_delete_normal_member_success() {
+        // given
+        String groupId = "test-group-id";
+        String userId = "test-user-id";
+
+        GroupMember groupMember = GroupMember.builder()
+                .groupId(groupId)
+                .userId(userId)
+                .role(GroupMember.GroupMemberRole.NORMAL)
+                .build();
+        Mockito.when(groupMemberRepository.findOne(any(Example.class)))
+                .thenReturn(Optional.of(groupMember))
+                .thenReturn(Optional.empty());
+
+        //when
+        groupService.deleteNormalMember(groupId, userId);
+        groupService.deleteNormalMember(groupId, userId);
+
+        // Then
+        Mockito.verify(groupMemberRepository).delete(argThat((argument) -> {
+            assertEquals(groupId, argument.getGroupId());
+            assertEquals(userId, argument.getUserId());
+            assertEquals(GroupMember.GroupMemberRole.NORMAL, argument.getRole());
+            return true;
+        }));
+    }
+
+    @Test
+    void should_delete_normal_member_failed_if_role_is_owner() {
+        // given
+        String groupId = "test-group-id";
+        String userId = "test-user-id";
+
+        GroupMember groupMember = GroupMember.builder()
+                .groupId(groupId)
+                .userId(userId)
+                .role(GroupMember.GroupMemberRole.OWNER)
+                .build();
+        Mockito.when(groupMemberRepository.findOne(any(Example.class)))
+                .thenReturn(Optional.of(groupMember));
+
+        // Then
+        BaseException exception = assertThrows(GroupException.class, () -> {
+            //when
+            groupService.deleteNormalMember(groupId, userId);
+        });
+
+        assertEquals("group_owner_can_not_exit", exception.getMessage());
+        assertEquals(BaseException.Type.BAD_REQUEST, exception.getType());
+    }
 }
