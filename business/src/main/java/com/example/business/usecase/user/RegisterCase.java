@@ -1,4 +1,4 @@
-package com.example.business.usecase;
+package com.example.business.usecase.user;
 
 import com.example.domain.user.model.User;
 import lombok.AllArgsConstructor;

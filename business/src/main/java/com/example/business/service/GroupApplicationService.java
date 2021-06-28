@@ -1,12 +1,12 @@
 package com.example.business.service;
 
-import com.example.business.usecase.CreateGroupCase;
-import com.example.business.usecase.GetGroupCase;
-import com.example.business.usecase.GetMyGroupCase;
-import com.example.business.usecase.ChangeGroupOwnerCase;
-import com.example.business.usecase.JoinGroupCase;
-import com.example.business.usecase.UpdateGroupCase;
-import com.example.business.usecase.UpdateGroupMemberCase;
+import com.example.business.usecase.group.CreateGroupCase;
+import com.example.business.usecase.group.GetGroupCase;
+import com.example.business.usecase.group.GetMyGroupCase;
+import com.example.business.usecase.group.ChangeGroupOwnerCase;
+import com.example.business.usecase.group.JoinGroupCase;
+import com.example.business.usecase.group.UpdateGroupCase;
+import com.example.business.usecase.group.UpdateGroupMemberCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;

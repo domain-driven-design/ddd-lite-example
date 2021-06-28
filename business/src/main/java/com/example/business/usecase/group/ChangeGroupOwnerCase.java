@@ -1,4 +1,4 @@
-package com.example.business.usecase;
+package com.example.business.usecase.group;
 
 import com.example.domain.group.model.GroupMember;
 import lombok.AllArgsConstructor;
@@ -7,17 +7,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class UpdateGroupMemberCase {
+public class ChangeGroupOwnerCase {
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
-        @NotNull(message = "group_member_role_required")
-        private GroupMember.GroupMemberRole role;
+        @NotNull(message = "group_member_id")
+        private String memberId;
     }
 
     @Getter

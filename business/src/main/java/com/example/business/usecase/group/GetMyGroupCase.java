@@ -1,4 +1,4 @@
-package com.example.business.usecase;
+package com.example.business.usecase.group;
 
 import com.example.domain.group.model.Group;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.example.business.usecase;
+package com.example.business.usecase.question;
 
 import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;

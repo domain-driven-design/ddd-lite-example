@@ -1,4 +1,4 @@
-package com.example.business.usecase;
+package com.example.business.usecase.authorize;
 
 import com.example.domain.auth.model.Authorize;
 import lombok.Builder;

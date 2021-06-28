@@ -1,13 +1,13 @@
 package com.example.business.rest;
 
 import com.example.business.service.QuestionApplicationService;
-import com.example.business.usecase.CreateAnswerCase;
-import com.example.business.usecase.CreateQuestionCase;
-import com.example.business.usecase.GetAnswerCase;
-import com.example.business.usecase.GetQuestionCase;
-import com.example.business.usecase.GetQuestionDetailCase;
-import com.example.business.usecase.UpdateAnswerCase;
-import com.example.business.usecase.UpdateQuestionCase;
+import com.example.business.usecase.question.CreateAnswerCase;
+import com.example.business.usecase.question.CreateQuestionCase;
+import com.example.business.usecase.question.GetAnswerCase;
+import com.example.business.usecase.question.GetQuestionCase;
+import com.example.business.usecase.question.GetQuestionDetailCase;
+import com.example.business.usecase.question.UpdateAnswerCase;
+import com.example.business.usecase.question.UpdateQuestionCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.example.business.usecase;
+package com.example.business.usecase.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package com.example.business.usecase;
+package com.example.business.usecase.user;
 
-import com.example.domain.group.model.Group;
+import com.example.domain.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,16 +9,14 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
-public class CreateGroupCase {
+public class UpdateUserCase {
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
-        @NotBlank(message = "group_name_required")
+        @NotBlank(message = "name_required")
         private String name;
-        @NotBlank(message = "group_description_required")
-        private String description;
     }
 
     @Getter
@@ -27,13 +25,11 @@ public class CreateGroupCase {
     public static class Response {
         private String id;
         private String name;
-        private String description;
 
-        public static Response from(Group group) {
+        public static Response from(User user) {
             return Response.builder()
-                    .id(group.getId())
-                    .name(group.getName())
-                    .description(group.getDescription())
+                    .id(user.getId())
+                    .name(user.getName())
                     .build();
         }
     }

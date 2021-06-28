@@ -1,6 +1,7 @@
-package com.example.business.usecase;
+package com.example.business.usecase.question;
 
-import com.example.domain.user.model.User;
+import com.example.domain.question.model.Answer;
+import com.example.domain.question.model.Question;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,14 +10,15 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
-public class UpdateUserCase {
+
+public class CreateAnswerCase {
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
-        @NotBlank(message = "name_required")
-        private String name;
+        @NotBlank(message = "answer_content_required")
+        private String content;
     }
 
     @Getter
@@ -24,12 +26,12 @@ public class UpdateUserCase {
     @Builder
     public static class Response {
         private String id;
-        private String name;
+        private String content;
 
-        public static Response from(User user) {
+        public static Response from(Answer answer) {
             return Response.builder()
-                    .id(user.getId())
-                    .name(user.getName())
+                    .id(answer.getId())
+                    .content(answer.getContent())
                     .build();
         }
     }

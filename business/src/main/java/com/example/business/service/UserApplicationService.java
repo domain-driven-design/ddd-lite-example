@@ -3,10 +3,10 @@ package com.example.business.service;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.user.model.User;
 import com.example.domain.user.service.UserService;
-import com.example.business.usecase.GetUserDetailCase;
-import com.example.business.usecase.RegisterCase;
-import com.example.business.usecase.ResetPasswordCase;
-import com.example.business.usecase.UpdateUserCase;
+import com.example.business.usecase.user.GetUserDetailCase;
+import com.example.business.usecase.user.RegisterCase;
+import com.example.business.usecase.user.ResetPasswordCase;
+import com.example.business.usecase.user.UpdateUserCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
