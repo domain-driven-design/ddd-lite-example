@@ -40,22 +40,6 @@ class GroupServiceTest {
     private GroupService groupService;
 
     @Test
-    void should_get_group_when_group_exists() {
-        // given
-        Group group = Group.builder()
-                .id("test-group-id").name("test group").description("test group description")
-                .build();
-        Mockito.when(groupRepository.findById(eq("test-group-id"))).thenReturn(Optional.of(group));
-
-        // when
-        Group groupFromService = groupService.get("test-group-id");
-
-        // then
-        assertEquals("test group", groupFromService.getName());
-        assertEquals("test group description", groupFromService.getDescription());
-    }
-
-    @Test
     void should_throw_not_found_when_group_does_not_exist() {
         // given
         Mockito.when(groupRepository.findById(eq("test-group-id"))).thenReturn(Optional.empty());
@@ -67,57 +51,6 @@ class GroupServiceTest {
 
         assertEquals("group_not_found", exception.getMessage());
         assertEquals(BaseException.Type.NOT_FOUND, exception.getType());
-    }
-
-    @Test
-    void should_create_group() {
-        Mockito.when(groupRepository.save(ArgumentMatchers.any())).thenReturn(
-                Group.builder().id("test-group-id").build()
-        );
-        groupService.create(
-                "test group name", "test group description", "test-user-id"
-        );
-        Mockito.verify(groupRepository).save(argThat((group) -> {
-            assertEquals("test group name", group.getName());
-            assertEquals("test group description", group.getDescription());
-            assertEquals("test-user-id", group.getCreatedBy());
-            assertThat(group.getCreatedAt(), isA(Instant.class));
-            assertThat(group.getUpdatedAt(), isA(Instant.class));
-            return true;
-        }));
-
-        Mockito.verify(groupMemberRepository).save(argThat((groupMember) -> {
-            assertEquals("test-user-id", groupMember.getUserId());
-            assertEquals("test-user-id", groupMember.getCreatedBy());
-            assertEquals(GroupMember.GroupMemberRole.OWNER, groupMember.getRole());
-            assertThat(groupMember.getCreatedAt(), isA(Instant.class));
-            assertThat(groupMember.getUpdatedAt(), isA(Instant.class));
-            return true;
-        }));
-    }
-
-
-    @Test
-    void should_update_group_success() {
-        GroupMember groupMember = GroupMember.builder().groupId("test-group-id").role(GroupMember.GroupMemberRole.OWNER)
-                .userId("test-user-id").build();
-        Group group = Group.builder()
-                .id("test-group-id").name("test group").description("test group description")
-                .members(Collections.singletonList(groupMember))
-                .build();
-        Mockito.when(groupRepository.findById(eq("test-group-id"))).thenReturn(Optional.of(group));
-
-        //when
-        groupService.update(
-                "test-group-id", "test new group", "test new group description",
-                "test-user-id"
-        );
-
-        Mockito.verify(groupRepository).save(argThat((argument) -> {
-            assertEquals("test new group", argument.getName());
-            assertEquals("test new group description", argument.getDescription());
-            return true;
-        }));
     }
 
 
@@ -142,26 +75,6 @@ class GroupServiceTest {
     }
 
     @Test
-    void should_add_normal_member_success() {
-        // given
-        Group group = Group.builder()
-                .id("test-group-id").name("test group").description("test group description")
-                .build();
-        Mockito.when(groupRepository.findById(eq("test-group-id"))).thenReturn(Optional.of(group));
-
-        //when
-        groupService.addNormalMember("test-group-id", "test-user");
-
-        // Then
-        Mockito.verify(groupMemberRepository).save(argThat((argument) -> {
-            assertEquals("test-group-id", argument.getGroupId());
-            assertEquals("test-user", argument.getUserId());
-            assertEquals(GroupMember.GroupMemberRole.NORMAL, argument.getRole());
-            return true;
-        }));
-    }
-
-    @Test
     void should_add_normal_member_failed_if_already_exist() {
         // given
         Group group = Group.builder()
@@ -178,34 +91,6 @@ class GroupServiceTest {
 
         assertEquals("group_member_conflict", exception.getMessage());
         assertEquals(BaseException.Type.CONFLICT, exception.getType());
-    }
-
-    @Test
-    void should_delete_normal_member_success() {
-        // given
-        String groupId = "test-group-id";
-        String userId = "test-user-id";
-
-        GroupMember groupMember = GroupMember.builder()
-                .groupId(groupId)
-                .userId(userId)
-                .role(GroupMember.GroupMemberRole.NORMAL)
-                .build();
-        Mockito.when(groupMemberRepository.findOne(any(Example.class)))
-                .thenReturn(Optional.of(groupMember))
-                .thenReturn(Optional.empty());
-
-        //when
-        groupService.deleteNormalMember(groupId, userId);
-        groupService.deleteNormalMember(groupId, userId);
-
-        // Then
-        Mockito.verify(groupMemberRepository).delete(argThat((argument) -> {
-            assertEquals(groupId, argument.getGroupId());
-            assertEquals(userId, argument.getUserId());
-            assertEquals(GroupMember.GroupMemberRole.NORMAL, argument.getRole());
-            return true;
-        }));
     }
 
     @Test

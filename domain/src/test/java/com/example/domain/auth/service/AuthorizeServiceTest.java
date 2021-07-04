@@ -23,37 +23,13 @@ import static org.mockito.ArgumentMatchers.argThat;
 class AuthorizeServiceTest {
 
     @Mock
-    private AuthorizeRepository repository;
-
-    @Mock
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @InjectMocks
     private AuthorizeService authorizeService;
 
     @Test
-    void should_create_authorize_when_password_is_correct() {
-        //given
-        User user = User.builder()
-                .password("testPassword")
-                .id("test-user-id")
-                .role(User.UserRole.ADMIN)
-                .build();
-        String password = "testPassword";
-
-        Mockito.when(bCryptPasswordEncoder.matches(anyString(), anyString())).thenReturn(true);
-        //when
-        authorizeService.create(user, password);
-        //then
-        Mockito.verify(repository).create(argThat((argument -> {
-            assertEquals("test-user-id", argument.getUserId());
-            assertEquals(User.UserRole.ADMIN, argument.getRole());
-            return true;
-        })));
-    }
-
-    @Test
-    void should_create_authorize_when_password_is_wrong() {
+    void should_create_authorize_failed_when_password_is_wrong() {
         //given
         User user = User.builder()
                 .password("testPassword")
@@ -86,7 +62,7 @@ class AuthorizeServiceTest {
     }
 
     @Test
-    void should_fetch_authorize_when_authorize_is_not_exist() {
+    void should_fetch_authorize_failed_when_authorize_is_not_exist() {
         //when
         BaseException exception = assertThrows(AuthorizeException.class, () -> {
             //when
@@ -97,10 +73,4 @@ class AuthorizeServiceTest {
         assertEquals(BaseException.Type.UNAUTHORIZED, exception.getType());
     }
 
-    @Test
-    void should_delete_authorize() {
-        //when
-        authorizeService.delete("test-authorize-id");
-        Mockito.verify(repository).delete("test-authorize-id");
-    }
 }
