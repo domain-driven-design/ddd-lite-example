@@ -90,7 +90,6 @@ public class GroupService {
                 .build()));
     }
 
-    // TODO 是否可以统一用groupId和userId定位member，只用memberId定位没有意义，还需要check是否是指定group
     private GroupMember getMember(String id, String memberId) {
         return groupMemberRepository
                 .findOne(Example.of(GroupMember.builder().groupId(id).id(memberId).build()))
@@ -147,7 +146,6 @@ public class GroupService {
         return optionalOperator.get();
     }
 
-    // TODO 把升为管理员，和降为普通成员分别暴露接口？还是一个完整的change role？
     public GroupMember changeMemberRole(String id, String memberId,
                                         GroupMember.GroupMemberRole role, String operatorId) {
         checkMemberRole(id, operatorId, GroupMember.GroupMemberRole.OWNER);
@@ -170,8 +168,8 @@ public class GroupService {
         GroupMember owner = checkMemberRole(id, operatorId, GroupMember.GroupMemberRole.OWNER);
 
         GroupMember groupMember = getMember(id, memberId);
-        // TODO 业务确认，chang owner后旧owner是对调role？降级为admin/normal？还是移除？
-        owner.setRole(groupMember.getRole());
+
+        owner.setRole(GroupMember.GroupMemberRole.ADMIN);
         owner.setUpdatedAt(Instant.now());
         groupMemberRepository.save(owner);
 

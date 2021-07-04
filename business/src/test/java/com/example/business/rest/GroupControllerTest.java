@@ -169,7 +169,7 @@ class GroupControllerTest extends TestBase {
 
         Response response = givenWithAuthorize(user)
                 .when()
-                .delete("/groups/" + group.getId() + "/members");
+                .delete("/groups/" + group.getId() + "/members/me");
         response.then().statusCode(200);
 
         Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
@@ -240,7 +240,7 @@ class GroupControllerTest extends TestBase {
                         put("memberId", groupMember.getId());
                     }
                 })                .when()
-                .put("/groups/" + group.getId() + "/members/owner");
+                .put("/groups/" + group.getId() + "/owner");
         response.then().statusCode(200)
                 .body("groupId", is(group.getId()))
                 .body("userId", is(user.getId()))
@@ -258,7 +258,7 @@ class GroupControllerTest extends TestBase {
                 .userId(creator.getId())
                 .build()));
         assertThat(optionalCreator.isPresent(), is(true));
-        assertThat(optionalCreator.get().getRole(), is(GroupMember.GroupMemberRole.NORMAL));
+        assertThat(optionalCreator.get().getRole(), is(GroupMember.GroupMemberRole.ADMIN));
 
     }
 

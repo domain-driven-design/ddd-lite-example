@@ -68,13 +68,12 @@ public class GroupController {
         return applicationService.joinGroup(id, authorize);
     }
 
-    @DeleteMapping("/{id}/members")
+    @DeleteMapping("/{id}/members/me")
     public void exitGroup(@PathVariable String id) {
         Authorize authorize = authorizeService.current();
         applicationService.exitGroup(id, authorize);
     }
 
-    // TODO memberId or userId
     @PutMapping("/{id}/members/{memberId}")
     public UpdateGroupMemberCase.Response updateMember(@PathVariable String id,
                                                        @PathVariable String memberId,
@@ -83,8 +82,7 @@ public class GroupController {
         return applicationService.updateMember(id, memberId, request, authorize);
     }
 
-    // TODO memberId or userId
-    @PutMapping("/{id}/members/owner")
+    @PutMapping("/{id}/owner")
     public ChangeGroupOwnerCase.Response changeOwner(@PathVariable String id,
                                                      @RequestBody @Valid ChangeGroupOwnerCase.Request request) {
         Authorize authorize = authorizeService.current();
