@@ -8,5 +8,5 @@ CREATE TABLE `group_member`
     `created_at` TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
     INDEX `i_group_id` (`group_id`),
-    UNIQUE INDEX `uni_group_user` (`group_id`, `user_id`)
+    UNIQUE INDEX `uni_group_id_user_id` (`group_id`, `user_id`)
 );
