@@ -29,7 +29,7 @@ import javax.validation.Valid;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@RequestMapping("/questions")
+@RequestMapping("/groups/{groupId}/questions")
 public class QuestionController {
     @Autowired
     private QuestionApplicationService applicationService;
@@ -38,9 +38,9 @@ public class QuestionController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public CreateQuestionCase.Response createQuestion(@RequestBody @Valid CreateQuestionCase.Request request) {
+    public CreateQuestionCase.Response createQuestion(@PathVariable String groupId, @RequestBody @Valid CreateQuestionCase.Request request) {
         Authorize authorize = authorizeService.current();
-        return applicationService.create(request, authorize);
+        return applicationService.create(request, groupId, authorize);
     }
 
     @GetMapping("/{id}")

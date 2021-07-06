@@ -35,6 +35,19 @@ public class GroupService {
         return groupRepository.findAll(spec, pageable);
     }
 
+    public void checkMember(String id, String userId) {
+        if (id.equals(Group.DEFAULT)) {
+            return;
+        }
+        boolean exists = groupMemberRepository.exists(Example.of(GroupMember.builder()
+                .groupId(id)
+                .userId(userId)
+                .build()));
+        if (!exists) {
+            throw GroupException.forbidden();
+        }
+    }
+
     // TODO 权限分级check
     private void checkOwner(Group group, String operatorId) {
         boolean isOwner = group.getMembers().stream()

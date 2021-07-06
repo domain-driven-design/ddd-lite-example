@@ -35,10 +35,11 @@ public class QuestionService {
         return repository.findAll(spec, pageable);
     }
 
-    public Question create(String title, String description, String operatorId) {
+    public Question create(String title, String description, String groupId, String operatorId) {
         Question question = Question.builder()
                 .title(title)
                 .description(description)
+                .groupId(groupId)
                 .createdBy(operatorId)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())

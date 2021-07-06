@@ -1,6 +1,7 @@
 package com.example.business.rest;
 
 import com.example.TestBase;
+import com.example.domain.group.model.Group;
 import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;
 import com.example.domain.question.repository.AnswerRepository;
@@ -23,6 +24,8 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.Is.isA;
 
 class QuestionControllerTest extends TestBase {
+    public static final String DEFAULT_PATH = "/groups/" + Group.DEFAULT + "/questions";
+
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
@@ -44,7 +47,7 @@ class QuestionControllerTest extends TestBase {
                     }
                 })
                 .when()
-                .post("/questions");
+                .post(DEFAULT_PATH);
         response.then().statusCode(201)
                 .body("id", isA(String.class))
                 .body("title", is(title))
@@ -64,11 +67,11 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_get_question_detail() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
 
         Response response = givenDefault()
                 .when()
-                .get("/questions/" + question.getId());
+                .get(DEFAULT_PATH + "/" + question.getId());
         response.then().statusCode(200)
                 .body("id", is(question.getId()))
                 .body("title", is(question.getTitle()))
@@ -79,16 +82,16 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_get_all_questions_by_page() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question0 = questionService.create("anyTitle0", "anyDescription0", user.getId());
-        Question question1 = questionService.create("anyTitle1", "anyDescription1", user.getId());
-        questionService.create("anyTitle2", "anyDescription2", user.getId());
+        Question question0 = questionService.create("anyTitle0", "anyDescription0", Group.DEFAULT, user.getId());
+        Question question1 = questionService.create("anyTitle1", "anyDescription1", Group.DEFAULT, user.getId());
+        questionService.create("anyTitle2", "anyDescription2", Group.DEFAULT, user.getId());
 
         Response response = givenDefault()
                 .param("sort", "createdAt")
                 .param("sort", "title")
                 .param("size", 2)
                 .when()
-                .get("/questions");
+                .get(DEFAULT_PATH);
 
         response.then().statusCode(200)
                 .body("content.size", is(2))
@@ -98,7 +101,7 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_update_question() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
         String newTitle = "newTitle";
         String newDescription = "newDescription";
 
@@ -111,7 +114,7 @@ class QuestionControllerTest extends TestBase {
                     }
                 })
                 .when()
-                .put("/questions/" + question.getId());
+                .put(DEFAULT_PATH + "/" + question.getId());
         response.then().statusCode(200)
                 .body("id", is(question.getId()))
                 .body("title", is(newTitle))
@@ -125,7 +128,7 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_delete_question() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
         String questionId = question.getId();
 
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
@@ -134,7 +137,7 @@ class QuestionControllerTest extends TestBase {
 
         Response response = givenWithAuthorize(user)
                 .when()
-                .delete("/questions/" + questionId);
+                .delete(DEFAULT_PATH + "/" + questionId);
         response.then().statusCode(200);
 
         assertThat(questionRepository.existsById(questionId), is(false));
@@ -146,7 +149,7 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_create_answer() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
         String content = "content";
 
         Response response = givenWithAuthorize(user)
@@ -156,7 +159,7 @@ class QuestionControllerTest extends TestBase {
                     }
                 })
                 .when()
-                .post("/questions/" + question.getId() + "/answers");
+                .post(DEFAULT_PATH + "/" + question.getId() + "/answers");
         response.then().statusCode(201)
                 .body("id", isA(String.class))
                 .body("content", is(content));
@@ -174,7 +177,7 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_get_all_answers_by_page() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
 
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         Answer answer0 = questionService.addAnswer(question.getId(), "content0", user.getId());
@@ -183,7 +186,7 @@ class QuestionControllerTest extends TestBase {
         Response response = givenDefault()
                 .param("sort", "createdAt")
                 .when()
-                .get("/questions/" + question.getId() + "/answers");
+                .get(DEFAULT_PATH + "/" + question.getId() + "/answers");
 
         response.then().statusCode(200)
                 .body("content.size", is(2))
@@ -193,7 +196,7 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_update_answer() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
         Answer answer = questionService.addAnswer(question.getId(), "content", user.getId());
         String newContent = "newContent";
 
@@ -204,7 +207,7 @@ class QuestionControllerTest extends TestBase {
                     }
                 })
                 .when()
-                .put("/questions/" + question.getId() + "/answers/" + answer.getId());
+                .put(DEFAULT_PATH + "/" + question.getId() + "/answers/" + answer.getId());
         response.then().statusCode(200)
                 .body("id", isA(String.class))
                 .body("content", is(newContent));
@@ -217,12 +220,12 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_delete_answer() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
         Answer answer = questionService.addAnswer(question.getId(), "content", user.getId());
 
         Response response = givenWithAuthorize(user)
                 .when()
-                .delete("/questions/" + question.getId() + "/answers/" + answer.getId());
+                .delete(DEFAULT_PATH + "/" + question.getId() + "/answers/" + answer.getId());
         response.then().statusCode(200);
 
         assertThat(answerRepository.findById(answer.getId()).isPresent(), is(false));

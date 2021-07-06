@@ -26,6 +26,8 @@ import java.util.List;
 @Table(name = "`group`")
 @FieldNameConstants
 public class Group {
+    public static final String DEFAULT = "default";
+
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")

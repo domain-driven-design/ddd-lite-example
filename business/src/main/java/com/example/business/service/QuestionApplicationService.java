@@ -8,6 +8,7 @@ import com.example.business.usecase.question.GetQuestionDetailCase;
 import com.example.business.usecase.question.UpdateAnswerCase;
 import com.example.business.usecase.question.UpdateQuestionCase;
 import com.example.domain.auth.model.Authorize;
+import com.example.domain.group.service.GroupService;
 import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;
 import com.example.domain.question.service.QuestionService;
@@ -21,9 +22,12 @@ import org.springframework.stereotype.Service;
 public class QuestionApplicationService {
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private GroupService groupService;
 
-    public CreateQuestionCase.Response create(CreateQuestionCase.Request request, Authorize authorize) {
-        Question question = questionService.create(request.getTitle(), request.getDescription(), authorize.getUserId());
+    public CreateQuestionCase.Response create(CreateQuestionCase.Request request, String groupId, Authorize authorize) {
+        groupService.checkMember(groupId, authorize.getUserId());
+        Question question = questionService.create(request.getTitle(), request.getDescription(), groupId, authorize.getUserId());
         return CreateQuestionCase.Response.from(question);
     }
 

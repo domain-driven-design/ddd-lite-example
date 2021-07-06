@@ -31,6 +31,8 @@ public class Question {
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
+    private String groupId;
+
     private String title;
 
     private String description;
