@@ -38,7 +38,8 @@ public class QuestionController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public CreateQuestionCase.Response createQuestion(@PathVariable String groupId, @RequestBody @Valid CreateQuestionCase.Request request) {
+    public CreateQuestionCase.Response createQuestion(@PathVariable String groupId,
+                                                      @RequestBody @Valid CreateQuestionCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.create(request, groupId, authorize);
     }
@@ -54,24 +55,26 @@ public class QuestionController {
     }
 
     @PutMapping("/{id}")
-    public UpdateQuestionCase.Response updateQuestion(@PathVariable String id,
+    public UpdateQuestionCase.Response updateQuestion(@PathVariable String groupId,
+                                                      @PathVariable String id,
                                                       @RequestBody @Valid UpdateQuestionCase.Request request) {
         Authorize authorize = authorizeService.current();
-        return applicationService.update(id, request, authorize);
+        return applicationService.update(id, request, groupId, authorize);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteQuestion(@PathVariable String id) {
+    public void deleteQuestion(@PathVariable String groupId, @PathVariable String id) {
         Authorize authorize = authorizeService.current();
-        applicationService.delete(id, authorize);
+        applicationService.delete(id, groupId, authorize);
     }
 
     @PostMapping("/{id}/answers")
     @ResponseStatus(CREATED)
-    public CreateAnswerCase.Response createAnswer(@PathVariable String id,
+    public CreateAnswerCase.Response createAnswer(@PathVariable String groupId,
+                                                  @PathVariable String id,
                                                   @RequestBody @Valid CreateAnswerCase.Request request) {
         Authorize authorize = authorizeService.current();
-        return applicationService.createAnswer(id, request, authorize);
+        return applicationService.createAnswer(id, request, groupId, authorize);
     }
 
     @GetMapping("/{id}/answers")
@@ -81,17 +84,19 @@ public class QuestionController {
     }
 
     @PutMapping("/{id}/answers/{answerId}")
-    public UpdateAnswerCase.Response createAnswer(@PathVariable String id,
+    public UpdateAnswerCase.Response createAnswer(@PathVariable String groupId,
+                                                  @PathVariable String id,
                                                   @PathVariable String answerId,
                                                   @RequestBody @Valid UpdateAnswerCase.Request request) {
         Authorize authorize = authorizeService.current();
-        return applicationService.updateAnswer(id, answerId, request, authorize);
+        return applicationService.updateAnswer(id, answerId, request, groupId, authorize);
     }
 
     @DeleteMapping("/{id}/answers/{answerId}")
-    public void deleteAnswer(@PathVariable String id,
+    public void deleteAnswer(@PathVariable String groupId,
+                             @PathVariable String id,
                              @PathVariable String answerId) {
         Authorize authorize = authorizeService.current();
-        applicationService.deleteAnswer(id, answerId, authorize);
+        applicationService.deleteAnswer(id, answerId, groupId, authorize);
     }
 }
