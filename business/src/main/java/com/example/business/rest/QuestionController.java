@@ -49,9 +49,10 @@ public class QuestionController {
         return applicationService.getDetail(id);
     }
 
-    @GetMapping()
-    public Page<GetQuestionCase.Response> getQuestionsByPage(@PageableDefault Pageable pageable) {
-        return applicationService.getByPage(pageable);
+    @GetMapping
+    public Page<GetQuestionCase.Response> getQuestionsByPage(@PathVariable String groupId,
+                                                             @PageableDefault Pageable pageable) {
+        return applicationService.getByPage(groupId, pageable);
     }
 
     @PutMapping("/{id}")

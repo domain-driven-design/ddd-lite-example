@@ -28,7 +28,8 @@ public class QuestionApplicationService {
     public CreateQuestionCase.Response create(CreateQuestionCase.Request request, String groupId, Authorize authorize) {
         groupService.checkMember(groupId, authorize.getUserId());
 
-        Question question = questionService.create(request.getTitle(), request.getDescription(), groupId, authorize.getUserId());
+        Question question =
+                questionService.create(request.getTitle(), request.getDescription(), groupId, authorize.getUserId());
 
         return CreateQuestionCase.Response.from(question);
     }
@@ -39,16 +40,21 @@ public class QuestionApplicationService {
         return GetQuestionDetailCase.Response.from(question);
     }
 
-    public Page<GetQuestionCase.Response> getByPage(Pageable pageable) {
-        Page<Question> questionPage = questionService.findAll(null, pageable);
+    public Page<GetQuestionCase.Response> getByPage(String groupId, Pageable pageable) {
+        Specification<Question> specification = (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get(Question.Fields.groupId), groupId);
+
+        Page<Question> questionPage = questionService.findAll(specification, pageable);
 
         return questionPage.map(GetQuestionCase.Response::from);
     }
 
-    public UpdateQuestionCase.Response update(String id, UpdateQuestionCase.Request request, String groupId, Authorize authorize) {
+    public UpdateQuestionCase.Response update(String id, UpdateQuestionCase.Request request, String groupId,
+                                              Authorize authorize) {
         groupService.checkMember(groupId, authorize.getUserId());
 
-        Question question = questionService.update(id, request.getTitle(), request.getDescription(), authorize.getUserId());
+        Question question =
+                questionService.update(id, request.getTitle(), request.getDescription(), authorize.getUserId());
 
         return UpdateQuestionCase.Response.from(question);
     }
@@ -59,7 +65,8 @@ public class QuestionApplicationService {
         questionService.delete(id, authorize.getUserId());
     }
 
-    public CreateAnswerCase.Response createAnswer(String id, CreateAnswerCase.Request request, String groupId, Authorize authorize) {
+    public CreateAnswerCase.Response createAnswer(String id, CreateAnswerCase.Request request, String groupId,
+                                                  Authorize authorize) {
         groupService.checkMember(groupId, authorize.getUserId());
 
         Answer answer = questionService.addAnswer(id, request.getContent(), authorize.getUserId());
@@ -75,7 +82,8 @@ public class QuestionApplicationService {
         return answerPage.map(GetAnswerCase.Response::from);
     }
 
-    public UpdateAnswerCase.Response updateAnswer(String id, String answerId, UpdateAnswerCase.Request request, String groupId, Authorize authorize) {
+    public UpdateAnswerCase.Response updateAnswer(String id, String answerId, UpdateAnswerCase.Request request,
+                                                  String groupId, Authorize authorize) {
         groupService.checkMember(groupId, authorize.getUserId());
 
         Answer answer = questionService.updateAnswer(id, answerId, request.getContent(), authorize.getUserId());

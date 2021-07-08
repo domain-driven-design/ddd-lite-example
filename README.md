@@ -69,6 +69,9 @@ ps：
 - 异步任务
 
 ## 待讨论
+- 如果有全局查询Question的业务需求，如何设计接口？现在接口设计为/groups/groupId/questions
+- 数据查询，是否检查权限
+- api测试，仅对默认圈子进行测试？自定义圈子的权限check测试在哪里做？api测试？applicationService测试？
 - 聚合根下的实体命名，比如：Group下的GroupMemberList是命名为groupMembers还是members？（具体情况待定）
 - 软删除（查询过滤，关联信息处理）
 - 测试命名规范
