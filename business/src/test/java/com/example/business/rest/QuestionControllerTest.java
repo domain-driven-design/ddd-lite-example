@@ -80,11 +80,13 @@ class QuestionControllerTest extends TestBase {
     }
 
     @Test
-    void should__questions_by_page() {
+    void should_query_questions_by_page() {
         User user = this.prepareUser("anyName", "anyEmail");
+        User otherUser = this.prepareUser("anyOtherName", "anyOtherEmail");
         Question question0 = questionService.create("anyTitle0", "anyDescription0", Group.DEFAULT, user.getId());
         Question question1 = questionService.create("anyTitle1", "anyDescription1", Group.DEFAULT, user.getId());
         questionService.create("anyTitle2", "anyDescription2", Group.DEFAULT, user.getId());
+        Question question3 = questionService.create("anyTitle3", "anyDescription3", Group.DEFAULT, otherUser.getId());
 
         givenDefault()
                 .param("sort", "createdAt")
@@ -108,6 +110,18 @@ class QuestionControllerTest extends TestBase {
                 .statusCode(200)
                 .body("content.size", is(1))
                 .body("content[0].title", is(question1.getTitle()));
+
+        givenDefault()
+                .param("sort", "createdAt")
+                .param("sort", "title")
+                .param("createdBy", otherUser.getId())
+                .param("size", 1)
+                .when()
+                .get(DEFAULT_PATH)
+                .then()
+                .statusCode(200)
+                .body("content.size", is(1))
+                .body("content[0].title", is(question3.getTitle()));
     }
 
     @Test

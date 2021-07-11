@@ -69,6 +69,8 @@ ps：
 - 异步任务
 
 ## 待讨论
+- 查看某位用户创建的问题，无需权限校验，直接在getByPage加查询条件？查询场景不同，但都是对question基本属性的筛选
+- 写接口，遵循/groups/groupId/questions，逐层check权限。读接口，不需要check权限，或者有时需要跳过圈子这个筛选项
 - api测试，是一个接口统一准备数据，然后分不同的happy path测试？还是不同happy path分别准备数据，在不同的test中测试？
 - getByPage和query是否要通过keyword可为空来统一使用？使用场景感觉略微不同
 - 如果有全局查询Question的业务需求，如何设计接口？现在接口设计为/groups/groupId/questions（是不是可以用类似ALL来跳过group筛选？）

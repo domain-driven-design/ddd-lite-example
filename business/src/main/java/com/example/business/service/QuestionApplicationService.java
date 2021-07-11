@@ -44,14 +44,18 @@ public class QuestionApplicationService {
         return GetQuestionDetailCase.Response.from(question);
     }
 
-    public Page<GetQuestionCase.Response> getByPage(String groupId, String keyword, Pageable pageable) {
+    public Page<GetQuestionCase.Response> getByPage(String groupId, String keyword, String createdBy, Pageable pageable) {
         Specification<Question> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicateList = new ArrayList<>();
-
+            // TODO use null / ALL ignore group filter?
             predicateList.add(criteriaBuilder.equal(root.get(Question.Fields.groupId), groupId));
 
             if (keyword != null) {
                 predicateList.add(criteriaBuilder.like(root.get(Question.Fields.title), "%" + keyword + "%"));
+            }
+
+            if (createdBy != null) {
+                predicateList.add(criteriaBuilder.equal(root.get(Question.Fields.createdBy), createdBy));
             }
 
             return criteriaBuilder.and(predicateList.toArray(new Predicate[0]));
