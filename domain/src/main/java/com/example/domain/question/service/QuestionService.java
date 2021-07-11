@@ -35,6 +35,10 @@ public class QuestionService {
         return repository.findAll(spec, pageable);
     }
 
+    public List<Question> findAll(Specification<Question> spec) {
+        return repository.findAll(spec);
+    }
+
     public Question create(String title, String description, String groupId, String operatorId) {
         Question question = Question.builder()
                 .title(title)
