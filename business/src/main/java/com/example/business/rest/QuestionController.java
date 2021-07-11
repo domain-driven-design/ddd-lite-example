@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,8 +52,9 @@ public class QuestionController {
 
     @GetMapping
     public Page<GetQuestionCase.Response> getQuestionsByPage(@PathVariable String groupId,
+                                                             @RequestParam(required = false) String keyword,
                                                              @PageableDefault Pageable pageable) {
-        return applicationService.getByPage(groupId, pageable);
+        return applicationService.getByPage(groupId, keyword, pageable);
     }
 
     @PutMapping("/{id}")

@@ -69,7 +69,9 @@ ps：
 - 异步任务
 
 ## 待讨论
-- 如果有全局查询Question的业务需求，如何设计接口？现在接口设计为/groups/groupId/questions
+- api测试，是一个接口统一准备数据，然后分不同的happy path测试？还是不同happy path分别准备数据，在不同的test中测试？
+- getByPage和query是否要通过keyword可为空来统一使用？使用场景感觉略微不同
+- 如果有全局查询Question的业务需求，如何设计接口？现在接口设计为/groups/groupId/questions（是不是可以用类似ALL来跳过group筛选？）
 - 数据查询，是否检查权限
 - api测试，仅对默认圈子进行测试？自定义圈子的权限check测试在哪里做？api测试？applicationService测试？
 - 聚合根下的实体命名，比如：Group下的GroupMemberList是命名为groupMembers还是members？（具体情况待定）

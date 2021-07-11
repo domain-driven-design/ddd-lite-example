@@ -18,6 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class QuestionApplicationService {
     @Autowired
@@ -40,9 +44,18 @@ public class QuestionApplicationService {
         return GetQuestionDetailCase.Response.from(question);
     }
 
-    public Page<GetQuestionCase.Response> getByPage(String groupId, Pageable pageable) {
-        Specification<Question> specification = (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get(Question.Fields.groupId), groupId);
+    public Page<GetQuestionCase.Response> getByPage(String groupId, String keyword, Pageable pageable) {
+        Specification<Question> specification = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicateList = new ArrayList<>();
+
+            predicateList.add(criteriaBuilder.equal(root.get(Question.Fields.groupId), groupId));
+
+            if (keyword != null) {
+                predicateList.add(criteriaBuilder.like(root.get(Question.Fields.title), "%" + keyword + "%"));
+            }
+
+            return criteriaBuilder.and(predicateList.toArray(new Predicate[0]));
+        };
 
         Page<Question> questionPage = questionService.findAll(specification, pageable);
 
