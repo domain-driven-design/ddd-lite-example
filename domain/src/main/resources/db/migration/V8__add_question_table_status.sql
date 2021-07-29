@@ -1,0 +1,2 @@
+ALTER TABLE `question`
+    ADD COLUMN `status` VARCHAR(10) NOT NULL DEFAULT 'OPENED';

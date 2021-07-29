@@ -37,6 +37,8 @@ public class Question {
 
     private String description;
 
+    private Status status;
+
     private String createdBy;
 
     private Instant createdAt;
@@ -46,4 +48,8 @@ public class Question {
     @OneToMany
     @JoinColumn(name = "question_id")
     private List<Answer> answers;
+
+    public enum Status {
+        OPENED, CLOSED
+    }
 }

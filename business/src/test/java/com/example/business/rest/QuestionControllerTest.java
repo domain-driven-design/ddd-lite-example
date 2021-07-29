@@ -60,6 +60,7 @@ class QuestionControllerTest extends TestBase {
         ));
 
         assertThat(questionOptional.isPresent(), is(true));
+        assertThat(questionOptional.get().getStatus(), is(Question.Status.OPENED));
 
     }
 

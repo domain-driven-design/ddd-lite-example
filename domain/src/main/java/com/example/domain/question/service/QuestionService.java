@@ -44,6 +44,7 @@ public class QuestionService {
                 .title(title)
                 .description(description)
                 .groupId(groupId)
+                .status(Question.Status.OPENED)
                 .createdBy(operatorId)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
