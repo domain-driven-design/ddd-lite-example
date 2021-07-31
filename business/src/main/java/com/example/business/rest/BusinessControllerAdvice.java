@@ -1,4 +1,4 @@
-package com.example.admin.rest;
+package com.example.business.rest;
 
 import com.example.domain.common.BaseException;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
-public class ControllerAdvice {
+public class BusinessControllerAdvice {
 
     private final Map<BaseException.Type, HttpStatus> codeMap = new HashMap<BaseException.Type, HttpStatus>() {{
         put(BaseException.Type.BAD_REQUEST, HttpStatus.BAD_REQUEST);
