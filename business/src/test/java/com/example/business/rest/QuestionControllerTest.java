@@ -153,6 +153,39 @@ class QuestionControllerTest extends TestBase {
     }
 
     @Test
+    void should_update_question_status() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
+
+        Response response = givenWithAuthorize(user)
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("status", Question.Status.CLOSED);
+                    }
+                })
+                .when()
+                .put(DEFAULT_PATH + "/" + question.getId() + "/status");
+        response.then().statusCode(200)
+                .body("id", is(question.getId()))
+                .body("status", is(Question.Status.CLOSED.name()));
+
+        Question updatedQuestion = questionRepository.findById(question.getId()).get();
+        assertThat(updatedQuestion.getStatus(), is(Question.Status.CLOSED));
+
+        givenWithAuthorize(user)
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("status", Question.Status.OPENED);
+                    }
+                })
+                .when()
+                .put(DEFAULT_PATH + "/" + question.getId() + "/status");
+        updatedQuestion = questionRepository.findById(question.getId()).get();
+        assertThat(updatedQuestion.getStatus(), is(Question.Status.OPENED));
+
+    }
+
+    @Test
     void should_delete_question() {
         User user = this.prepareUser("anyName", "anyEmail");
         Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());

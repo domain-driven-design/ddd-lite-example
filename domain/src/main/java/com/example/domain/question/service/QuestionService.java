@@ -65,6 +65,19 @@ public class QuestionService {
         return repository.save(question);
     }
 
+    public Question updateStatus(String id, Question.Status status, String operatorId) {
+        Question question = this._get(id);
+
+        // TODO group admin and admin
+        if (!question.getCreatedBy().equals(operatorId)) {
+            throw QuestionException.forbidden();
+        }
+
+        question.setStatus(status);
+        question.setUpdatedAt(Instant.now());
+        return repository.save(question);
+    }
+
     public void delete(String id, String operatorId) {
         Optional<Question> optionalQuestion = repository.findById(id);
         if (!optionalQuestion.isPresent()) {

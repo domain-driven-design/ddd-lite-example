@@ -7,6 +7,7 @@ import com.example.business.usecase.question.GetQuestionCase;
 import com.example.business.usecase.question.GetQuestionDetailCase;
 import com.example.business.usecase.question.UpdateAnswerCase;
 import com.example.business.usecase.question.UpdateQuestionCase;
+import com.example.business.usecase.question.UpdateQuestionStatusCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.group.service.GroupService;
 import com.example.domain.question.model.Answer;
@@ -74,6 +75,15 @@ public class QuestionApplicationService {
                 questionService.update(id, request.getTitle(), request.getDescription(), authorize.getUserId());
 
         return UpdateQuestionCase.Response.from(question);
+    }
+
+    public UpdateQuestionStatusCase.Response updateStatus(String id, UpdateQuestionStatusCase.Request request,
+                                                          String groupId, Authorize authorize) {
+        groupService.checkMember(groupId, authorize.getUserId());
+
+        Question question = questionService.updateStatus(id, request.getStatus(), authorize.getUserId());
+
+        return UpdateQuestionStatusCase.Response.from(question);
     }
 
     public void delete(String id, String groupId, Authorize authorize) {

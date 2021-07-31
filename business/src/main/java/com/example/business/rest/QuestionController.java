@@ -8,6 +8,7 @@ import com.example.business.usecase.question.GetQuestionCase;
 import com.example.business.usecase.question.GetQuestionDetailCase;
 import com.example.business.usecase.question.UpdateAnswerCase;
 import com.example.business.usecase.question.UpdateQuestionCase;
+import com.example.business.usecase.question.UpdateQuestionStatusCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,14 @@ public class QuestionController {
                                                       @RequestBody @Valid UpdateQuestionCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.update(id, request, groupId, authorize);
+    }
+
+    @PutMapping("/{id}/status")
+    public UpdateQuestionStatusCase.Response updateQuestionStatus(@PathVariable String groupId,
+                                                      @PathVariable String id,
+                                                      @RequestBody @Valid UpdateQuestionStatusCase.Request request) {
+        Authorize authorize = authorizeService.current();
+        return applicationService.updateStatus(id, request, groupId, authorize);
     }
 
     @DeleteMapping("/{id}")
