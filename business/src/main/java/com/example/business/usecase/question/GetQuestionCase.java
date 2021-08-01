@@ -14,6 +14,7 @@ public class GetQuestionCase {
     public static class Response {
         private String id;
         private String title;
+        private String description;
         private String createdBy;
         private Instant createdAt;
         private Instant updatedAt;
@@ -22,6 +23,7 @@ public class GetQuestionCase {
             return Response.builder()
                     .id(question.getId())
                     .title(question.getTitle())
+                    .description(question.getDescription())
                     .createdBy(question.getCreatedBy())
                     .createdAt(question.getCreatedAt())
                     .updatedAt(question.getUpdatedAt())

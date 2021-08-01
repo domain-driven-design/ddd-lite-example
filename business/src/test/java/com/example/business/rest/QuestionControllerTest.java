@@ -98,7 +98,9 @@ class QuestionControllerTest extends TestBase {
                 .then()
                 .statusCode(200)
                 .body("content.size", is(2))
-                .body("content.title", hasItems(question0.getTitle(), question1.getTitle()));
+                .body("content.title", hasItems(question0.getTitle(), question1.getTitle()))
+                .body("content.description", hasItems(question0.getDescription(), question1.getDescription()));
+
 
         givenDefault()
                 .param("sort", "createdAt")
@@ -110,7 +112,8 @@ class QuestionControllerTest extends TestBase {
                 .then()
                 .statusCode(200)
                 .body("content.size", is(1))
-                .body("content[0].title", is(question1.getTitle()));
+                .body("content[0].title", is(question1.getTitle()))
+                .body("content[0].description", is(question1.getDescription()));
 
         givenDefault()
                 .param("sort", "createdAt")
@@ -122,7 +125,8 @@ class QuestionControllerTest extends TestBase {
                 .then()
                 .statusCode(200)
                 .body("content.size", is(1))
-                .body("content[0].title", is(question3.getTitle()));
+                .body("content[0].title", is(question3.getTitle()))
+                .body("content[0].description", is(question3.getDescription()));
     }
 
     @Test
