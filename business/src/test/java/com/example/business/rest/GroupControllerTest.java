@@ -83,6 +83,7 @@ class GroupControllerTest extends TestBase {
 
         response.then().statusCode(200)
                 .body("content.size", is(2))
+                .body("content.description", hasItems(group0.getDescription(), group1.getDescription()))
                 .body("content.name", hasItems(group0.getName(), group1.getName()))
                 .body("content.members[0]", hasSize(1));
 

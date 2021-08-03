@@ -17,6 +17,7 @@ public class GetGroupCase {
     public static class Response {
         private String id;
         private String name;
+        private String description;
         private List<GroupMemberResponse> members;
         private String createdBy;
         private Instant createdAt;
@@ -26,6 +27,7 @@ public class GetGroupCase {
             return Response.builder()
                     .id(group.getId())
                     .name(group.getName())
+                    .description(group.getDescription())
                     .members(group.getMembers().stream().map(GroupMemberResponse::from).collect(Collectors.toList()))
                     .createdBy(group.getCreatedBy())
                     .createdAt(group.getCreatedAt())
