@@ -4,6 +4,7 @@ import com.example.business.service.GroupApplicationService;
 import com.example.business.usecase.group.ChangeGroupOwnerCase;
 import com.example.business.usecase.group.CreateGroupCase;
 import com.example.business.usecase.group.GetGroupCase;
+import com.example.business.usecase.group.GetGroupDetailCase;
 import com.example.business.usecase.group.GetMyGroupCase;
 import com.example.business.usecase.group.JoinGroupCase;
 import com.example.business.usecase.group.UpdateGroupCase;
@@ -41,6 +42,11 @@ public class GroupController {
     public CreateGroupCase.Response createGroup(@RequestBody @Valid CreateGroupCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.createGroup(request, authorize);
+    }
+
+    @GetMapping("/{id}")
+    public GetGroupDetailCase.Response getGroupDetail(@PathVariable String id) {
+        return applicationService.getGroupDetail(id);
     }
 
     @GetMapping()

@@ -2,6 +2,7 @@ package com.example.business.service;
 
 import com.example.business.usecase.group.CreateGroupCase;
 import com.example.business.usecase.group.GetGroupCase;
+import com.example.business.usecase.group.GetGroupDetailCase;
 import com.example.business.usecase.group.GetMyGroupCase;
 import com.example.business.usecase.group.ChangeGroupOwnerCase;
 import com.example.business.usecase.group.JoinGroupCase;
@@ -29,6 +30,12 @@ public class GroupApplicationService {
     public CreateGroupCase.Response createGroup(CreateGroupCase.Request request, Authorize authorize) {
         Group group = groupService.create(request.getName(), request.getDescription(), authorize.getUserId());
         return CreateGroupCase.Response.from(group);
+    }
+
+    public GetGroupDetailCase.Response getGroupDetail(String id) {
+        Group group = groupService.get(id);
+
+        return GetGroupDetailCase.Response.from(group);
     }
 
     public Page<GetGroupCase.Response> getGroupsByPage(Pageable pageable) {

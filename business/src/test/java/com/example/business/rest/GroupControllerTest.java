@@ -67,6 +67,24 @@ class GroupControllerTest extends TestBase {
     }
 
     @Test
+    void should_get_group_detail() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Group group = groupService.create("name", "anyDescription", user.getId());
+
+
+        Response response = givenDefault()
+                .when()
+                .get("/groups/" + group.getId());
+
+        response.then().statusCode(200)
+                .body("name", is(group.getName()))
+                .body("description", is(group.getDescription()))
+                .body("members", hasSize(1))
+                .body("members[0].userId", is(user.getId()))
+                .body("createdBy", is(group.getCreatedBy()));
+    }
+
+    @Test
     void should_get_all_groups_by_page() {
         User user = this.prepareUser("anyName", "anyEmail");
         Group group0 = groupService.create("name0", "anyDescription", user.getId());
