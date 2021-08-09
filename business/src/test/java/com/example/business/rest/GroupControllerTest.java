@@ -81,7 +81,8 @@ class GroupControllerTest extends TestBase {
                 .body("description", is(group.getDescription()))
                 .body("members", hasSize(1))
                 .body("members[0].userId", is(user.getId()))
-                .body("createdBy", is(group.getCreatedBy()));
+                .body("creator.id", is(user.getId()))
+                .body("creator.name", is(user.getName()));
     }
 
     @Test

@@ -12,6 +12,8 @@ import com.example.domain.auth.model.Authorize;
 import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;
 import com.example.domain.group.service.GroupService;
+import com.example.domain.user.model.User;
+import com.example.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,8 @@ import java.util.List;
 public class GroupApplicationService {
     @Autowired
     private GroupService groupService;
+    @Autowired
+    private UserService userService;
 
     public CreateGroupCase.Response createGroup(CreateGroupCase.Request request, Authorize authorize) {
         Group group = groupService.create(request.getName(), request.getDescription(), authorize.getUserId());
@@ -35,7 +39,9 @@ public class GroupApplicationService {
     public GetGroupDetailCase.Response getGroupDetail(String id) {
         Group group = groupService.get(id);
 
-        return GetGroupDetailCase.Response.from(group);
+        User creator = userService.get(group.getCreatedBy());
+
+        return GetGroupDetailCase.Response.from(group, creator);
     }
 
     public Page<GetGroupCase.Response> getGroupsByPage(Pageable pageable) {
