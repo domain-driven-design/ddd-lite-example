@@ -52,7 +52,7 @@ public class GroupService {
     private void checkOwner(Group group, String operatorId) {
         boolean isOwner = group.getMembers().stream()
                 .anyMatch(groupMember -> groupMember.getUserId().equals(operatorId)
-                        && groupMember.getRole().equals(GroupMember.GroupMemberRole.OWNER));
+                        && groupMember.getRole().equals(GroupMember.Role.OWNER));
 
         if (!isOwner) {
             throw GroupException.forbidden();
@@ -72,7 +72,7 @@ public class GroupService {
         Group createdGroup = groupRepository.save(group);
 
         GroupMember groupMember = GroupMember.builder()
-                .role(GroupMember.GroupMemberRole.OWNER)
+                .role(GroupMember.Role.OWNER)
                 .groupId(createdGroup.getId())
                 .userId(operatorId)
                 .createdBy(operatorId)
@@ -122,7 +122,7 @@ public class GroupService {
         GroupMember member = GroupMember.builder()
                 .groupId(id)
                 .userId(operatorId)
-                .role(GroupMember.GroupMemberRole.NORMAL)
+                .role(GroupMember.Role.NORMAL)
                 .createdBy(operatorId)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
@@ -141,7 +141,7 @@ public class GroupService {
 
         GroupMember groupMember = optionalGroupMember.get();
 
-        if (groupMember.getRole().equals(GroupMember.GroupMemberRole.OWNER)) {
+        if (groupMember.getRole().equals(GroupMember.Role.OWNER)) {
             throw GroupException.ownerCanNotExit();
         }
 
@@ -149,7 +149,7 @@ public class GroupService {
 
     }
 
-    private GroupMember checkMemberRole(String id, String userId, GroupMember.GroupMemberRole role) {
+    private GroupMember checkMemberRole(String id, String userId, GroupMember.Role role) {
         Optional<GroupMember> optionalOperator = findMember(id, userId);
 
         if (!optionalOperator.isPresent() || optionalOperator.get().getRole().compareTo(role) < 0) {
@@ -160,13 +160,13 @@ public class GroupService {
     }
 
     public GroupMember changeMemberRole(String id, String memberId,
-                                        GroupMember.GroupMemberRole role, String operatorId) {
-        checkMemberRole(id, operatorId, GroupMember.GroupMemberRole.OWNER);
+                                        GroupMember.Role role, String operatorId) {
+        checkMemberRole(id, operatorId, GroupMember.Role.OWNER);
 
         GroupMember groupMember = getMember(id, memberId);
 
-        if (role.equals(GroupMember.GroupMemberRole.OWNER) ||
-                groupMember.getRole().equals(GroupMember.GroupMemberRole.OWNER)) {
+        if (role.equals(GroupMember.Role.OWNER) ||
+                groupMember.getRole().equals(GroupMember.Role.OWNER)) {
             throw GroupException.ownerCanNotChange();
         }
 
@@ -178,21 +178,21 @@ public class GroupService {
 
     @Transactional
     public GroupMember changeOwner(String id, String memberId, String operatorId) {
-        GroupMember owner = checkMemberRole(id, operatorId, GroupMember.GroupMemberRole.OWNER);
+        GroupMember owner = checkMemberRole(id, operatorId, GroupMember.Role.OWNER);
 
         GroupMember groupMember = getMember(id, memberId);
 
-        owner.setRole(GroupMember.GroupMemberRole.ADMIN);
+        owner.setRole(GroupMember.Role.ADMIN);
         owner.setUpdatedAt(Instant.now());
         groupMemberRepository.save(owner);
 
-        groupMember.setRole(GroupMember.GroupMemberRole.OWNER);
+        groupMember.setRole(GroupMember.Role.OWNER);
         groupMember.setUpdatedAt(Instant.now());
         return groupMemberRepository.save(groupMember);
     }
 
     public void deleteMember(String id, String memberId, String operatorId) {
-        GroupMember operator = checkMemberRole(id, operatorId, GroupMember.GroupMemberRole.ADMIN);
+        GroupMember operator = checkMemberRole(id, operatorId, GroupMember.Role.ADMIN);
 
         GroupMember groupMember = getMember(id, memberId);
 

@@ -37,7 +37,7 @@ public class GroupMember {
     private String userId;
 
     @Enumerated(EnumType.STRING)
-    private GroupMemberRole role;
+    private Role role;
 
     private String createdBy;
 
@@ -45,7 +45,7 @@ public class GroupMember {
 
     private Instant updatedAt;
 
-    public enum GroupMemberRole {
+    public enum Role {
         NORMAL, ADMIN, OWNER
     }
 }

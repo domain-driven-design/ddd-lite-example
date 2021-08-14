@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class UpdateGroupMemberCase {
@@ -17,7 +16,7 @@ public class UpdateGroupMemberCase {
     @AllArgsConstructor
     public static class Request {
         @NotNull(message = "group_member_role_required")
-        private GroupMember.GroupMemberRole role;
+        private GroupMember.Role role;
     }
 
     @Getter
@@ -26,7 +25,7 @@ public class UpdateGroupMemberCase {
     public static class Response {
         private String groupId;
         private String userId;
-        private GroupMember.GroupMemberRole role;
+        private GroupMember.Role role;
 
         public static Response from(GroupMember groupMember) {
             return Response.builder()

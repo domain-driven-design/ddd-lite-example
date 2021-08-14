@@ -12,7 +12,7 @@ public class JoinGroupCase {
     public static class Response {
         private String groupId;
         private String userId;
-        private GroupMember.GroupMemberRole role;
+        private GroupMember.Role role;
 
         public static Response from(GroupMember groupMember) {
             return Response.builder()

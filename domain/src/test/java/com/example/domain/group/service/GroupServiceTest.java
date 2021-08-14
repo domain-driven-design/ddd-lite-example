@@ -8,23 +8,19 @@ import com.example.domain.group.repository.GroupMemberRepository;
 import com.example.domain.group.repository.GroupRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Example;
 
-import java.time.Instant;
 import java.util.Collections;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
@@ -102,7 +98,7 @@ class GroupServiceTest {
         GroupMember groupMember = GroupMember.builder()
                 .groupId(groupId)
                 .userId(userId)
-                .role(GroupMember.GroupMemberRole.OWNER)
+                .role(GroupMember.Role.OWNER)
                 .build();
         Mockito.when(groupMemberRepository.findOne(any(Example.class)))
                 .thenReturn(Optional.of(groupMember));

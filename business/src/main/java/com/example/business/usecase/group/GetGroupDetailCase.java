@@ -44,11 +44,13 @@ public class GetGroupDetailCase {
     public static class GroupMemberResponse {
         private String userId;
         private Instant createdAt;
+        private GroupMember.Role role;
 
         public static GroupMemberResponse from(GroupMember groupMember) {
             return GroupMemberResponse.builder()
                     .userId(groupMember.getUserId())
                     .createdAt(groupMember.getCreatedAt())
+                    .role(groupMember.getRole())
                     .build();
         }
     }
