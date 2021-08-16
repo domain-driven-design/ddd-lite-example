@@ -109,6 +109,10 @@ public class GroupService {
                 .orElseThrow(GroupException::memberNotFound);
     }
 
+    public Page<GroupMember> findAllMembers(Specification<GroupMember> specification, Pageable pageable) {
+        return groupMemberRepository.findAll(specification, pageable);
+    }
+
     public GroupMember addNormalMember(String id, String operatorId) {
         Group group = _get(id);
 

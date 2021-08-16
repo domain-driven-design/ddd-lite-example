@@ -5,6 +5,7 @@ import com.example.business.usecase.group.ChangeGroupOwnerCase;
 import com.example.business.usecase.group.CreateGroupCase;
 import com.example.business.usecase.group.GetGroupCase;
 import com.example.business.usecase.group.GetGroupDetailCase;
+import com.example.business.usecase.group.GetGroupMemberCase;
 import com.example.business.usecase.group.GetMyGroupCase;
 import com.example.business.usecase.group.JoinGroupCase;
 import com.example.business.usecase.group.UpdateGroupCase;
@@ -65,6 +66,11 @@ public class GroupController {
                                                 @RequestBody @Valid UpdateGroupCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.updateGroup(id, request, authorize);
+    }
+
+    @GetMapping("/{id}/members")
+    public Page<GetGroupMemberCase.Response> getGroupMembers(@PathVariable String id, Pageable pageable) {
+        return applicationService.getGroupMembers(id, pageable);
     }
 
     @PostMapping("/{id}/members")

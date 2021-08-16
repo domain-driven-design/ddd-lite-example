@@ -1,10 +1,11 @@
 package com.example.business.service;
 
+import com.example.business.usecase.group.ChangeGroupOwnerCase;
 import com.example.business.usecase.group.CreateGroupCase;
 import com.example.business.usecase.group.GetGroupCase;
 import com.example.business.usecase.group.GetGroupDetailCase;
+import com.example.business.usecase.group.GetGroupMemberCase;
 import com.example.business.usecase.group.GetMyGroupCase;
-import com.example.business.usecase.group.ChangeGroupOwnerCase;
 import com.example.business.usecase.group.JoinGroupCase;
 import com.example.business.usecase.group.UpdateGroupCase;
 import com.example.business.usecase.group.UpdateGroupMemberCase;
@@ -23,6 +24,12 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 @Service
 public class GroupApplicationService {
@@ -65,6 +72,23 @@ public class GroupApplicationService {
         return UpdateGroupCase.Response.from(group);
     }
 
+    public Page<GetGroupMemberCase.Response> getGroupMembers(String id, Pageable pageable) {
+        Specification<GroupMember> specification = (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get(GroupMember.Fields.groupId), id);
+        Page<GroupMember> page = groupService.findAllMembers(specification, pageable);
+
+        Set<String> userIds = page.getContent().stream().map(GroupMember::getUserId).collect(Collectors.toSet());
+        Specification<User> userSpecification = (root, query, criteriaBuilder) ->
+                criteriaBuilder.in(root.get(User.Fields.id)).value(userIds);
+
+        Map<String, User> userMap = userService.findAll(userSpecification, Pageable.unpaged()).getContent().stream()
+                .collect(toMap(User::getId, Function.identity()));
+
+        return page.map(groupMember ->
+                GetGroupMemberCase.Response.from(groupMember, userMap.get(groupMember.getUserId()))
+        );
+    }
+
     public JoinGroupCase.Response joinGroup(String id, Authorize authorize) {
         GroupMember member = groupService.addNormalMember(id, authorize.getUserId());
         return JoinGroupCase.Response.from(member);
@@ -83,8 +107,8 @@ public class GroupApplicationService {
     }
 
     public ChangeGroupOwnerCase.Response changeOwner(String id,
-                                                       ChangeGroupOwnerCase.Request request,
-                                                       Authorize authorize) {
+                                                     ChangeGroupOwnerCase.Request request,
+                                                     Authorize authorize) {
         GroupMember groupMember = groupService.changeOwner(id, request.getMemberId(), authorize.getUserId());
         return ChangeGroupOwnerCase.Response.from(groupMember);
     }

@@ -159,6 +159,31 @@ class GroupControllerTest extends TestBase {
     }
 
     @Test
+    void should_get_group_members() {
+        User creator = this.prepareUser("anyName", "anyEmail");
+        Group group = groupService.create("name", "description", creator.getId());
+
+        User user1 = this.prepareUser("name1", "email1");
+        User user2 = this.prepareUser("name2", "email2");
+        User user3 = this.prepareUser("name3", "email3");
+
+        groupService.addNormalMember(group.getId(), user1.getId());
+        groupService.addNormalMember(group.getId(), user2.getId());
+        groupService.addNormalMember(group.getId(), user3.getId());
+
+        Response response = givenWithAuthorize(creator)
+                .param("sort", "createdAt")
+                .when()
+                .get("/groups/" + group.getId() + "/members");
+
+        response.then().statusCode(200)
+                .body("content.size", is(4))
+                .body("content.userId", hasItems(creator.getId(), user1.getId(), user2.getId(), user3.getId()))
+                .body("content.name", hasItems(creator.getName(), user1.getName(), user2.getName(), user3.getName()))
+                .body("content.role", hasItems(GroupMember.Role.NORMAL.name(), GroupMember.Role.OWNER.name()));
+    }
+
+    @Test
     void should_join_group() {
         User creator = this.prepareUser("anyName", "anyEmail");
         Group group = groupService.create("name", "description", creator.getId());
