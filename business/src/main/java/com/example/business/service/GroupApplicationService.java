@@ -89,6 +89,26 @@ public class GroupApplicationService {
         );
     }
 
+    public Page<GetGroupMemberCase.Response> getGroupManagementMembers(String id, Pageable pageable) {
+        Specification<GroupMember> specification = (root, query, criteriaBuilder) ->
+                criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get(GroupMember.Fields.groupId), id),
+                        criteriaBuilder.notEqual(root.get(GroupMember.Fields.role), GroupMember.Role.OWNER)
+                );
+        Page<GroupMember> page = groupService.findAllMembers(specification, pageable);
+
+        Set<String> userIds = page.getContent().stream().map(GroupMember::getUserId).collect(Collectors.toSet());
+        Specification<User> userSpecification = (root, query, criteriaBuilder) ->
+                criteriaBuilder.in(root.get(User.Fields.id)).value(userIds);
+
+        Map<String, User> userMap = userService.findAll(userSpecification, Pageable.unpaged()).getContent().stream()
+                .collect(toMap(User::getId, Function.identity()));
+
+        return page.map(groupMember ->
+                GetGroupMemberCase.Response.from(groupMember, userMap.get(groupMember.getUserId()))
+        );
+    }
+
     public JoinGroupCase.Response joinGroup(String id, Authorize authorize) {
         GroupMember member = groupService.addNormalMember(id, authorize.getUserId());
         return JoinGroupCase.Response.from(member);

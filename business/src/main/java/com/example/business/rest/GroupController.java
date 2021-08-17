@@ -73,6 +73,11 @@ public class GroupController {
         return applicationService.getGroupMembers(id, pageable);
     }
 
+    @GetMapping("/{id}/members/management")
+    public Page<GetGroupMemberCase.Response> getGroupManagementMembers(@PathVariable String id, Pageable pageable) {
+        return applicationService.getGroupManagementMembers(id, pageable);
+    }
+
     @PostMapping("/{id}/members")
     @ResponseStatus(CREATED)
     public JoinGroupCase.Response joinGroup(@PathVariable String id) {
