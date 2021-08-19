@@ -4,6 +4,7 @@ import com.example.business.service.QuestionApplicationService;
 import com.example.business.usecase.question.CreateAnswerCase;
 import com.example.business.usecase.question.CreateQuestionCase;
 import com.example.business.usecase.question.GetAnswerCase;
+import com.example.business.usecase.question.GetManagementQuestionCase;
 import com.example.business.usecase.question.GetQuestionCase;
 import com.example.business.usecase.question.GetQuestionDetailCase;
 import com.example.business.usecase.question.UpdateAnswerCase;
@@ -57,6 +58,14 @@ public class QuestionController {
                                                              @RequestParam(required = false) String createdBy,
                                                              @PageableDefault Pageable pageable) {
         return applicationService.getByPage(groupId, keyword, createdBy, pageable);
+    }
+
+    @GetMapping("/management")
+    public Page<GetManagementQuestionCase.Response> getManagementQuestions(@PathVariable String groupId,
+                                                                           @RequestParam(required = false) String keyword,
+                                                                           @RequestParam(required = false) String createdBy,
+                                                                           @PageableDefault Pageable pageable) {
+        return applicationService.getManagementQuestions(groupId, keyword, createdBy, pageable);
     }
 
     @PutMapping("/{id}")

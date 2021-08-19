@@ -130,6 +130,57 @@ class QuestionControllerTest extends TestBase {
     }
 
     @Test
+    void should_get_management_questions_by_page() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        User otherUser = this.prepareUser("anyOtherName", "anyOtherEmail");
+        Question question0 = questionService.create("anyTitle0", "anyDescription0", Group.DEFAULT, user.getId());
+        Question question1 = questionService.create("anyTitle1", "anyDescription1", Group.DEFAULT, user.getId());
+        questionService.create("anyTitle2", "anyDescription2", Group.DEFAULT, user.getId());
+        Question question3 = questionService.create("anyTitle3", "anyDescription3", Group.DEFAULT, otherUser.getId());
+
+        givenDefault()
+                .param("sort", "createdAt")
+                .param("sort", "title")
+                .param("size", 2)
+                .when()
+                .get(DEFAULT_PATH + "/management")
+                .then()
+                .statusCode(200)
+                .body("content.size", is(2))
+                .body("content.title", hasItems(question0.getTitle(), question1.getTitle()))
+                .body("content.description", hasItems(question0.getDescription(), question1.getDescription()))
+                .body("content[0].creator.id", is(user.getId()))
+                .body("content[0].creator.name", is(user.getName()));
+
+
+        givenDefault()
+                .param("sort", "createdAt")
+                .param("sort", "title")
+                .param("keyword", "Title1")
+                .param("size", 2)
+                .when()
+                .get(DEFAULT_PATH + "/management")
+                .then()
+                .statusCode(200)
+                .body("content.size", is(1))
+                .body("content[0].title", is(question1.getTitle()))
+                .body("content[0].description", is(question1.getDescription()));
+
+        givenDefault()
+                .param("sort", "createdAt")
+                .param("sort", "title")
+                .param("createdBy", otherUser.getId())
+                .param("size", 1)
+                .when()
+                .get(DEFAULT_PATH + "/management")
+                .then()
+                .statusCode(200)
+                .body("content.size", is(1))
+                .body("content[0].title", is(question3.getTitle()))
+                .body("content[0].description", is(question3.getDescription()));
+    }
+
+    @Test
     void should_update_question() {
         User user = this.prepareUser("anyName", "anyEmail");
         Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
