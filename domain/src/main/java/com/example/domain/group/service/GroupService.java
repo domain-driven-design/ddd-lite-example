@@ -103,9 +103,24 @@ public class GroupService {
                 .build()));
     }
 
-    private GroupMember getMember(String id, String memberId) {
+    private GroupMember _getMember(String id, String memberId) {
         return groupMemberRepository
                 .findOne(Example.of(GroupMember.builder().groupId(id).id(memberId).build()))
+                .orElseThrow(GroupException::memberNotFound);
+    }
+
+    public GroupMember getMember(String id, String userId) {
+        if (id.equals(Group.DEFAULT)) {
+            return GroupMember.builder()
+                    .groupId(id)
+                    .userId(userId)
+                    .role(GroupMember.Role.OWNER)
+                    .build();
+        }
+        return groupMemberRepository.findOne(Example.of(GroupMember.builder()
+                .groupId(id)
+                .userId(userId)
+                .build()))
                 .orElseThrow(GroupException::memberNotFound);
     }
 
@@ -167,7 +182,7 @@ public class GroupService {
                                         GroupMember.Role role, String operatorId) {
         checkMemberRole(id, operatorId, GroupMember.Role.OWNER);
 
-        GroupMember groupMember = getMember(id, memberId);
+        GroupMember groupMember = _getMember(id, memberId);
 
         if (role.equals(GroupMember.Role.OWNER) ||
                 groupMember.getRole().equals(GroupMember.Role.OWNER)) {
@@ -184,7 +199,7 @@ public class GroupService {
     public GroupMember changeOwner(String id, String memberId, String operatorId) {
         GroupMember owner = checkMemberRole(id, operatorId, GroupMember.Role.OWNER);
 
-        GroupMember groupMember = getMember(id, memberId);
+        GroupMember groupMember = _getMember(id, memberId);
 
         owner.setRole(GroupMember.Role.ADMIN);
         owner.setUpdatedAt(Instant.now());
@@ -198,7 +213,7 @@ public class GroupService {
     public void deleteMember(String id, String memberId, String operatorId) {
         GroupMember operator = checkMemberRole(id, operatorId, GroupMember.Role.ADMIN);
 
-        GroupMember groupMember = getMember(id, memberId);
+        GroupMember groupMember = _getMember(id, memberId);
 
         if (operator.getRole().compareTo(groupMember.getRole()) <= 0) {
             throw GroupException.forbidden();

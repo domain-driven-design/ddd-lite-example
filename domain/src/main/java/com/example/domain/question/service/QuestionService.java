@@ -1,12 +1,12 @@
 package com.example.domain.question.service;
 
+import com.example.domain.group.model.GroupMember;
 import com.example.domain.question.exception.QuestionException;
 import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;
 import com.example.domain.question.repository.AnswerRepository;
 import com.example.domain.question.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -78,14 +78,14 @@ public class QuestionService {
         return repository.save(question);
     }
 
-    public void delete(String id, String operatorId) {
+    public void delete(String id, GroupMember member) {
         Optional<Question> optionalQuestion = repository.findById(id);
         if (!optionalQuestion.isPresent()) {
             return;
         }
 
         Question question = optionalQuestion.get();
-        if (!question.getCreatedBy().equals(operatorId)) {
+        if (member.getRole().compareTo(GroupMember.Role.ADMIN) < 0 && !question.getCreatedBy().equals(member.getUserId())) {
             throw QuestionException.forbidden();
         }
 

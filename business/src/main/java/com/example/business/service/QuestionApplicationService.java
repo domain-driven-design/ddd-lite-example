@@ -10,6 +10,7 @@ import com.example.business.usecase.question.UpdateAnswerCase;
 import com.example.business.usecase.question.UpdateQuestionCase;
 import com.example.business.usecase.question.UpdateQuestionStatusCase;
 import com.example.domain.auth.model.Authorize;
+import com.example.domain.group.model.GroupMember;
 import com.example.domain.group.service.GroupService;
 import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;
@@ -130,9 +131,9 @@ public class QuestionApplicationService {
     }
 
     public void delete(String id, String groupId, Authorize authorize) {
-        groupService.checkMember(groupId, authorize.getUserId());
+        GroupMember member = groupService.getMember(groupId, authorize.getUserId());
 
-        questionService.delete(id, authorize.getUserId());
+        questionService.delete(id, member);
     }
 
     public CreateAnswerCase.Response createAnswer(String id, CreateAnswerCase.Request request, String groupId,
