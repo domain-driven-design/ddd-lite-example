@@ -91,12 +91,12 @@ public class GroupController {
         applicationService.exitGroup(id, authorize);
     }
 
-    @PutMapping("/{id}/members/{memberId}")
+    @PutMapping("/{id}/members/{userId}")
     public UpdateGroupMemberCase.Response updateMember(@PathVariable String id,
-                                                       @PathVariable String memberId,
+                                                       @PathVariable String userId,
                                                        @RequestBody @Valid UpdateGroupMemberCase.Request request) {
         Authorize authorize = authorizeService.current();
-        return applicationService.updateMember(id, memberId, request, authorize);
+        return applicationService.updateMember(id, userId, request, authorize);
     }
 
     @PutMapping("/{id}/owner")
@@ -106,10 +106,10 @@ public class GroupController {
         return applicationService.changeOwner(id, request, authorize);
     }
 
-    @DeleteMapping("/{id}/members/{memberId}")
-    public void removeMember(@PathVariable String id, @PathVariable String memberId) {
+    @DeleteMapping("/{id}/members/{userId}")
+    public void removeMember(@PathVariable String id, @PathVariable String userId) {
         Authorize authorize = authorizeService.current();
-        applicationService.removeMember(id, memberId, authorize);
+        applicationService.removeMember(id, userId, authorize);
     }
 
 }

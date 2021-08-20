@@ -15,8 +15,8 @@ public class ChangeGroupOwnerCase {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
-        @NotNull(message = "group_member_id")
-        private String memberId;
+        @NotNull(message = "group_user_id")
+        private String userId;
     }
 
     @Getter

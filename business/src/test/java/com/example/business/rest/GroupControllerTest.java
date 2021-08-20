@@ -264,7 +264,7 @@ class GroupControllerTest extends TestBase {
                         put("role", GroupMember.Role.ADMIN);
                     }
                 })                .when()
-                .put("/groups/" + group.getId() + "/members/" + groupMember.getId());
+                .put("/groups/" + group.getId() + "/members/" + groupMember.getUserId());
         response.then().statusCode(200)
                 .body("groupId", is(group.getId()))
                 .body("userId", is(user.getId()))
@@ -283,7 +283,7 @@ class GroupControllerTest extends TestBase {
                         put("role", GroupMember.Role.NORMAL);
                     }
                 })                .when()
-                .put("/groups/" + group.getId() + "/members/" + groupMember.getId());
+                .put("/groups/" + group.getId() + "/members/" + groupMember.getUserId());
         response.then().statusCode(200)
                 .body("groupId", is(group.getId()))
                 .body("userId", is(user.getId()))
@@ -308,7 +308,7 @@ class GroupControllerTest extends TestBase {
         Response response = givenWithAuthorize(creator)
                 .body(new HashMap<String, Object>() {
                     {
-                        put("memberId", groupMember.getId());
+                        put("userId", groupMember.getUserId());
                     }
                 })                .when()
                 .put("/groups/" + group.getId() + "/owner");
@@ -343,7 +343,7 @@ class GroupControllerTest extends TestBase {
 
         Response response = givenWithAuthorize(creator)
                 .when()
-                .delete("/groups/" + group.getId() + "/members/" + groupMember.getId());
+                .delete("/groups/" + group.getId() + "/members/" + groupMember.getUserId());
         response.then().statusCode(200);
 
         Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()

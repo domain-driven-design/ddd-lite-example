@@ -118,10 +118,10 @@ public class GroupApplicationService {
         groupService.deleteNormalMember(id, authorize.getUserId());
     }
 
-    public UpdateGroupMemberCase.Response updateMember(String id, String memberId,
+    public UpdateGroupMemberCase.Response updateMember(String id, String userId,
                                                        UpdateGroupMemberCase.Request request,
                                                        Authorize authorize) {
-        GroupMember groupMember = groupService.changeMemberRole(id, memberId, request.getRole(), authorize.getUserId());
+        GroupMember groupMember = groupService.changeMemberRole(id, userId, request.getRole(), authorize.getUserId());
 
         return UpdateGroupMemberCase.Response.from(groupMember);
     }
@@ -129,11 +129,11 @@ public class GroupApplicationService {
     public ChangeGroupOwnerCase.Response changeOwner(String id,
                                                      ChangeGroupOwnerCase.Request request,
                                                      Authorize authorize) {
-        GroupMember groupMember = groupService.changeOwner(id, request.getMemberId(), authorize.getUserId());
+        GroupMember groupMember = groupService.changeOwner(id, request.getUserId(), authorize.getUserId());
         return ChangeGroupOwnerCase.Response.from(groupMember);
     }
 
-    public void removeMember(String id, String memberId, Authorize authorize) {
-        groupService.deleteMember(id, memberId, authorize.getUserId());
+    public void removeMember(String id, String userId, Authorize authorize) {
+        groupService.deleteMember(id, userId, authorize.getUserId());
     }
 }
