@@ -112,19 +112,19 @@ public class QuestionApplicationService {
 
     public UpdateQuestionCase.Response update(String id, UpdateQuestionCase.Request request, String groupId,
                                               Authorize authorize) {
-        groupService.checkMember(groupId, authorize.getUserId());
+        GroupMember member = groupService.getMember(groupId, authorize.getUserId());
 
         Question question =
-                questionService.update(id, request.getTitle(), request.getDescription(), authorize.getUserId());
+                questionService.update(id, request.getTitle(), request.getDescription(), member);
 
         return UpdateQuestionCase.Response.from(question);
     }
 
     public UpdateQuestionStatusCase.Response updateStatus(String id, UpdateQuestionStatusCase.Request request,
                                                           String groupId, Authorize authorize) {
-        groupService.checkMember(groupId, authorize.getUserId());
+        GroupMember member = groupService.getMember(groupId, authorize.getUserId());
 
-        Question question = questionService.updateStatus(id, request.getStatus(), authorize.getUserId());
+        Question question = questionService.updateStatus(id, request.getStatus(), member);
 
         return UpdateQuestionStatusCase.Response.from(question);
     }
@@ -137,9 +137,9 @@ public class QuestionApplicationService {
 
     public CreateAnswerCase.Response createAnswer(String id, CreateAnswerCase.Request request, String groupId,
                                                   Authorize authorize) {
-        groupService.checkMember(groupId, authorize.getUserId());
+        GroupMember member = groupService.getMember(groupId, authorize.getUserId());
 
-        Answer answer = questionService.addAnswer(id, request.getContent(), authorize.getUserId());
+        Answer answer = questionService.addAnswer(id, request.getContent(), member);
 
         return CreateAnswerCase.Response.from(answer);
     }
@@ -154,16 +154,16 @@ public class QuestionApplicationService {
 
     public UpdateAnswerCase.Response updateAnswer(String id, String answerId, UpdateAnswerCase.Request request,
                                                   String groupId, Authorize authorize) {
-        groupService.checkMember(groupId, authorize.getUserId());
+        GroupMember member = groupService.getMember(groupId, authorize.getUserId());
 
-        Answer answer = questionService.updateAnswer(id, answerId, request.getContent(), authorize.getUserId());
+        Answer answer = questionService.updateAnswer(id, answerId, request.getContent(), member);
 
         return UpdateAnswerCase.Response.from(answer);
     }
 
     public void deleteAnswer(String id, String answerId, String groupId, Authorize authorize) {
-        groupService.checkMember(groupId, authorize.getUserId());
+        GroupMember member = groupService.getMember(groupId, authorize.getUserId());
 
-        questionService.deleteAnswer(id, answerId, authorize.getUserId());
+        questionService.deleteAnswer(id, answerId, member);
     }
 }

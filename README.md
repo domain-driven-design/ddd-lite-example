@@ -69,6 +69,7 @@ ps：
 - 异步任务
 
 ## 待讨论
+- API测试覆盖所有happy path，包括不同角色权限对同一资源的同一操作，单元测试专注check各种业务异常
 - 查看某位用户创建的问题，无需权限校验，直接在getByPage加查询条件？查询场景不同，但都是对question基本属性的筛选
 - 写接口，遵循/groups/groupId/questions，逐层check权限。读接口，不需要check权限，或者有时需要跳过圈子这个筛选项
 - api测试，是一个接口统一准备数据，然后分不同的happy path测试？还是不同happy path分别准备数据，在不同的test中测试？

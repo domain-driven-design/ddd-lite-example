@@ -218,7 +218,7 @@ class QuestionControllerTest extends TestBase {
     }
 
     @Test
-    void should_update_question_status() {
+    void should_update_question_status_by_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
         GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
         Question question = questionService.create("anyTitle", "anyDescription", member);
@@ -252,15 +252,143 @@ class QuestionControllerTest extends TestBase {
     }
 
     @Test
-    void should_delete_question() {
+    void should_update_question_status_by_group_admin_and_not_creator() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Group group = groupService.create("anyGroupName", "", user.getId());
+        GroupMember groupOwner = group.getMembers().get(0);
+        User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
+        GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
+
+        Question question = questionService.create("anyTitle", "anyDescription", groupOwner);
+
+        Response response = givenWithAuthorize(otherUser)
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("status", Question.Status.CLOSED);
+                    }
+                })
+                .when()
+                .put(DEFAULT_PATH + "/" + question.getId() + "/status");
+        response.then().statusCode(200)
+                .body("id", is(question.getId()))
+                .body("status", is(Question.Status.CLOSED.name()));
+
+        Question updatedQuestion = questionRepository.findById(question.getId()).get();
+        assertThat(updatedQuestion.getStatus(), is(Question.Status.CLOSED));
+
+        givenWithAuthorize(user)
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("status", Question.Status.OPENED);
+                    }
+                })
+                .when()
+                .put(DEFAULT_PATH + "/" + question.getId() + "/status");
+        updatedQuestion = questionRepository.findById(question.getId()).get();
+        assertThat(updatedQuestion.getStatus(), is(Question.Status.OPENED));
+
+    }
+
+    @Test
+    void should_update_question_status_by_group_owner_and_not_creator() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Group group = groupService.create("anyGroupName", "", user.getId());
+        GroupMember groupOwner = group.getMembers().get(0);
+        User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
+        GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
+
+        Question question = questionService.create("anyTitle", "anyDescription", groupAdmin);
+
+        Response response = givenWithAuthorize(user)
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("status", Question.Status.CLOSED);
+                    }
+                })
+                .when()
+                .put(DEFAULT_PATH + "/" + question.getId() + "/status");
+        response.then().statusCode(200)
+                .body("id", is(question.getId()))
+                .body("status", is(Question.Status.CLOSED.name()));
+
+        Question updatedQuestion = questionRepository.findById(question.getId()).get();
+        assertThat(updatedQuestion.getStatus(), is(Question.Status.CLOSED));
+
+        givenWithAuthorize(user)
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("status", Question.Status.OPENED);
+                    }
+                })
+                .when()
+                .put(DEFAULT_PATH + "/" + question.getId() + "/status");
+        updatedQuestion = questionRepository.findById(question.getId()).get();
+        assertThat(updatedQuestion.getStatus(), is(Question.Status.OPENED));
+
+    }
+
+    @Test
+    void should_delete_question_by_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
         GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
+        User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
+        GroupMember otherMember = groupService.getMember(Group.DEFAULT, otherUser.getId());
+
         Question question = questionService.create("anyTitle", "anyDescription", member);
         String questionId = question.getId();
 
+        questionService.addAnswer(questionId, "content0", member);
+        questionService.addAnswer(questionId, "content1", otherMember);
+
+        Response response = givenWithAuthorize(user)
+                .when()
+                .delete(DEFAULT_PATH + "/" + questionId);
+        response.then().statusCode(200);
+
+        assertThat(questionRepository.existsById(questionId), is(false));
+
+        List<Answer> answers = answerRepository.findAll(Example.of(Answer.builder().questionId(questionId).build()));
+        assertThat(answers, hasSize(0));
+    }
+
+    @Test
+    void should_delete_question_by_group_admin_and_not_creator() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Group group = groupService.create("anyGroupName", "", user.getId());
+        GroupMember groupOwner = group.getMembers().get(0);
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
-        questionService.addAnswer(questionId, "content0", user.getId());
-        questionService.addAnswer(questionId, "content1", otherUser.getId());
+        GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
+
+        Question question = questionService.create("anyTitle", "anyDescription", groupOwner);
+        String questionId = question.getId();
+
+        questionService.addAnswer(questionId, "content0", groupOwner);
+        questionService.addAnswer(questionId, "content1", groupAdmin);
+
+        Response response = givenWithAuthorize(otherUser)
+                .when()
+                .delete(DEFAULT_PATH + "/" + questionId);
+        response.then().statusCode(200);
+
+        assertThat(questionRepository.existsById(questionId), is(false));
+
+        List<Answer> answers = answerRepository.findAll(Example.of(Answer.builder().questionId(questionId).build()));
+        assertThat(answers, hasSize(0));
+    }
+
+    @Test
+    void should_delete_question_by_group_owner_and_not_creator() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Group group = groupService.create("anyGroupName", "", user.getId());
+        GroupMember groupOwner = group.getMembers().get(0);
+        User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
+        GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
+
+        Question question = questionService.create("anyTitle", "anyDescription", groupAdmin);
+        String questionId = question.getId();
+
+        questionService.addAnswer(questionId, "content0", groupOwner);
+        questionService.addAnswer(questionId, "content1", groupAdmin);
 
         Response response = givenWithAuthorize(user)
                 .when()
@@ -306,11 +434,12 @@ class QuestionControllerTest extends TestBase {
     void should_get_all_answers_by_page() {
         User user = this.prepareUser("anyName", "anyEmail");
         GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
+        User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
+        GroupMember otherMember = groupService.getMember(Group.DEFAULT, otherUser.getId());
         Question question = questionService.create("anyTitle", "anyDescription", member);
 
-        User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
-        Answer answer0 = questionService.addAnswer(question.getId(), "content0", user.getId());
-        Answer answer1 = questionService.addAnswer(question.getId(), "content1", otherUser.getId());
+        Answer answer0 = questionService.addAnswer(question.getId(), "content0", member);
+        Answer answer1 = questionService.addAnswer(question.getId(), "content1", otherMember);
 
         Response response = givenDefault()
                 .param("sort", "createdAt")
@@ -327,7 +456,7 @@ class QuestionControllerTest extends TestBase {
         User user = this.prepareUser("anyName", "anyEmail");
         GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
         Question question = questionService.create("anyTitle", "anyDescription", member);
-        Answer answer = questionService.addAnswer(question.getId(), "content", user.getId());
+        Answer answer = questionService.addAnswer(question.getId(), "content", member);
         String newContent = "newContent";
 
         Response response = givenWithAuthorize(user)
@@ -348,11 +477,11 @@ class QuestionControllerTest extends TestBase {
     }
 
     @Test
-    void should_delete_answer() {
+    void should_delete_answer_by_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
         GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
         Question question = questionService.create("anyTitle", "anyDescription", member);
-        Answer answer = questionService.addAnswer(question.getId(), "content", user.getId());
+        Answer answer = questionService.addAnswer(question.getId(), "content", member);
 
         Response response = givenWithAuthorize(user)
                 .when()
@@ -360,5 +489,49 @@ class QuestionControllerTest extends TestBase {
         response.then().statusCode(200);
 
         assertThat(answerRepository.findById(answer.getId()).isPresent(), is(false));
+    }
+
+    @Test
+    void should_delete_answer_by_group_admin_and_not_creator() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Group group = groupService.create("anyGroupName", "", user.getId());
+        GroupMember groupOwner = group.getMembers().get(0);
+        User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
+        GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
+
+        Question question = questionService.create("anyTitle", "anyDescription", groupAdmin);
+        Answer answer = questionService.addAnswer(question.getId(), "content", groupAdmin);
+
+        Response response = givenWithAuthorize(otherUser)
+                .when()
+                .delete(DEFAULT_PATH + "/" + question.getId() + "/answers/" + answer.getId());
+        response.then().statusCode(200);
+
+        assertThat(answerRepository.findById(answer.getId()).isPresent(), is(false));
+    }
+
+    @Test
+    void should_delete_answer_by_group_owner_and_not_creator() {
+        User user = this.prepareUser("anyName", "anyEmail");
+        Group group = groupService.create("anyGroupName", "", user.getId());
+        GroupMember groupOwner = group.getMembers().get(0);
+        User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
+        GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
+
+        Question question = questionService.create("anyTitle", "anyDescription", groupAdmin);
+        Answer answer = questionService.addAnswer(question.getId(), "content", groupAdmin);
+
+        Response response = givenWithAuthorize(user)
+                .when()
+                .delete(DEFAULT_PATH + "/" + question.getId() + "/answers/" + answer.getId());
+        response.then().statusCode(200);
+
+        assertThat(answerRepository.findById(answer.getId()).isPresent(), is(false));
+    }
+
+
+    private GroupMember addGroupAdmin(Group group, User user, GroupMember operator) {
+        GroupMember otherMember = groupService.addNormalMember(group.getId(), user.getId());
+        return groupService.changeMemberRole(group.getId(), otherMember.getId(), GroupMember.Role.ADMIN, operator.getUserId());
     }
 }

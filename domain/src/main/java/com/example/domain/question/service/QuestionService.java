@@ -52,10 +52,10 @@ public class QuestionService {
         return repository.save(question);
     }
 
-    public Question update(String id, String title, String description, String operatorId) {
+    public Question update(String id, String title, String description, GroupMember operator) {
         Question question = this._get(id);
 
-        if (!question.getCreatedBy().equals(operatorId)) {
+        if (!question.getCreatedBy().equals(operator.getUserId())) {
             throw QuestionException.forbidden();
         }
 
@@ -65,11 +65,11 @@ public class QuestionService {
         return repository.save(question);
     }
 
-    public Question updateStatus(String id, Question.Status status, String operatorId) {
+    public Question updateStatus(String id, Question.Status status, GroupMember operator) {
         Question question = this._get(id);
 
-        // TODO group admin and admin
-        if (!question.getCreatedBy().equals(operatorId)) {
+        // TODO admin
+        if (operator.getRole().compareTo(GroupMember.Role.ADMIN) < 0 && !question.getCreatedBy().equals(operator.getUserId())) {
             throw QuestionException.forbidden();
         }
 
@@ -85,6 +85,7 @@ public class QuestionService {
         }
 
         Question question = optionalQuestion.get();
+        // TODO admin
         if (operator.getRole().compareTo(GroupMember.Role.ADMIN) < 0 && !question.getCreatedBy().equals(operator.getUserId())) {
             throw QuestionException.forbidden();
         }
@@ -98,15 +99,14 @@ public class QuestionService {
         return answerRepository.findById(answerId).orElseThrow(QuestionException::answerNotFound);
     }
 
-    public Answer addAnswer(String id, String content, String operatorId) {
+    public Answer addAnswer(String id, String content, GroupMember operator) {
         Question question = _get(id);
 
         // TODO 业务验证：一个operator只能在一个question有一个answer
-
         Answer answer = Answer.builder()
                 .questionId(id)
                 .content(content)
-                .createdBy(operatorId)
+                .createdBy(operator.getUserId())
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
@@ -118,13 +118,12 @@ public class QuestionService {
         return answerRepository.findAll(spec, pageable);
     }
 
-    public Answer updateAnswer(String id, String answerId, String content, String operatorId) {
+    public Answer updateAnswer(String id, String answerId, String content, GroupMember operator) {
         Question question = _get(id);
 
         // TODO 业务验证 影响answer修改的question状态
-
         Answer answer = _getAnswer(answerId);
-        if (!answer.getCreatedBy().equals(operatorId)) {
+        if (!answer.getCreatedBy().equals(operator.getUserId())) {
             throw QuestionException.answerForbidden();
         }
 
@@ -134,14 +133,15 @@ public class QuestionService {
         return answerRepository.save(answer);
     }
 
-    public void deleteAnswer(String id, String answerId, String operatorId) {
+    public void deleteAnswer(String id, String answerId, GroupMember operator) {
         // TODO id 不需要
 
         Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
         if (!optionalAnswer.isPresent()) {
             return;
         }
-        if (!optionalAnswer.get().getCreatedBy().equals(operatorId)) {
+        // TODO admin
+        if (operator.getRole().compareTo(GroupMember.Role.ADMIN) < 0 && !optionalAnswer.get().getCreatedBy().equals(operator.getUserId())) {
             throw QuestionException.answerForbidden();
         }
         answerRepository.deleteById(answerId);

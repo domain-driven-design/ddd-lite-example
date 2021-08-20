@@ -26,18 +26,19 @@ class QueryControllerTest extends TestBase {
         User user = this.prepareUser("anyName", "anyEmail");
         User otherUser = this.prepareUser("anyOtherName", "anyOtherEmail");
         Group group = groupService.create("anyName", "anyDescription", user.getId());
-        GroupMember userDefaultGroupMember = groupService.getMember(Group.DEFAULT, user.getId());
+        GroupMember defaultGroupMember = groupService.getMember(Group.DEFAULT, user.getId());
+        GroupMember defaultGroupOtherMember = groupService.getMember(Group.DEFAULT, otherUser.getId());
 
-        Question question0 = questionService.create("title0", "anyDescription", userDefaultGroupMember);
+        Question question0 = questionService.create("title0", "anyDescription", defaultGroupMember);
         Question question1 = questionService.create("title1", "anyDescription", group.getMembers().get(0));
-        Question question2 = questionService.create("title2", "anyDescription", userDefaultGroupMember);
-        Question question3 = questionService.create("title3", "anyDescription", userDefaultGroupMember);
+        Question question2 = questionService.create("title2", "anyDescription", defaultGroupMember);
+        Question question3 = questionService.create("title3", "anyDescription", defaultGroupMember);
 
-        questionService.addAnswer(question0.getId(), "anyContent", user.getId());
-        questionService.addAnswer(question1.getId(), "anyContent", user.getId());
-        questionService.addAnswer(question2.getId(), "anyContent", user.getId());
-        questionService.addAnswer(question2.getId(), "anyContent", otherUser.getId());
-        questionService.addAnswer(question3.getId(), "anyContent", otherUser.getId());
+        questionService.addAnswer(question0.getId(), "anyContent", defaultGroupMember);
+        questionService.addAnswer(question1.getId(), "anyContent", defaultGroupMember);
+        questionService.addAnswer(question2.getId(), "anyContent", defaultGroupMember);
+        questionService.addAnswer(question2.getId(), "anyContent", defaultGroupOtherMember);
+        questionService.addAnswer(question3.getId(), "anyContent", defaultGroupOtherMember);
 
         Response response = givenWithAuthorize(user)
                 .param("userId", user.getId())
