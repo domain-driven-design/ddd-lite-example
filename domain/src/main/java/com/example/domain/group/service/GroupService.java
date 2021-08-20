@@ -37,31 +37,6 @@ public class GroupService {
         return groupRepository.findAll(spec, pageable);
     }
 
-    public void checkMember(String id, String userId) {
-        if (id.equals(Group.DEFAULT)) {
-            return;
-        }
-        boolean exists = groupMemberRepository.exists(Example.of(GroupMember.builder()
-                .groupId(id)
-                .userId(userId)
-                .build()));
-        if (!exists) {
-            throw GroupException.forbidden();
-        }
-    }
-
-    // TODO 权限分级check
-    private void checkOwner(Group group, String operatorId) {
-        boolean isOwner = group.getMembers().stream()
-                .anyMatch(groupMember -> groupMember.getUserId().equals(operatorId)
-                        && groupMember.getRole().equals(GroupMember.Role.OWNER));
-
-        if (!isOwner) {
-            throw GroupException.forbidden();
-        }
-
-    }
-
     public Group create(String name, String description, String operatorId) {
         Group group = Group.builder()
                 .name(name)
@@ -91,7 +66,13 @@ public class GroupService {
     public Group update(String id, String name, String description, String operatorId) {
         Group group = _get(id);
 
-        checkOwner(group, operatorId);
+        boolean isOwner = group.getMembers().stream()
+                .anyMatch(groupMember -> groupMember.getUserId().equals(operatorId)
+                        && groupMember.getRole().equals(GroupMember.Role.OWNER));
+
+        if (!isOwner) {
+            throw GroupException.forbidden();
+        }
 
         group.setName(name);
         group.setDescription(description);
