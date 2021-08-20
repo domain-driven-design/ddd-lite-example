@@ -2,6 +2,8 @@ package com.example.business.rest;
 
 import com.example.TestBase;
 import com.example.domain.group.model.Group;
+import com.example.domain.group.model.GroupMember;
+import com.example.domain.group.service.GroupService;
 import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;
 import com.example.domain.question.repository.AnswerRepository;
@@ -32,6 +34,8 @@ class QuestionControllerTest extends TestBase {
     private QuestionService questionService;
     @Autowired
     private AnswerRepository answerRepository;
+    @Autowired
+    private GroupService groupService;
 
     @Test
     void should_create_question() {
@@ -68,7 +72,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_get_question_detail() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
+        GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", member);
 
         Response response = givenDefault()
                 .when()
@@ -84,10 +89,12 @@ class QuestionControllerTest extends TestBase {
     void should_query_questions_by_page() {
         User user = this.prepareUser("anyName", "anyEmail");
         User otherUser = this.prepareUser("anyOtherName", "anyOtherEmail");
-        Question question0 = questionService.create("anyTitle0", "anyDescription0", Group.DEFAULT, user.getId());
-        Question question1 = questionService.create("anyTitle1", "anyDescription1", Group.DEFAULT, user.getId());
-        questionService.create("anyTitle2", "anyDescription2", Group.DEFAULT, user.getId());
-        Question question3 = questionService.create("anyTitle3", "anyDescription3", Group.DEFAULT, otherUser.getId());
+        GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
+        GroupMember otherMember = groupService.getMember(Group.DEFAULT, otherUser.getId());
+        Question question0 = questionService.create("anyTitle0", "anyDescription0", member);
+        Question question1 = questionService.create("anyTitle1", "anyDescription1", member);
+        questionService.create("anyTitle2", "anyDescription2", member);
+        Question question3 = questionService.create("anyTitle3", "anyDescription3", otherMember);
 
         givenDefault()
                 .param("sort", "createdAt")
@@ -133,10 +140,12 @@ class QuestionControllerTest extends TestBase {
     void should_get_management_questions_by_page() {
         User user = this.prepareUser("anyName", "anyEmail");
         User otherUser = this.prepareUser("anyOtherName", "anyOtherEmail");
-        Question question0 = questionService.create("anyTitle0", "anyDescription0", Group.DEFAULT, user.getId());
-        Question question1 = questionService.create("anyTitle1", "anyDescription1", Group.DEFAULT, user.getId());
-        questionService.create("anyTitle2", "anyDescription2", Group.DEFAULT, user.getId());
-        Question question3 = questionService.create("anyTitle3", "anyDescription3", Group.DEFAULT, otherUser.getId());
+        GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
+        GroupMember otherMember = groupService.getMember(Group.DEFAULT, otherUser.getId());
+        Question question0 = questionService.create("anyTitle0", "anyDescription0", member);
+        Question question1 = questionService.create("anyTitle1", "anyDescription1", member);
+        questionService.create("anyTitle2", "anyDescription2", member);
+        Question question3 = questionService.create("anyTitle3", "anyDescription3", otherMember);
 
         givenDefault()
                 .param("sort", "createdAt")
@@ -183,7 +192,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_update_question() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
+        GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", member);
         String newTitle = "newTitle";
         String newDescription = "newDescription";
 
@@ -210,7 +220,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_update_question_status() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
+        GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", member);
 
         Response response = givenWithAuthorize(user)
                 .body(new HashMap<String, Object>() {
@@ -243,7 +254,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_delete_question() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
+        GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", member);
         String questionId = question.getId();
 
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
@@ -264,7 +276,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_create_answer() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
+        GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", member);
         String content = "content";
 
         Response response = givenWithAuthorize(user)
@@ -292,7 +305,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_get_all_answers_by_page() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
+        GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", member);
 
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         Answer answer0 = questionService.addAnswer(question.getId(), "content0", user.getId());
@@ -311,7 +325,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_update_answer() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
+        GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", member);
         Answer answer = questionService.addAnswer(question.getId(), "content", user.getId());
         String newContent = "newContent";
 
@@ -335,7 +350,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_delete_answer() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Question question = questionService.create("anyTitle", "anyDescription", Group.DEFAULT, user.getId());
+        GroupMember member = groupService.getMember(Group.DEFAULT, user.getId());
+        Question question = questionService.create("anyTitle", "anyDescription", member);
         Answer answer = questionService.addAnswer(question.getId(), "content", user.getId());
 
         Response response = givenWithAuthorize(user)

@@ -2,6 +2,7 @@ package com.example.business.rest;
 
 import com.example.TestBase;
 import com.example.domain.group.model.Group;
+import com.example.domain.group.model.GroupMember;
 import com.example.domain.group.service.GroupService;
 import com.example.domain.question.model.Question;
 import com.example.domain.question.service.QuestionService;
@@ -25,11 +26,12 @@ class QueryControllerTest extends TestBase {
         User user = this.prepareUser("anyName", "anyEmail");
         User otherUser = this.prepareUser("anyOtherName", "anyOtherEmail");
         Group group = groupService.create("anyName", "anyDescription", user.getId());
+        GroupMember userDefaultGroupMember = groupService.getMember(Group.DEFAULT, user.getId());
 
-        Question question0 = questionService.create("title0", "anyDescription", Group.DEFAULT, user.getId());
-        Question question1 = questionService.create("title1", "anyDescription", group.getId(), user.getId());
-        Question question2 = questionService.create("title2", "anyDescription", Group.DEFAULT, user.getId());
-        Question question3 = questionService.create("title3", "anyDescription", Group.DEFAULT, user.getId());
+        Question question0 = questionService.create("title0", "anyDescription", userDefaultGroupMember);
+        Question question1 = questionService.create("title1", "anyDescription", group.getMembers().get(0));
+        Question question2 = questionService.create("title2", "anyDescription", userDefaultGroupMember);
+        Question question3 = questionService.create("title3", "anyDescription", userDefaultGroupMember);
 
         questionService.addAnswer(question0.getId(), "anyContent", user.getId());
         questionService.addAnswer(question1.getId(), "anyContent", user.getId());

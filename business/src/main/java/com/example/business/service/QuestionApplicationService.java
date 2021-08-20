@@ -43,10 +43,9 @@ public class QuestionApplicationService {
     private UserService userService;
 
     public CreateQuestionCase.Response create(CreateQuestionCase.Request request, String groupId, Authorize authorize) {
-        groupService.checkMember(groupId, authorize.getUserId());
+        GroupMember member = groupService.getMember(groupId, authorize.getUserId());
 
-        Question question =
-                questionService.create(request.getTitle(), request.getDescription(), groupId, authorize.getUserId());
+        Question question = questionService.create(request.getTitle(), request.getDescription(), member);
 
         return CreateQuestionCase.Response.from(question);
     }

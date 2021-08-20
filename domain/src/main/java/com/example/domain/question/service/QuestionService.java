@@ -39,13 +39,13 @@ public class QuestionService {
         return repository.findAll(spec);
     }
 
-    public Question create(String title, String description, String groupId, String operatorId) {
+    public Question create(String title, String description, GroupMember operator) {
         Question question = Question.builder()
                 .title(title)
                 .description(description)
-                .groupId(groupId)
+                .groupId(operator.getGroupId())
                 .status(Question.Status.OPENED)
-                .createdBy(operatorId)
+                .createdBy(operator.getUserId())
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
@@ -78,14 +78,14 @@ public class QuestionService {
         return repository.save(question);
     }
 
-    public void delete(String id, GroupMember member) {
+    public void delete(String id, GroupMember operator) {
         Optional<Question> optionalQuestion = repository.findById(id);
         if (!optionalQuestion.isPresent()) {
             return;
         }
 
         Question question = optionalQuestion.get();
-        if (member.getRole().compareTo(GroupMember.Role.ADMIN) < 0 && !question.getCreatedBy().equals(member.getUserId())) {
+        if (operator.getRole().compareTo(GroupMember.Role.ADMIN) < 0 && !question.getCreatedBy().equals(operator.getUserId())) {
             throw QuestionException.forbidden();
         }
 

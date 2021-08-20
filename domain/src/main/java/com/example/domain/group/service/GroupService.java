@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -71,7 +73,7 @@ public class GroupService {
 
         Group createdGroup = groupRepository.save(group);
 
-        GroupMember groupMember = GroupMember.builder()
+        GroupMember owner = GroupMember.builder()
                 .role(GroupMember.Role.OWNER)
                 .groupId(createdGroup.getId())
                 .userId(operatorId)
@@ -79,7 +81,9 @@ public class GroupService {
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
-        groupMemberRepository.save(groupMember);
+        groupMemberRepository.save(owner);
+
+        createdGroup.setMembers(Collections.singletonList(owner));
 
         return createdGroup;
     }
