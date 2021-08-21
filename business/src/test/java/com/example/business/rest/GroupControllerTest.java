@@ -217,7 +217,7 @@ class GroupControllerTest extends TestBase {
 
         Response response = givenWithAuthorize(user)
                 .when()
-                .post("/groups/" + group.getId() + "/members");
+                .post("/groups/" + group.getId() + "/members/me");
         response.then().statusCode(201)
                 .body("groupId", is(group.getId()))
                 .body("userId", is(user.getId()))

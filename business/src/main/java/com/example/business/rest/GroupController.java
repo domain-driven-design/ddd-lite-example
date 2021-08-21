@@ -78,7 +78,7 @@ public class GroupController {
         return applicationService.getGroupManagementMembers(id, pageable);
     }
 
-    @PostMapping("/{id}/members")
+    @PostMapping("/{id}/members/me")
     @ResponseStatus(CREATED)
     public JoinGroupCase.Response joinGroup(@PathVariable String id) {
         Authorize authorize = authorizeService.current();
