@@ -69,6 +69,7 @@ ps：
 - 异步任务
 
 ## 待讨论
+- 前端如何判断一个question，一个user只能有一个answer？性能考虑
 - 对于查询，查询的维度和筛选条件，比如：对answer的查询，以question，以group，以group member
 - 权衡，在仅需要operator的最终传递的userId，而不需要对应role权限check，这样的方法是否需要查询出operator并传入？
 - API测试覆盖所有happy path，包括不同角色权限对同一资源的同一操作，单元测试专注check各种业务异常
