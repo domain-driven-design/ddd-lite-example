@@ -24,6 +24,7 @@ public class UserManagementController {
         return applicationService.getUsers(pageable);
     }
 
+    // TODO 要不要和上面的query合并？
     @GetMapping("/suggest")
     public Page<SuggestUsersCase.Response> suggestUsers(@RequestParam String keyword, Pageable pageable) {
         return applicationService.suggestUsers(keyword, pageable);
