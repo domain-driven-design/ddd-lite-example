@@ -48,6 +48,9 @@ ps：
 1. 禁止使用 scan\keys 会造成性能低下 http://doc.redisfans.com/key/scan.html
 2. 禁止存放需要持久化的数据，因为可能需要清理 redis 数据
 
+## 其他规范
+1. repository的save操作对象，必须从repository中重新查询后更新，避免使用缓存等对象存在的潜在问题
+
 ## 测试策略
 
 1. 单元测试。覆盖基础的组件、工具类和领域服务，单元测试需要验证各种分支条件。仅测试业务异常，不需要happy path。

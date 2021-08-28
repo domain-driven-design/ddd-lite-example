@@ -14,6 +14,7 @@ import org.springframework.data.domain.Example;
 import java.util.HashMap;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
@@ -125,6 +126,48 @@ class UserManagementControllerTest extends TestBase {
 
         boolean exists = userRepository.exists(Example.of(User.builder().name(name).email(email).build()));
         assertTrue(exists);
+    }
+
+    // TODO 统一场景的不同请求值，写在一起？还是分开？
+    @Test
+    void should_update_user_status() {
+        User user = userService.create("anyName", "anyEmail0", "anyPassword");
+
+        given()
+                .contentType("application/json")
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("status", User.Status.FROZEN);
+                    }
+                })
+                .header("Authorization", "Bearer " + authorize.getId())
+                .when()
+                .put("/management/users/" + user.getId() + "/status")
+                .then().statusCode(200)
+                .body("id", is(user.getId()))
+                .body("status", is(User.Status.FROZEN.name()));
+
+        User frozenUser = userRepository.findById(user.getId()).get();
+        assertThat(frozenUser.getStatus(), is(User.Status.FROZEN));
+
+
+        given()
+                .contentType("application/json")
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("status", User.Status.NORMAL);
+                    }
+                })
+                .header("Authorization", "Bearer " + authorize.getId())
+                .when()
+                .put("/management/users/" + user.getId() + "/status")
+                .then().statusCode(200)
+                .body("id", is(user.getId()))
+                .body("status", is(User.Status.NORMAL.name()));
+
+        User normalUser = userRepository.findById(user.getId()).get();
+        assertThat(normalUser.getStatus(), is(User.Status.NORMAL));
+
     }
 
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
+// TODO user status check
 @Service
 public class UserService {
     @Autowired
@@ -46,6 +47,7 @@ public class UserService {
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .role(User.UserRole.USER)
+                .status(User.Status.NORMAL)
                 .build();
         validateConflicted(user);
         return repository.save(user);
@@ -75,6 +77,19 @@ public class UserService {
         return repository.save(user);
     }
 
+    // TODO 是否将冻结/解冻分开处理？现阶段只是对status进行更改，并且对status的更改权限检查是一致的
+    public User updateStatus(String id, User.Status status, User operator) {
+        if (!operator.getRole().equals(User.UserRole.ADMIN)) {
+            // TODO 权限异常区分粒度？status，message
+            throw UserException.noPermissionUpdate();
+        }
+
+        User user = _get(id);
+        user.setStatus(status);
+        user.setUpdatedAt(Instant.now());
+
+        return repository.save(user);
+    }
 
     // TODO 是否在domain service检查唯一性？
     private void validateConflicted(User user) {

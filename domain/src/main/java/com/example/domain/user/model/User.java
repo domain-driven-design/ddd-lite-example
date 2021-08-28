@@ -43,7 +43,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     public enum UserRole {
         ADMIN, USER
+    }
+
+    public enum Status {
+        NORMAL, FROZEN
     }
 }

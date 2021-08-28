@@ -4,6 +4,7 @@ import com.example.admin.usecases.CreateUserCase;
 import com.example.admin.usecases.GetUserDetailCase;
 import com.example.admin.usecases.GetUsersCase;
 import com.example.admin.usecases.SuggestUsersCase;
+import com.example.admin.usecases.UpdateUserStatusCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.user.model.User;
 import com.example.domain.user.service.UserService;
@@ -55,5 +56,14 @@ public class UserManagementApplicationService {
     public CreateUserCase.Response createUser(CreateUserCase.Request request, Authorize authorize) {
         User user = userService.create(request.getName(), request.getEmail(), request.getPassword());
         return CreateUserCase.Response.from(user);
+    }
+
+    public UpdateUserStatusCase.Response updateUserStatus(String id,
+                                                          UpdateUserStatusCase.Request request,
+                                                          Authorize authorize) {
+        // TODO 是不是可以从authorize中直接得到user需要的权限信息，拼装成user，作为operator，而不用再次查询
+        User operator = userService.get(authorize.getUserId());
+        User user = userService.updateStatus(id, request.getStatus(), operator);
+        return UpdateUserStatusCase.Response.from(user);
     }
 }

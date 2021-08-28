@@ -5,6 +5,7 @@ import com.example.admin.usecases.CreateUserCase;
 import com.example.admin.usecases.GetUserDetailCase;
 import com.example.admin.usecases.GetUsersCase;
 import com.example.admin.usecases.SuggestUsersCase;
+import com.example.admin.usecases.UpdateUserStatusCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +40,8 @@ public class UserManagementController {
 
     // TODO 要不要和上面的query合并？
     @GetMapping("/suggest")
-    public Page<SuggestUsersCase.Response> suggestUsers(@RequestParam(required = false) String keyword, Pageable pageable) {
+    public Page<SuggestUsersCase.Response> suggestUsers(@RequestParam(required = false) String keyword,
+                                                        Pageable pageable) {
         return applicationService.suggestUsers(keyword, pageable);
     }
 
@@ -53,5 +55,12 @@ public class UserManagementController {
     public CreateUserCase.Response createUser(@RequestBody @Valid CreateUserCase.Request request) {
         Authorize authorize = authorizeService.current();
         return applicationService.createUser(request, authorize);
+    }
+
+    @PutMapping("/{id}/status")
+    public UpdateUserStatusCase.Response updateUserStatus(@PathVariable("id") String id,
+                                                          @RequestBody @Valid UpdateUserStatusCase.Request request) {
+        Authorize authorize = authorizeService.current();
+        return applicationService.updateUserStatus(id, request, authorize);
     }
 }
