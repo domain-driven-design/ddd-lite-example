@@ -3,15 +3,21 @@ package com.example.admin.rest;
 import com.example.TestBase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.user.model.User;
+import com.example.domain.user.repository.UserRepository;
 import com.example.domain.user.service.UserService;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+
+import java.util.HashMap;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UserManagementControllerTest extends TestBase {
 
@@ -19,6 +25,9 @@ class UserManagementControllerTest extends TestBase {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     @BeforeEach
@@ -90,4 +99,32 @@ class UserManagementControllerTest extends TestBase {
                 .body("name", is(user.getName()))
                 .body("email", is(user.getEmail()));
     }
+
+    @Test
+    void should_create_user() {
+        String name = "test";
+        String email = "test@email.com";
+        String password = "password";
+
+        Response response = given()
+                .contentType("application/json")
+                .body(new HashMap<String, Object>() {
+                    {
+                        put("name", name);
+                        put("email", email);
+                        put("password", password);
+                    }
+                })
+                .header("Authorization", "Bearer " + authorize.getId())
+                .when()
+                .post("/management/users");
+        response.then().statusCode(201)
+                .body("id", is(notNullValue()))
+                .body("name", is(name))
+                .body("email", is(email));
+
+        boolean exists = userRepository.exists(Example.of(User.builder().name(name).email(email).build()));
+        assertTrue(exists);
+    }
+
 }
