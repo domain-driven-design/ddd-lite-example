@@ -53,10 +53,10 @@ public class UserService {
         return repository.save(user);
     }
 
-    public User update(String id, String name, String operatorId) {
+    public User update(String id, String name, User operator) {
         User user = _get(id);
 
-        if (!id.equals(operatorId)) {
+        if (!id.equals(operator.getId())) {
             throw UserException.noPermissionUpdate();
         }
 
@@ -65,10 +65,10 @@ public class UserService {
         return repository.save(user);
     }
 
-    public User resetPassword(String id, String password, String operatorId) {
+    public User resetPassword(String id, String password, User operator) {
         User user = _get(id);
 
-        if (!id.equals(operatorId)) {
+        if (!id.equals(operator.getId())) {
             throw UserException.noPermissionUpdate();
         }
 

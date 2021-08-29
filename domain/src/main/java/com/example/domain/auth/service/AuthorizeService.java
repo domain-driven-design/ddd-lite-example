@@ -30,14 +30,17 @@ public class AuthorizeService {
         return repository.create(authorize);
     }
 
-    // TODO 是否可以这里不需要得到authorize，而是一个通过authorize拼装的可信任的简单user，作为operator
-    public Authorize current() {
-        Authorize authorize = AuthorizeContextHolder.getContext();
+    public Authorize getCurrent() {
+        return AuthorizeContextHolder.getContext();
+    }
+
+    public User getOperator() {
+        Authorize authorize = getCurrent();
         if (authorize == null || authorize.getUserId() == null) {
             throw AuthorizeException.Unauthorized();
         }
 
-        return authorize;
+        return User.builder().id(authorize.getUserId()).role(authorize.getRole()).build();
     }
 
     public void delete(String id) {

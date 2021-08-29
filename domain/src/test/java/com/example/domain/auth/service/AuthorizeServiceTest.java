@@ -3,7 +3,6 @@ package com.example.domain.auth.service;
 import com.example.domain.auth.AuthorizeContextHolder;
 import com.example.domain.auth.exception.AuthorizeException;
 import com.example.domain.auth.model.Authorize;
-import com.example.domain.auth.repository.AuthorizeRepository;
 import com.example.domain.common.BaseException;
 import com.example.domain.user.model.User;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.argThat;
 
 @ExtendWith(MockitoExtension.class)
 class AuthorizeServiceTest {
@@ -55,7 +53,7 @@ class AuthorizeServiceTest {
                 Authorize.builder().id("test-authorize").userId("test-user-id").build()
         );
         //when
-        Authorize current = authorizeService.current();
+        Authorize current = authorizeService.getCurrent();
         //then
         assertEquals("test-authorize", current.getId());
         AuthorizeContextHolder.setContext(null);
@@ -66,7 +64,7 @@ class AuthorizeServiceTest {
         //when
         BaseException exception = assertThrows(AuthorizeException.class, () -> {
             //when
-            authorizeService.current();
+            authorizeService.getOperator();
         });
 
         assertEquals("unauthorized", exception.getMessage());

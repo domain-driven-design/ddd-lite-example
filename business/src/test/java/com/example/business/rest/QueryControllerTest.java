@@ -25,7 +25,7 @@ class QueryControllerTest extends TestBase {
     void should_query_questions() {
         User user = this.prepareUser("anyName", "anyEmail");
         User otherUser = this.prepareUser("anyOtherName", "anyOtherEmail");
-        Group group = groupService.create("anyName", "anyDescription", user.getId());
+        Group group = groupService.create("anyName", "anyDescription", user);
         GroupMember defaultGroupMember = groupService.getMember(Group.DEFAULT, user.getId());
         GroupMember defaultGroupOtherMember = groupService.getMember(Group.DEFAULT, otherUser.getId());
 

@@ -10,8 +10,8 @@ import com.example.business.usecase.question.GetQuestionDetailCase;
 import com.example.business.usecase.question.UpdateAnswerCase;
 import com.example.business.usecase.question.UpdateQuestionCase;
 import com.example.business.usecase.question.UpdateQuestionStatusCase;
-import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
+import com.example.domain.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,8 +43,8 @@ public class QuestionController {
     @ResponseStatus(CREATED)
     public CreateQuestionCase.Response createQuestion(@PathVariable String groupId,
                                                       @RequestBody @Valid CreateQuestionCase.Request request) {
-        Authorize authorize = authorizeService.current();
-        return applicationService.create(request, groupId, authorize);
+        User operator = authorizeService.getOperator();
+        return applicationService.create(request, groupId, operator);
     }
 
     @GetMapping("/{id}")
@@ -72,22 +72,22 @@ public class QuestionController {
     public UpdateQuestionCase.Response updateQuestion(@PathVariable String groupId,
                                                       @PathVariable String id,
                                                       @RequestBody @Valid UpdateQuestionCase.Request request) {
-        Authorize authorize = authorizeService.current();
-        return applicationService.update(id, request, groupId, authorize);
+        User operator = authorizeService.getOperator();
+        return applicationService.update(id, request, groupId, operator);
     }
 
     @PutMapping("/{id}/status")
     public UpdateQuestionStatusCase.Response updateQuestionStatus(@PathVariable String groupId,
                                                       @PathVariable String id,
                                                       @RequestBody @Valid UpdateQuestionStatusCase.Request request) {
-        Authorize authorize = authorizeService.current();
-        return applicationService.updateStatus(id, request, groupId, authorize);
+        User operator = authorizeService.getOperator();
+        return applicationService.updateStatus(id, request, groupId, operator);
     }
 
     @DeleteMapping("/{id}")
     public void deleteQuestion(@PathVariable String groupId, @PathVariable String id) {
-        Authorize authorize = authorizeService.current();
-        applicationService.delete(id, groupId, authorize);
+        User operator = authorizeService.getOperator();
+        applicationService.delete(id, groupId, operator);
     }
 
     @PostMapping("/{id}/answers")
@@ -95,8 +95,8 @@ public class QuestionController {
     public CreateAnswerCase.Response createAnswer(@PathVariable String groupId,
                                                   @PathVariable String id,
                                                   @RequestBody @Valid CreateAnswerCase.Request request) {
-        Authorize authorize = authorizeService.current();
-        return applicationService.createAnswer(id, request, groupId, authorize);
+        User operator = authorizeService.getOperator();
+        return applicationService.createAnswer(id, request, groupId, operator);
     }
 
     @GetMapping("/{id}/answers")
@@ -110,15 +110,15 @@ public class QuestionController {
                                                   @PathVariable String id,
                                                   @PathVariable String answerId,
                                                   @RequestBody @Valid UpdateAnswerCase.Request request) {
-        Authorize authorize = authorizeService.current();
-        return applicationService.updateAnswer(id, answerId, request, groupId, authorize);
+        User operator = authorizeService.getOperator();
+        return applicationService.updateAnswer(id, answerId, request, groupId, operator);
     }
 
     @DeleteMapping("/{id}/answers/{answerId}")
     public void deleteAnswer(@PathVariable String groupId,
                              @PathVariable String id,
                              @PathVariable String answerId) {
-        Authorize authorize = authorizeService.current();
-        applicationService.deleteAnswer(id, answerId, groupId, authorize);
+        User operator = authorizeService.getOperator();
+        applicationService.deleteAnswer(id, answerId, groupId, operator);
     }
 }

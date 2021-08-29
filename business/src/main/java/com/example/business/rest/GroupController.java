@@ -12,6 +12,7 @@ import com.example.business.usecase.group.UpdateGroupCase;
 import com.example.business.usecase.group.UpdateGroupMemberCase;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
+import com.example.domain.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,8 +42,8 @@ public class GroupController {
     @PostMapping
     @ResponseStatus(CREATED)
     public CreateGroupCase.Response createGroup(@RequestBody @Valid CreateGroupCase.Request request) {
-        Authorize authorize = authorizeService.current();
-        return applicationService.createGroup(request, authorize);
+        User operator = authorizeService.getOperator();
+        return applicationService.createGroup(request, operator);
     }
 
     @GetMapping("/{id}")
@@ -57,15 +58,15 @@ public class GroupController {
 
     @GetMapping("/mine")
     public Page<GetMyGroupCase.Response> getMyGroupsByPage(@PageableDefault Pageable pageable) {
-        Authorize authorize = authorizeService.current();
-        return applicationService.getMineGroupsByPage(pageable, authorize);
+        User operator = authorizeService.getOperator();
+        return applicationService.getMineGroupsByPage(pageable, operator);
     }
 
     @PutMapping("/{id}")
     public UpdateGroupCase.Response updateGroup(@PathVariable String id,
                                                 @RequestBody @Valid UpdateGroupCase.Request request) {
-        Authorize authorize = authorizeService.current();
-        return applicationService.updateGroup(id, request, authorize);
+        User operator = authorizeService.getOperator();
+        return applicationService.updateGroup(id, request, operator);
     }
 
     @GetMapping("/{id}/members")
@@ -81,35 +82,35 @@ public class GroupController {
     @PostMapping("/{id}/members/me")
     @ResponseStatus(CREATED)
     public JoinGroupCase.Response joinGroup(@PathVariable String id) {
-        Authorize authorize = authorizeService.current();
-        return applicationService.joinGroup(id, authorize);
+        User operator = authorizeService.getOperator();
+        return applicationService.joinGroup(id, operator);
     }
 
     @DeleteMapping("/{id}/members/me")
     public void exitGroup(@PathVariable String id) {
-        Authorize authorize = authorizeService.current();
-        applicationService.exitGroup(id, authorize);
+        User operator = authorizeService.getOperator();
+        applicationService.exitGroup(id, operator);
     }
 
     @PutMapping("/{id}/members/{userId}")
     public UpdateGroupMemberCase.Response updateMember(@PathVariable String id,
                                                        @PathVariable String userId,
                                                        @RequestBody @Valid UpdateGroupMemberCase.Request request) {
-        Authorize authorize = authorizeService.current();
-        return applicationService.updateMember(id, userId, request, authorize);
+        User operator = authorizeService.getOperator();
+        return applicationService.updateMember(id, userId, request, operator);
     }
 
     @PutMapping("/{id}/owner")
     public ChangeGroupOwnerCase.Response changeOwner(@PathVariable String id,
                                                      @RequestBody @Valid ChangeGroupOwnerCase.Request request) {
-        Authorize authorize = authorizeService.current();
-        return applicationService.changeOwner(id, request, authorize);
+        User operator = authorizeService.getOperator();
+        return applicationService.changeOwner(id, request, operator);
     }
 
     @DeleteMapping("/{id}/members/{userId}")
     public void removeMember(@PathVariable String id, @PathVariable String userId) {
-        Authorize authorize = authorizeService.current();
-        applicationService.removeMember(id, userId, authorize);
+        User operator = authorizeService.getOperator();
+        applicationService.removeMember(id, userId, operator);
     }
 
 }

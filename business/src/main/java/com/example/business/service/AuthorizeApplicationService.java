@@ -29,12 +29,12 @@ public class AuthorizeApplicationService {
     }
 
     public void logout() {
-        Authorize authorize = service.current();
+        Authorize authorize = service.getCurrent();
         service.delete(authorize.getId());
     }
 
     public GetUserProfileCase.Response getProfile() {
-        Authorize authorize = service.current();
+        Authorize authorize = service.getCurrent();
         return GetUserProfileCase.Response.from(authorize);
     }
 }

@@ -9,7 +9,6 @@ import com.example.business.usecase.group.GetMyGroupCase;
 import com.example.business.usecase.group.JoinGroupCase;
 import com.example.business.usecase.group.UpdateGroupCase;
 import com.example.business.usecase.group.UpdateGroupMemberCase;
-import com.example.domain.auth.model.Authorize;
 import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;
 import com.example.domain.group.service.GroupService;
@@ -38,8 +37,8 @@ public class GroupApplicationService {
     @Autowired
     private UserService userService;
 
-    public CreateGroupCase.Response createGroup(CreateGroupCase.Request request, Authorize authorize) {
-        Group group = groupService.create(request.getName(), request.getDescription(), authorize.getUserId());
+    public CreateGroupCase.Response createGroup(CreateGroupCase.Request request, User operator) {
+        Group group = groupService.create(request.getName(), request.getDescription(), operator);
         return CreateGroupCase.Response.from(group);
     }
 
@@ -57,18 +56,18 @@ public class GroupApplicationService {
         return groupPage.map(GetGroupCase.Response::from);
     }
 
-    public Page<GetMyGroupCase.Response> getMineGroupsByPage(Pageable pageable, Authorize authorize) {
+    public Page<GetMyGroupCase.Response> getMineGroupsByPage(Pageable pageable, User operator) {
         Specification<Group> specification = (root, query, criteriaBuilder) -> {
             Join<Group, List<GroupMember>> join = root.join(Group.Fields.members, JoinType.LEFT);
-            return criteriaBuilder.equal(join.get(GroupMember.Fields.userId), authorize.getUserId());
+            return criteriaBuilder.equal(join.get(GroupMember.Fields.userId), operator.getId());
         };
         Page<Group> groupPage = groupService.findAll(specification, pageable);
 
         return groupPage.map(GetMyGroupCase.Response::from);
     }
 
-    public UpdateGroupCase.Response updateGroup(String id, UpdateGroupCase.Request request, Authorize authorize) {
-        Group group = groupService.update(id, request.getName(), request.getDescription(), authorize.getUserId());
+    public UpdateGroupCase.Response updateGroup(String id, UpdateGroupCase.Request request, User operator) {
+        Group group = groupService.update(id, request.getName(), request.getDescription(), operator);
         return UpdateGroupCase.Response.from(group);
     }
 
@@ -109,31 +108,31 @@ public class GroupApplicationService {
         );
     }
 
-    public JoinGroupCase.Response joinGroup(String id, Authorize authorize) {
-        GroupMember member = groupService.addNormalMember(id, authorize.getUserId());
+    public JoinGroupCase.Response joinGroup(String id, User operator) {
+        GroupMember member = groupService.addNormalMember(id, operator);
         return JoinGroupCase.Response.from(member);
     }
 
-    public void exitGroup(String id, Authorize authorize) {
-        groupService.deleteNormalMember(id, authorize.getUserId());
+    public void exitGroup(String id, User operator) {
+        groupService.deleteNormalMember(id, operator);
     }
 
     public UpdateGroupMemberCase.Response updateMember(String id, String userId,
                                                        UpdateGroupMemberCase.Request request,
-                                                       Authorize authorize) {
-        GroupMember groupMember = groupService.changeMemberRole(id, userId, request.getRole(), authorize.getUserId());
+                                                       User operator) {
+        GroupMember groupMember = groupService.changeMemberRole(id, userId, request.getRole(), operator);
 
         return UpdateGroupMemberCase.Response.from(groupMember);
     }
 
     public ChangeGroupOwnerCase.Response changeOwner(String id,
                                                      ChangeGroupOwnerCase.Request request,
-                                                     Authorize authorize) {
-        GroupMember groupMember = groupService.changeOwner(id, request.getUserId(), authorize.getUserId());
+                                                     User operator) {
+        GroupMember groupMember = groupService.changeOwner(id, request.getUserId(), operator);
         return ChangeGroupOwnerCase.Response.from(groupMember);
     }
 
-    public void removeMember(String id, String userId, Authorize authorize) {
-        groupService.deleteMember(id, userId, authorize.getUserId());
+    public void removeMember(String id, String userId, User operator) {
+        groupService.deleteMember(id, userId, operator);
     }
 }

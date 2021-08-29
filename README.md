@@ -69,6 +69,7 @@ ps：
 - 圈子内的问题属于圈子，那么创建者不再是圈子成员时，就无权对问题进行操作，问题的管理维度只能是以圈子成员的身份。
 
 ## 待实现
+- 区分User UserOperator，GroupMember GroupMemberOperator
 - 缓存
 - 安全审计（重要操作记录）
 - 代码规范：checkstyle

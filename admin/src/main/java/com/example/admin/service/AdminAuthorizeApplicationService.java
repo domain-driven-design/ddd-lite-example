@@ -28,7 +28,7 @@ public class AdminAuthorizeApplicationService {
     }
 
     public void logout() {
-        Authorize authorize = service.current();
+        Authorize authorize = service.getCurrent();
         service.delete(authorize.getId());
     }
 }

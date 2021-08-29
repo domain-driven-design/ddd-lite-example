@@ -22,19 +22,19 @@ public class UserApplicationService {
         return RegisterCase.Response.from(user);
     }
 
-    public GetUserDetailCase.Response getDetail(Authorize authorize) {
-        String userId = authorize.getUserId();
+    public GetUserDetailCase.Response getDetail(User operator) {
+        String userId = operator.getId();
         return GetUserDetailCase.Response.from(service.get(userId));
     }
 
-    public UpdateUserCase.Response update(UpdateUserCase.Request request, Authorize authorize) {
-        User updatedUser = service.update(authorize.getUserId(), request.getName(), authorize.getUserId());
+    public UpdateUserCase.Response update(UpdateUserCase.Request request, User operator) {
+        User updatedUser = service.update(operator.getId(), request.getName(), operator);
         return UpdateUserCase.Response.from(updatedUser);
     }
 
 
-    public void resetPassword(ResetPasswordCase.Request request, Authorize authorize) {
-        service.resetPassword(authorize.getUserId(), request.getPassword(), authorize.getUserId());
+    public void resetPassword(ResetPasswordCase.Request request, User operator) {
+        service.resetPassword(operator.getId(), request.getPassword(), operator);
         // TODO 是否清理authorize？
     }
 }

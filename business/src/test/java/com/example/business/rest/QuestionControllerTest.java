@@ -254,7 +254,7 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_update_question_status_by_group_admin_and_not_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("anyGroupName", "", user.getId());
+        Group group = groupService.create("anyGroupName", "", user);
         GroupMember groupOwner = group.getMembers().get(0);
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
@@ -292,7 +292,7 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_update_question_status_by_group_owner_and_not_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("anyGroupName", "", user.getId());
+        Group group = groupService.create("anyGroupName", "", user);
         GroupMember groupOwner = group.getMembers().get(0);
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
@@ -354,7 +354,7 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_delete_question_by_group_admin_and_not_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("anyGroupName", "", user.getId());
+        Group group = groupService.create("anyGroupName", "", user);
         GroupMember groupOwner = group.getMembers().get(0);
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
@@ -379,7 +379,7 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_delete_question_by_group_owner_and_not_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("anyGroupName", "", user.getId());
+        Group group = groupService.create("anyGroupName", "", user);
         GroupMember groupOwner = group.getMembers().get(0);
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
@@ -494,7 +494,7 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_delete_answer_by_group_admin_and_not_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("anyGroupName", "", user.getId());
+        Group group = groupService.create("anyGroupName", "", user);
         GroupMember groupOwner = group.getMembers().get(0);
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
@@ -513,7 +513,7 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_delete_answer_by_group_owner_and_not_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("anyGroupName", "", user.getId());
+        Group group = groupService.create("anyGroupName", "", user);
         GroupMember groupOwner = group.getMembers().get(0);
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
@@ -531,7 +531,9 @@ class QuestionControllerTest extends TestBase {
 
 
     private GroupMember addGroupAdmin(Group group, User user, GroupMember operator) {
-        GroupMember otherMember = groupService.addNormalMember(group.getId(), user.getId());
-        return groupService.changeMemberRole(group.getId(), otherMember.getUserId(), GroupMember.Role.ADMIN, operator.getUserId());
+        GroupMember otherMember = groupService.addNormalMember(group.getId(), user);
+        return groupService.changeMemberRole(group.getId(), otherMember.getUserId(),
+                GroupMember.Role.ADMIN, User.builder().id(operator.getUserId()).build()
+        );
     }
 }

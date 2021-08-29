@@ -69,7 +69,7 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_get_group_detail() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "anyDescription", user.getId());
+        Group group = groupService.create("name", "anyDescription", user);
 
 
         Response response = givenDefault()
@@ -89,9 +89,9 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_get_all_groups_by_page() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group0 = groupService.create("name0", "anyDescription", user.getId());
-        Group group1 = groupService.create("name1", "anyDescription", user.getId());
-        groupService.create("name2", "anyDescription", user.getId());
+        Group group0 = groupService.create("name0", "anyDescription", user);
+        Group group1 = groupService.create("name1", "anyDescription", user);
+        groupService.create("name2", "anyDescription", user);
 
 
         Response response = givenDefault()
@@ -113,9 +113,9 @@ class GroupControllerTest extends TestBase {
     void should_get_all_mine_groups_by_page() {
         User user = this.prepareUser("anyName", "anyEmail");
         User otherUser = this.prepareUser("otherName", "otherEmail");
-        Group group0 = groupService.create("name0", "anyDescription", user.getId());
-        groupService.create("name1", "anyDescription", otherUser.getId());
-        Group group2 = groupService.create("name2", "anyDescription", user.getId());
+        Group group0 = groupService.create("name0", "anyDescription", user);
+        groupService.create("name1", "anyDescription", otherUser);
+        Group group2 = groupService.create("name2", "anyDescription", user);
 
 
         Response response = givenWithAuthorize(user)
@@ -133,7 +133,7 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_update_group() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", user.getId());
+        Group group = groupService.create("name", "description", user);
 
         String newName = "newName";
         String newDescription = "newDescription";
@@ -161,15 +161,15 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_get_group_members() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator.getId());
+        Group group = groupService.create("name", "description", creator);
 
         User user1 = this.prepareUser("name1", "email1");
         User user2 = this.prepareUser("name2", "email2");
         User user3 = this.prepareUser("name3", "email3");
 
-        groupService.addNormalMember(group.getId(), user1.getId());
-        groupService.addNormalMember(group.getId(), user2.getId());
-        groupService.addNormalMember(group.getId(), user3.getId());
+        groupService.addNormalMember(group.getId(), user1);
+        groupService.addNormalMember(group.getId(), user2);
+        groupService.addNormalMember(group.getId(), user3);
 
         Response response = givenWithAuthorize(creator)
                 .param("sort", "createdAt")
@@ -186,15 +186,15 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_get_group_management_members() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator.getId());
+        Group group = groupService.create("name", "description", creator);
 
         User user1 = this.prepareUser("name1", "email1");
         User user2 = this.prepareUser("name2", "email2");
         User user3 = this.prepareUser("name3", "email3");
 
-        groupService.addNormalMember(group.getId(), user1.getId());
-        groupService.addNormalMember(group.getId(), user2.getId());
-        groupService.addNormalMember(group.getId(), user3.getId());
+        groupService.addNormalMember(group.getId(), user1);
+        groupService.addNormalMember(group.getId(), user2);
+        groupService.addNormalMember(group.getId(), user3);
 
         Response response = givenWithAuthorize(creator)
                 .param("sort", "createdAt")
@@ -211,7 +211,7 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_join_group() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator.getId());
+        Group group = groupService.create("name", "description", creator);
 
         User user = this.prepareUser("otherName", "otherEmail");
 
@@ -234,7 +234,7 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_exit_group() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator.getId());
+        Group group = groupService.create("name", "description", creator);
 
         User user = this.prepareUser("otherName", "otherEmail");
 
@@ -253,10 +253,10 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_change_member_role() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator.getId());
+        Group group = groupService.create("name", "description", creator);
 
         User user = this.prepareUser("otherName", "otherEmail");
-        GroupMember groupMember = groupService.addNormalMember(group.getId(), user.getId());
+        GroupMember groupMember = groupService.addNormalMember(group.getId(), user);
 
         Response response = givenWithAuthorize(creator)
                 .body(new HashMap<String, Object>() {
@@ -300,10 +300,10 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_change_owner() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator.getId());
+        Group group = groupService.create("name", "description", creator);
 
         User user = this.prepareUser("otherName", "otherEmail");
-        GroupMember groupMember = groupService.addNormalMember(group.getId(), user.getId());
+        GroupMember groupMember = groupService.addNormalMember(group.getId(), user);
 
         Response response = givenWithAuthorize(creator)
                 .body(new HashMap<String, Object>() {
@@ -336,10 +336,10 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_remove_member() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator.getId());
+        Group group = groupService.create("name", "description", creator);
 
         User user = this.prepareUser("otherName", "otherEmail");
-        GroupMember groupMember = groupService.addNormalMember(group.getId(), user.getId());
+        GroupMember groupMember = groupService.addNormalMember(group.getId(), user);
 
         Response response = givenWithAuthorize(creator)
                 .when()
