@@ -38,9 +38,9 @@ ps：
 
 ## 风格说明
 
-1. 命名风格避免冗余，例如 domainService.action(String id, ...., String operatorId)，连起来需要形成一句话
+1. 命名风格避免冗余，例如 domainService.action(String id, ...., Object operator)，连起来需要形成一句话
 2. 如果注解为默认行为，不显示添加，比如 @Column 如果满足字段规，则省略
-3. ApplicationServe 形参顺序为，被操作对象的 id、request、operatorId
+3. ApplicationServe 形参顺序为，被操作对象的 id、request、operator
 4. url 中使用 /me 来默认使用当前用户凭证
 
 ## redis 使用规范
