@@ -1,13 +1,12 @@
 package com.example.business.rest;
 
-import com.example.domain.auth.model.Authorize;
-import com.example.domain.auth.service.AuthorizeService;
 import com.example.business.service.UserApplicationService;
 import com.example.business.usecase.user.GetUserDetailCase;
 import com.example.business.usecase.user.RegisterCase;
 import com.example.business.usecase.user.ResetPasswordCase;
 import com.example.business.usecase.user.UpdateUserCase;
-import com.example.domain.user.model.User;
+import com.example.domain.auth.service.AuthorizeService;
+import com.example.domain.user.model.Operator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,19 +37,19 @@ public class UserController {
 
     @GetMapping("/me")
     public GetUserDetailCase.Response getDetail() {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.getDetail(operator);
     }
 
     @PutMapping("/me")
     public UpdateUserCase.Response update(@RequestBody @Valid UpdateUserCase.Request request) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.update(request, operator);
     }
 
     @PutMapping("/me/password")
     public void resetPassword(@RequestBody @Valid ResetPasswordCase.Request request) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         applicationService.resetPassword(request, operator);
     }
 }

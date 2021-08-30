@@ -1,6 +1,7 @@
 package com.example.business.service;
 
 import com.example.domain.auth.model.Authorize;
+import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import com.example.domain.user.service.UserService;
 import com.example.business.usecase.user.GetUserDetailCase;
@@ -22,19 +23,19 @@ public class UserApplicationService {
         return RegisterCase.Response.from(user);
     }
 
-    public GetUserDetailCase.Response getDetail(User operator) {
-        String userId = operator.getId();
+    public GetUserDetailCase.Response getDetail(Operator operator) {
+        String userId = operator.getUserId();
         return GetUserDetailCase.Response.from(service.get(userId));
     }
 
-    public UpdateUserCase.Response update(UpdateUserCase.Request request, User operator) {
-        User updatedUser = service.update(operator.getId(), request.getName(), operator);
+    public UpdateUserCase.Response update(UpdateUserCase.Request request, Operator operator) {
+        User updatedUser = service.update(operator.getUserId(), request.getName(), operator);
         return UpdateUserCase.Response.from(updatedUser);
     }
 
 
-    public void resetPassword(ResetPasswordCase.Request request, User operator) {
-        service.resetPassword(operator.getId(), request.getPassword(), operator);
+    public void resetPassword(ResetPasswordCase.Request request, Operator operator) {
+        service.resetPassword(operator.getUserId(), request.getPassword(), operator);
         // TODO 是否清理authorize？
     }
 }

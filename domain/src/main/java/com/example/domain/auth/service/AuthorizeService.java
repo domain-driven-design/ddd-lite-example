@@ -4,6 +4,7 @@ import com.example.domain.auth.AuthorizeContextHolder;
 import com.example.domain.auth.exception.AuthorizeException;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.repository.AuthorizeRepository;
+import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,13 @@ public class AuthorizeService {
         return AuthorizeContextHolder.getContext();
     }
 
-    public User getOperator() {
+    public Operator getOperator() {
         Authorize authorize = getCurrent();
         if (authorize == null || authorize.getUserId() == null) {
             throw AuthorizeException.Unauthorized();
         }
 
-        return User.builder().id(authorize.getUserId()).role(authorize.getRole()).build();
+        return Operator.builder().userId(authorize.getUserId()).role(authorize.getRole()).build();
     }
 
     public void delete(String id) {

@@ -14,6 +14,7 @@ import com.example.domain.group.service.GroupService;
 import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;
 import com.example.domain.question.service.QuestionService;
+import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import com.example.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,8 @@ public class QuestionApplicationService {
     @Autowired
     private UserService userService;
 
-    public CreateQuestionCase.Response create(CreateQuestionCase.Request request, String groupId, User operator) {
-        GroupMember member = groupService.getMember(groupId, operator.getId());
+    public CreateQuestionCase.Response create(CreateQuestionCase.Request request, String groupId, Operator operator) {
+        GroupMember member = groupService.getMember(groupId, operator.getUserId());
 
         Question question = questionService.create(request.getTitle(), request.getDescription(), member);
 
@@ -110,8 +111,8 @@ public class QuestionApplicationService {
     }
 
     public UpdateQuestionCase.Response update(String id, UpdateQuestionCase.Request request, String groupId,
-                                              User operator) {
-        GroupMember member = groupService.getMember(groupId, operator.getId());
+                                              Operator operator) {
+        GroupMember member = groupService.getMember(groupId, operator.getUserId());
 
         Question question =
                 questionService.update(id, request.getTitle(), request.getDescription(), member);
@@ -120,23 +121,23 @@ public class QuestionApplicationService {
     }
 
     public UpdateQuestionStatusCase.Response updateStatus(String id, UpdateQuestionStatusCase.Request request,
-                                                          String groupId, User operator) {
-        GroupMember member = groupService.getMember(groupId, operator.getId());
+                                                          String groupId, Operator operator) {
+        GroupMember member = groupService.getMember(groupId, operator.getUserId());
 
         Question question = questionService.updateStatus(id, request.getStatus(), member);
 
         return UpdateQuestionStatusCase.Response.from(question);
     }
 
-    public void delete(String id, String groupId, User operator) {
-        GroupMember member = groupService.getMember(groupId, operator.getId());
+    public void delete(String id, String groupId, Operator operator) {
+        GroupMember member = groupService.getMember(groupId, operator.getUserId());
 
         questionService.delete(id, member);
     }
 
     public CreateAnswerCase.Response createAnswer(String id, CreateAnswerCase.Request request, String groupId,
-                                                  User operator){
-        GroupMember member = groupService.getMember(groupId, operator.getId());
+                                                  Operator operator){
+        GroupMember member = groupService.getMember(groupId, operator.getUserId());
 
         Answer answer = questionService.addAnswer(id, request.getContent(), member);
 
@@ -152,16 +153,16 @@ public class QuestionApplicationService {
     }
 
     public UpdateAnswerCase.Response updateAnswer(String id, String answerId, UpdateAnswerCase.Request request,
-                                                  String groupId, User operator) {
-        GroupMember member = groupService.getMember(groupId, operator.getId());
+                                                  String groupId, Operator operator) {
+        GroupMember member = groupService.getMember(groupId, operator.getUserId());
 
         Answer answer = questionService.updateAnswer(id, answerId, request.getContent(), member);
 
         return UpdateAnswerCase.Response.from(answer);
     }
 
-    public void deleteAnswer(String id, String answerId, String groupId, User operator) {
-        GroupMember member = groupService.getMember(groupId, operator.getId());
+    public void deleteAnswer(String id, String answerId, String groupId, Operator operator) {
+        GroupMember member = groupService.getMember(groupId, operator.getUserId());
 
         questionService.deleteAnswer(id, answerId, member);
     }

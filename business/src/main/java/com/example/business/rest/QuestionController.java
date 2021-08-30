@@ -11,7 +11,7 @@ import com.example.business.usecase.question.UpdateAnswerCase;
 import com.example.business.usecase.question.UpdateQuestionCase;
 import com.example.business.usecase.question.UpdateQuestionStatusCase;
 import com.example.domain.auth.service.AuthorizeService;
-import com.example.domain.user.model.User;
+import com.example.domain.user.model.Operator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +43,7 @@ public class QuestionController {
     @ResponseStatus(CREATED)
     public CreateQuestionCase.Response createQuestion(@PathVariable String groupId,
                                                       @RequestBody @Valid CreateQuestionCase.Request request) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.create(request, groupId, operator);
     }
 
@@ -62,8 +62,10 @@ public class QuestionController {
 
     @GetMapping("/management")
     public Page<GetManagementQuestionCase.Response> getManagementQuestions(@PathVariable String groupId,
-                                                                           @RequestParam(required = false) String keyword,
-                                                                           @RequestParam(required = false) String createdBy,
+                                                                           @RequestParam(required = false)
+                                                                                   String keyword,
+                                                                           @RequestParam(required = false)
+                                                                                   String createdBy,
                                                                            @PageableDefault Pageable pageable) {
         return applicationService.getManagementQuestions(groupId, keyword, createdBy, pageable);
     }
@@ -72,21 +74,22 @@ public class QuestionController {
     public UpdateQuestionCase.Response updateQuestion(@PathVariable String groupId,
                                                       @PathVariable String id,
                                                       @RequestBody @Valid UpdateQuestionCase.Request request) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.update(id, request, groupId, operator);
     }
 
     @PutMapping("/{id}/status")
     public UpdateQuestionStatusCase.Response updateQuestionStatus(@PathVariable String groupId,
-                                                      @PathVariable String id,
-                                                      @RequestBody @Valid UpdateQuestionStatusCase.Request request) {
-        User operator = authorizeService.getOperator();
+                                                                  @PathVariable String id,
+                                                                  @RequestBody
+                                                                  @Valid UpdateQuestionStatusCase.Request request) {
+        Operator operator = authorizeService.getOperator();
         return applicationService.updateStatus(id, request, groupId, operator);
     }
 
     @DeleteMapping("/{id}")
     public void deleteQuestion(@PathVariable String groupId, @PathVariable String id) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         applicationService.delete(id, groupId, operator);
     }
 
@@ -95,7 +98,7 @@ public class QuestionController {
     public CreateAnswerCase.Response createAnswer(@PathVariable String groupId,
                                                   @PathVariable String id,
                                                   @RequestBody @Valid CreateAnswerCase.Request request) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.createAnswer(id, request, groupId, operator);
     }
 
@@ -110,7 +113,7 @@ public class QuestionController {
                                                   @PathVariable String id,
                                                   @PathVariable String answerId,
                                                   @RequestBody @Valid UpdateAnswerCase.Request request) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.updateAnswer(id, answerId, request, groupId, operator);
     }
 
@@ -118,7 +121,7 @@ public class QuestionController {
     public void deleteAnswer(@PathVariable String groupId,
                              @PathVariable String id,
                              @PathVariable String answerId) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         applicationService.deleteAnswer(id, answerId, groupId, operator);
     }
 }

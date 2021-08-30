@@ -5,6 +5,7 @@ import com.example.admin.usecases.GetUserDetailCase;
 import com.example.admin.usecases.GetUsersCase;
 import com.example.admin.usecases.SuggestUsersCase;
 import com.example.admin.usecases.UpdateUserStatusCase;
+import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import com.example.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +53,14 @@ public class UserManagementApplicationService {
         return GetUserDetailCase.Response.from(user);
     }
 
-    public CreateUserCase.Response createUser(CreateUserCase.Request request, User operator) {
+    public CreateUserCase.Response createUser(CreateUserCase.Request request, Operator operator) {
         User user = userService.create(request.getName(), request.getEmail(), request.getPassword());
         return CreateUserCase.Response.from(user);
     }
 
     public UpdateUserStatusCase.Response updateUserStatus(String id,
                                                           UpdateUserStatusCase.Request request,
-                                                          User operator) {
+                                                          Operator operator) {
         User user = userService.updateStatus(id, request.getStatus(), operator);
         return UpdateUserStatusCase.Response.from(user);
     }

@@ -6,6 +6,7 @@ import com.example.domain.group.model.GroupMember;
 import com.example.domain.group.repository.GroupMemberRepository;
 import com.example.domain.group.repository.GroupRepository;
 import com.example.domain.group.service.GroupService;
+import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -69,7 +70,8 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_get_group_detail() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "anyDescription", user);
+        Operator operator = getOperator(user);
+        Group group = groupService.create("name", "anyDescription", operator);
 
 
         Response response = givenDefault()
@@ -89,9 +91,11 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_get_all_groups_by_page() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group0 = groupService.create("name0", "anyDescription", user);
-        Group group1 = groupService.create("name1", "anyDescription", user);
-        groupService.create("name2", "anyDescription", user);
+        Operator operator = getOperator(user);
+
+        Group group0 = groupService.create("name0", "anyDescription", operator);
+        Group group1 = groupService.create("name1", "anyDescription", operator);
+        groupService.create("name2", "anyDescription", operator);
 
 
         Response response = givenDefault()
@@ -112,10 +116,13 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_get_all_mine_groups_by_page() {
         User user = this.prepareUser("anyName", "anyEmail");
+        Operator operator = getOperator(user);
         User otherUser = this.prepareUser("otherName", "otherEmail");
-        Group group0 = groupService.create("name0", "anyDescription", user);
-        groupService.create("name1", "anyDescription", otherUser);
-        Group group2 = groupService.create("name2", "anyDescription", user);
+        Operator otherOperator = getOperator(otherUser);
+
+        Group group0 = groupService.create("name0", "anyDescription", operator);
+        groupService.create("name1", "anyDescription", otherOperator);
+        Group group2 = groupService.create("name2", "anyDescription", operator);
 
 
         Response response = givenWithAuthorize(user)
@@ -133,7 +140,9 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_update_group() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", user);
+        Operator operator = getOperator(user);
+
+        Group group = groupService.create("name", "description", operator);
 
         String newName = "newName";
         String newDescription = "newDescription";
@@ -161,15 +170,20 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_get_group_members() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator);
+        Operator operator = getOperator(creator);
+
+        Group group = groupService.create("name", "description", operator);
 
         User user1 = this.prepareUser("name1", "email1");
+        Operator operator1 = getOperator(user1);
         User user2 = this.prepareUser("name2", "email2");
+        Operator operator2 = getOperator(user2);
         User user3 = this.prepareUser("name3", "email3");
+        Operator operator3 = getOperator(user3);
 
-        groupService.addNormalMember(group.getId(), user1);
-        groupService.addNormalMember(group.getId(), user2);
-        groupService.addNormalMember(group.getId(), user3);
+        groupService.addNormalMember(group.getId(), operator1);
+        groupService.addNormalMember(group.getId(), operator2);
+        groupService.addNormalMember(group.getId(), operator3);
 
         Response response = givenWithAuthorize(creator)
                 .param("sort", "createdAt")
@@ -186,15 +200,20 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_get_group_management_members() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator);
+        Operator operator = getOperator(creator);
+
+        Group group = groupService.create("name", "description", operator);
 
         User user1 = this.prepareUser("name1", "email1");
+        Operator operator1 = getOperator(user1);
         User user2 = this.prepareUser("name2", "email2");
+        Operator operator2 = getOperator(user2);
         User user3 = this.prepareUser("name3", "email3");
+        Operator operator3 = getOperator(user3);
 
-        groupService.addNormalMember(group.getId(), user1);
-        groupService.addNormalMember(group.getId(), user2);
-        groupService.addNormalMember(group.getId(), user3);
+        groupService.addNormalMember(group.getId(), operator1);
+        groupService.addNormalMember(group.getId(), operator2);
+        groupService.addNormalMember(group.getId(), operator3);
 
         Response response = givenWithAuthorize(creator)
                 .param("sort", "createdAt")
@@ -211,7 +230,8 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_join_group() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator);
+        Operator operator = getOperator(creator);
+        Group group = groupService.create("name", "description", operator);
 
         User user = this.prepareUser("otherName", "otherEmail");
 
@@ -234,7 +254,9 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_exit_group() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator);
+        Operator operator = getOperator(creator);
+
+        Group group = groupService.create("name", "description", operator);
 
         User user = this.prepareUser("otherName", "otherEmail");
 
@@ -253,10 +275,14 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_change_member_role() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator);
+        Operator operator = getOperator(creator);
+
+        Group group = groupService.create("name", "description", operator);
 
         User user = this.prepareUser("otherName", "otherEmail");
-        GroupMember groupMember = groupService.addNormalMember(group.getId(), user);
+        Operator otherOperator = getOperator(user);
+
+        GroupMember groupMember = groupService.addNormalMember(group.getId(), otherOperator);
 
         Response response = givenWithAuthorize(creator)
                 .body(new HashMap<String, Object>() {
@@ -300,10 +326,14 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_change_owner() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator);
+        Operator operator = getOperator(creator);
+
+        Group group = groupService.create("name", "description", operator);
 
         User user = this.prepareUser("otherName", "otherEmail");
-        GroupMember groupMember = groupService.addNormalMember(group.getId(), user);
+        Operator otherOperator = getOperator(user);
+
+        GroupMember groupMember = groupService.addNormalMember(group.getId(), otherOperator);
 
         Response response = givenWithAuthorize(creator)
                 .body(new HashMap<String, Object>() {
@@ -336,10 +366,13 @@ class GroupControllerTest extends TestBase {
     @Test
     void should_remove_member() {
         User creator = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("name", "description", creator);
+        Operator operator = getOperator(creator);
+
+        Group group = groupService.create("name", "description", operator);
 
         User user = this.prepareUser("otherName", "otherEmail");
-        GroupMember groupMember = groupService.addNormalMember(group.getId(), user);
+        Operator otherOperator = getOperator(user);
+        GroupMember groupMember = groupService.addNormalMember(group.getId(), otherOperator);
 
         Response response = givenWithAuthorize(creator)
                 .when()
@@ -351,5 +384,9 @@ class GroupControllerTest extends TestBase {
                 .userId(user.getId())
                 .build()));
         assertThat(optionalGroupMember.isPresent(), is(false));
+    }
+
+    private Operator getOperator(User user) {
+        return Operator.builder().userId(user.getId()).role(user.getRole()).build();
     }
 }

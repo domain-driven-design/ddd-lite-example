@@ -6,7 +6,7 @@ import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;
 import com.example.domain.group.repository.GroupMemberRepository;
 import com.example.domain.group.repository.GroupRepository;
-import com.example.domain.user.model.User;
+import com.example.domain.user.model.Operator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Example;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -63,7 +62,7 @@ class GroupServiceTest {
             //when
             groupService.update(
                     "test-group-id", "test new group", "test new group description",
-                    User.builder().id("test-user-id").build()
+                    Operator.builder().userId("test-user-id").build()
             );
         });
 
@@ -83,7 +82,7 @@ class GroupServiceTest {
 
         BaseException exception = assertThrows(GroupException.class, () -> {
             //when
-            groupService.addNormalMember("test-group-id", User.builder().id("test-user").build());
+            groupService.addNormalMember("test-group-id", Operator.builder().userId("test-user-id").build());
         });
 
         assertEquals("group_member_conflict", exception.getMessage());
@@ -107,7 +106,7 @@ class GroupServiceTest {
         // Then
         BaseException exception = assertThrows(GroupException.class, () -> {
             //when
-            groupService.deleteNormalMember(groupId, User.builder().id(userId).build());
+            groupService.deleteNormalMember(groupId, Operator.builder().userId(userId).build());
         });
 
         assertEquals("group_owner_can_not_exit", exception.getMessage());

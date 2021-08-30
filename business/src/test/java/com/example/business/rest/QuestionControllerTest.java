@@ -9,6 +9,7 @@ import com.example.domain.question.model.Question;
 import com.example.domain.question.repository.AnswerRepository;
 import com.example.domain.question.repository.QuestionRepository;
 import com.example.domain.question.service.QuestionService;
+import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -254,7 +255,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_update_question_status_by_group_admin_and_not_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("anyGroupName", "", user);
+        Operator operator = getOperator(user);
+        Group group = groupService.create("anyGroupName", "", operator);
         GroupMember groupOwner = group.getMembers().get(0);
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
@@ -292,7 +294,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_update_question_status_by_group_owner_and_not_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("anyGroupName", "", user);
+        Operator operator = getOperator(user);
+        Group group = groupService.create("anyGroupName", "", operator);
         GroupMember groupOwner = group.getMembers().get(0);
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
@@ -354,7 +357,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_delete_question_by_group_admin_and_not_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("anyGroupName", "", user);
+        Operator operator = getOperator(user);
+        Group group = groupService.create("anyGroupName", "", operator);
         GroupMember groupOwner = group.getMembers().get(0);
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
@@ -379,7 +383,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_delete_question_by_group_owner_and_not_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("anyGroupName", "", user);
+        Operator operator = getOperator(user);
+        Group group = groupService.create("anyGroupName", "", operator);
         GroupMember groupOwner = group.getMembers().get(0);
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
@@ -494,7 +499,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_delete_answer_by_group_admin_and_not_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("anyGroupName", "", user);
+        Operator operator = getOperator(user);
+        Group group = groupService.create("anyGroupName", "", operator);
         GroupMember groupOwner = group.getMembers().get(0);
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
@@ -513,7 +519,8 @@ class QuestionControllerTest extends TestBase {
     @Test
     void should_delete_answer_by_group_owner_and_not_creator() {
         User user = this.prepareUser("anyName", "anyEmail");
-        Group group = groupService.create("anyGroupName", "", user);
+        Operator operator = getOperator(user);
+        Group group = groupService.create("anyGroupName", "", operator);
         GroupMember groupOwner = group.getMembers().get(0);
         User otherUser = this.prepareUser("otherUserName", "otherUserEmail");
         GroupMember groupAdmin = addGroupAdmin(group, otherUser, groupOwner);
@@ -531,9 +538,13 @@ class QuestionControllerTest extends TestBase {
 
 
     private GroupMember addGroupAdmin(Group group, User user, GroupMember operator) {
-        GroupMember otherMember = groupService.addNormalMember(group.getId(), user);
+        GroupMember otherMember = groupService.addNormalMember(group.getId(), getOperator(user));
         return groupService.changeMemberRole(group.getId(), otherMember.getUserId(),
-                GroupMember.Role.ADMIN, User.builder().id(operator.getUserId()).build()
+                GroupMember.Role.ADMIN, getOperator(User.builder().id(operator.getUserId()).build())
         );
+    }
+
+    private Operator getOperator(User user) {
+        return Operator.builder().userId(user.getId()).role(user.getRole()).build();
     }
 }

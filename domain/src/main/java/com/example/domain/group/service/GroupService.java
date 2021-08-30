@@ -5,7 +5,7 @@ import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;
 import com.example.domain.group.repository.GroupMemberRepository;
 import com.example.domain.group.repository.GroupRepository;
-import com.example.domain.user.model.User;
+import com.example.domain.user.model.Operator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -37,11 +37,11 @@ public class GroupService {
         return groupRepository.findAll(spec, pageable);
     }
 
-    public Group create(String name, String description, User operator) {
+    public Group create(String name, String description, Operator operator) {
         Group group = Group.builder()
                 .name(name)
                 .description(description)
-                .createdBy(operator.getId())
+                .createdBy(operator.getUserId())
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
@@ -51,8 +51,8 @@ public class GroupService {
         GroupMember owner = GroupMember.builder()
                 .role(GroupMember.Role.OWNER)
                 .groupId(createdGroup.getId())
-                .userId(operator.getId())
-                .createdBy(operator.getId())
+                .userId(operator.getUserId())
+                .createdBy(operator.getUserId())
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
@@ -63,11 +63,11 @@ public class GroupService {
         return createdGroup;
     }
 
-    public Group update(String id, String name, String description, User operator) {
+    public Group update(String id, String name, String description, Operator operator) {
         Group group = _get(id);
 
         boolean isOwner = group.getMembers().stream()
-                .anyMatch(groupMember -> groupMember.getUserId().equals(operator.getId())
+                .anyMatch(groupMember -> groupMember.getUserId().equals(operator.getUserId())
                         && groupMember.getRole().equals(GroupMember.Role.OWNER));
 
         if (!isOwner) {
@@ -115,21 +115,21 @@ public class GroupService {
         return groupMemberRepository.findAll(specification, pageable);
     }
 
-    public GroupMember addNormalMember(String id, User operator) {
+    public GroupMember addNormalMember(String id, Operator operator) {
         Group group = _get(id);
 
         // TODO 根据以后的业务规则调整，被管理员移除后不得加入
 
-        Optional<GroupMember> optionalGroupMember = findMember(id, operator.getId());
+        Optional<GroupMember> optionalGroupMember = findMember(id, operator.getUserId());
         if (optionalGroupMember.isPresent()) {
             throw GroupException.memberConflict();
         }
 
         GroupMember member = GroupMember.builder()
                 .groupId(id)
-                .userId(operator.getId())
+                .userId(operator.getUserId())
                 .role(GroupMember.Role.NORMAL)
-                .createdBy(operator.getId())
+                .createdBy(operator.getUserId())
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
@@ -138,9 +138,9 @@ public class GroupService {
         return groupMemberRepository.save(member);
     }
 
-    public void deleteNormalMember(String id, User operator) {
+    public void deleteNormalMember(String id, Operator operator) {
         // TODO check operator
-        Optional<GroupMember> optionalGroupMember = findMember(id, operator.getId());
+        Optional<GroupMember> optionalGroupMember = findMember(id, operator.getUserId());
         if (!optionalGroupMember.isPresent()) {
             return;
         }
@@ -166,8 +166,8 @@ public class GroupService {
     }
 
     public GroupMember changeMemberRole(String id, String userId,
-                                        GroupMember.Role role, User operator) {
-        checkMemberRole(id, operator.getId(), GroupMember.Role.OWNER);
+                                        GroupMember.Role role, Operator operator) {
+        checkMemberRole(id, operator.getUserId(), GroupMember.Role.OWNER);
 
         GroupMember groupMember = _getMember(id, userId);
 
@@ -183,8 +183,8 @@ public class GroupService {
     }
 
     @Transactional
-    public GroupMember changeOwner(String id, String userId, User operator) {
-        GroupMember owner = checkMemberRole(id, operator.getId(), GroupMember.Role.OWNER);
+    public GroupMember changeOwner(String id, String userId, Operator operator) {
+        GroupMember owner = checkMemberRole(id, operator.getUserId(), GroupMember.Role.OWNER);
 
         GroupMember groupMember = _getMember(id, userId);
 
@@ -197,8 +197,8 @@ public class GroupService {
         return groupMemberRepository.save(groupMember);
     }
 
-    public void deleteMember(String id, String userId, User operator) {
-        GroupMember groupMemberOperator = checkMemberRole(id, operator.getId(), GroupMember.Role.ADMIN);
+    public void deleteMember(String id, String userId, Operator operator) {
+        GroupMember groupMemberOperator = checkMemberRole(id, operator.getUserId(), GroupMember.Role.ADMIN);
 
         GroupMember groupMember = _getMember(id, userId);
 

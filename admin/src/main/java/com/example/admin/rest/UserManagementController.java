@@ -7,6 +7,7 @@ import com.example.admin.usecases.GetUsersCase;
 import com.example.admin.usecases.SuggestUsersCase;
 import com.example.admin.usecases.UpdateUserStatusCase;
 import com.example.domain.auth.service.AuthorizeService;
+import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,14 +54,14 @@ public class UserManagementController {
     @PostMapping()
     @ResponseStatus(CREATED)
     public CreateUserCase.Response createUser(@RequestBody @Valid CreateUserCase.Request request) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.createUser(request, operator);
     }
 
     @PutMapping("/{id}/status")
     public UpdateUserStatusCase.Response updateUserStatus(@PathVariable("id") String id,
                                                           @RequestBody @Valid UpdateUserStatusCase.Request request) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.updateUserStatus(id, request, operator);
     }
 }

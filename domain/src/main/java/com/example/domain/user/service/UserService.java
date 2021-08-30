@@ -1,6 +1,7 @@
 package com.example.domain.user.service;
 
 import com.example.domain.user.exception.UserException;
+import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,10 +54,10 @@ public class UserService {
         return repository.save(user);
     }
 
-    public User update(String id, String name, User operator) {
+    public User update(String id, String name, Operator operator) {
         User user = _get(id);
 
-        if (!id.equals(operator.getId())) {
+        if (!id.equals(operator.getUserId())) {
             throw UserException.noPermissionUpdate();
         }
 
@@ -65,10 +66,10 @@ public class UserService {
         return repository.save(user);
     }
 
-    public User resetPassword(String id, String password, User operator) {
+    public User resetPassword(String id, String password, Operator operator) {
         User user = _get(id);
 
-        if (!id.equals(operator.getId())) {
+        if (!id.equals(operator.getUserId())) {
             throw UserException.noPermissionUpdate();
         }
 
@@ -78,7 +79,7 @@ public class UserService {
     }
 
     // TODO 是否将冻结/解冻分开处理？现阶段只是对status进行更改，并且对status的更改权限检查是一致的
-    public User updateStatus(String id, User.Status status, User operator) {
+    public User updateStatus(String id, User.Status status, Operator operator) {
         if (!operator.getRole().equals(User.UserRole.ADMIN)) {
             // TODO 权限异常区分粒度？status，message
             throw UserException.noPermissionUpdate();

@@ -6,6 +6,7 @@ import com.example.domain.group.model.GroupMember;
 import com.example.domain.group.service.GroupService;
 import com.example.domain.question.model.Question;
 import com.example.domain.question.service.QuestionService;
+import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -24,8 +25,9 @@ class QueryControllerTest extends TestBase {
     @Test
     void should_query_questions() {
         User user = this.prepareUser("anyName", "anyEmail");
+        Operator operator = getOperator(user);
         User otherUser = this.prepareUser("anyOtherName", "anyOtherEmail");
-        Group group = groupService.create("anyName", "anyDescription", user);
+        Group group = groupService.create("anyName", "anyDescription", operator);
         GroupMember defaultGroupMember = groupService.getMember(Group.DEFAULT, user.getId());
         GroupMember defaultGroupOtherMember = groupService.getMember(Group.DEFAULT, otherUser.getId());
 
@@ -48,5 +50,7 @@ class QueryControllerTest extends TestBase {
                 .body("content", hasSize(3));
     }
 
-
+    private Operator getOperator(User user) {
+        return Operator.builder().userId(user.getId()).role(user.getRole()).build();
+    }
 }

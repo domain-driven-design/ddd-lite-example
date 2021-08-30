@@ -12,6 +12,7 @@ import com.example.business.usecase.group.UpdateGroupMemberCase;
 import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;
 import com.example.domain.group.service.GroupService;
+import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import com.example.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class GroupApplicationService {
     @Autowired
     private UserService userService;
 
-    public CreateGroupCase.Response createGroup(CreateGroupCase.Request request, User operator) {
+    public CreateGroupCase.Response createGroup(CreateGroupCase.Request request, Operator operator) {
         Group group = groupService.create(request.getName(), request.getDescription(), operator);
         return CreateGroupCase.Response.from(group);
     }
@@ -56,17 +57,17 @@ public class GroupApplicationService {
         return groupPage.map(GetGroupCase.Response::from);
     }
 
-    public Page<GetMyGroupCase.Response> getMineGroupsByPage(Pageable pageable, User operator) {
+    public Page<GetMyGroupCase.Response> getMineGroupsByPage(Pageable pageable, Operator operator) {
         Specification<Group> specification = (root, query, criteriaBuilder) -> {
             Join<Group, List<GroupMember>> join = root.join(Group.Fields.members, JoinType.LEFT);
-            return criteriaBuilder.equal(join.get(GroupMember.Fields.userId), operator.getId());
+            return criteriaBuilder.equal(join.get(GroupMember.Fields.userId), operator.getUserId());
         };
         Page<Group> groupPage = groupService.findAll(specification, pageable);
 
         return groupPage.map(GetMyGroupCase.Response::from);
     }
 
-    public UpdateGroupCase.Response updateGroup(String id, UpdateGroupCase.Request request, User operator) {
+    public UpdateGroupCase.Response updateGroup(String id, UpdateGroupCase.Request request, Operator operator) {
         Group group = groupService.update(id, request.getName(), request.getDescription(), operator);
         return UpdateGroupCase.Response.from(group);
     }
@@ -108,18 +109,18 @@ public class GroupApplicationService {
         );
     }
 
-    public JoinGroupCase.Response joinGroup(String id, User operator) {
+    public JoinGroupCase.Response joinGroup(String id, Operator operator) {
         GroupMember member = groupService.addNormalMember(id, operator);
         return JoinGroupCase.Response.from(member);
     }
 
-    public void exitGroup(String id, User operator) {
+    public void exitGroup(String id, Operator operator) {
         groupService.deleteNormalMember(id, operator);
     }
 
     public UpdateGroupMemberCase.Response updateMember(String id, String userId,
                                                        UpdateGroupMemberCase.Request request,
-                                                       User operator) {
+                                                       Operator operator) {
         GroupMember groupMember = groupService.changeMemberRole(id, userId, request.getRole(), operator);
 
         return UpdateGroupMemberCase.Response.from(groupMember);
@@ -127,12 +128,12 @@ public class GroupApplicationService {
 
     public ChangeGroupOwnerCase.Response changeOwner(String id,
                                                      ChangeGroupOwnerCase.Request request,
-                                                     User operator) {
+                                                     Operator operator) {
         GroupMember groupMember = groupService.changeOwner(id, request.getUserId(), operator);
         return ChangeGroupOwnerCase.Response.from(groupMember);
     }
 
-    public void removeMember(String id, String userId, User operator) {
+    public void removeMember(String id, String userId, Operator operator) {
         groupService.deleteMember(id, userId, operator);
     }
 }

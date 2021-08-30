@@ -10,9 +10,8 @@ import com.example.business.usecase.group.GetMyGroupCase;
 import com.example.business.usecase.group.JoinGroupCase;
 import com.example.business.usecase.group.UpdateGroupCase;
 import com.example.business.usecase.group.UpdateGroupMemberCase;
-import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
-import com.example.domain.user.model.User;
+import com.example.domain.user.model.Operator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +41,7 @@ public class GroupController {
     @PostMapping
     @ResponseStatus(CREATED)
     public CreateGroupCase.Response createGroup(@RequestBody @Valid CreateGroupCase.Request request) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.createGroup(request, operator);
     }
 
@@ -58,14 +57,14 @@ public class GroupController {
 
     @GetMapping("/mine")
     public Page<GetMyGroupCase.Response> getMyGroupsByPage(@PageableDefault Pageable pageable) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.getMineGroupsByPage(pageable, operator);
     }
 
     @PutMapping("/{id}")
     public UpdateGroupCase.Response updateGroup(@PathVariable String id,
                                                 @RequestBody @Valid UpdateGroupCase.Request request) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.updateGroup(id, request, operator);
     }
 
@@ -82,13 +81,13 @@ public class GroupController {
     @PostMapping("/{id}/members/me")
     @ResponseStatus(CREATED)
     public JoinGroupCase.Response joinGroup(@PathVariable String id) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.joinGroup(id, operator);
     }
 
     @DeleteMapping("/{id}/members/me")
     public void exitGroup(@PathVariable String id) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         applicationService.exitGroup(id, operator);
     }
 
@@ -96,20 +95,20 @@ public class GroupController {
     public UpdateGroupMemberCase.Response updateMember(@PathVariable String id,
                                                        @PathVariable String userId,
                                                        @RequestBody @Valid UpdateGroupMemberCase.Request request) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.updateMember(id, userId, request, operator);
     }
 
     @PutMapping("/{id}/owner")
     public ChangeGroupOwnerCase.Response changeOwner(@PathVariable String id,
                                                      @RequestBody @Valid ChangeGroupOwnerCase.Request request) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         return applicationService.changeOwner(id, request, operator);
     }
 
     @DeleteMapping("/{id}/members/{userId}")
     public void removeMember(@PathVariable String id, @PathVariable String userId) {
-        User operator = authorizeService.getOperator();
+        Operator operator = authorizeService.getOperator();
         applicationService.removeMember(id, userId, operator);
     }
 
