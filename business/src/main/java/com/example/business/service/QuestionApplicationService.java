@@ -9,7 +9,7 @@ import com.example.business.usecase.question.GetQuestionDetailCase;
 import com.example.business.usecase.question.UpdateAnswerCase;
 import com.example.business.usecase.question.UpdateQuestionCase;
 import com.example.business.usecase.question.UpdateQuestionStatusCase;
-import com.example.domain.group.model.GroupMember;
+import com.example.domain.group.model.GroupOperator;
 import com.example.domain.group.service.GroupService;
 import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;
@@ -43,9 +43,9 @@ public class QuestionApplicationService {
     private UserService userService;
 
     public CreateQuestionCase.Response create(CreateQuestionCase.Request request, String groupId, Operator operator) {
-        GroupMember member = groupService.getMember(groupId, operator.getUserId());
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
 
-        Question question = questionService.create(request.getTitle(), request.getDescription(), member);
+        Question question = questionService.create(request.getTitle(), request.getDescription(), groupOperator);
 
         return CreateQuestionCase.Response.from(question);
     }
@@ -112,34 +112,34 @@ public class QuestionApplicationService {
 
     public UpdateQuestionCase.Response update(String id, UpdateQuestionCase.Request request, String groupId,
                                               Operator operator) {
-        GroupMember member = groupService.getMember(groupId, operator.getUserId());
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
 
         Question question =
-                questionService.update(id, request.getTitle(), request.getDescription(), member);
+                questionService.update(id, request.getTitle(), request.getDescription(), groupOperator);
 
         return UpdateQuestionCase.Response.from(question);
     }
 
     public UpdateQuestionStatusCase.Response updateStatus(String id, UpdateQuestionStatusCase.Request request,
                                                           String groupId, Operator operator) {
-        GroupMember member = groupService.getMember(groupId, operator.getUserId());
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
 
-        Question question = questionService.updateStatus(id, request.getStatus(), member);
+        Question question = questionService.updateStatus(id, request.getStatus(), groupOperator);
 
         return UpdateQuestionStatusCase.Response.from(question);
     }
 
     public void delete(String id, String groupId, Operator operator) {
-        GroupMember member = groupService.getMember(groupId, operator.getUserId());
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
 
-        questionService.delete(id, member);
+        questionService.delete(id, groupOperator);
     }
 
     public CreateAnswerCase.Response createAnswer(String id, CreateAnswerCase.Request request, String groupId,
-                                                  Operator operator){
-        GroupMember member = groupService.getMember(groupId, operator.getUserId());
+                                                  Operator operator) {
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
 
-        Answer answer = questionService.addAnswer(id, request.getContent(), member);
+        Answer answer = questionService.addAnswer(id, request.getContent(), groupOperator);
 
         return CreateAnswerCase.Response.from(answer);
     }
@@ -154,16 +154,16 @@ public class QuestionApplicationService {
 
     public UpdateAnswerCase.Response updateAnswer(String id, String answerId, UpdateAnswerCase.Request request,
                                                   String groupId, Operator operator) {
-        GroupMember member = groupService.getMember(groupId, operator.getUserId());
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
 
-        Answer answer = questionService.updateAnswer(id, answerId, request.getContent(), member);
+        Answer answer = questionService.updateAnswer(id, answerId, request.getContent(), groupOperator);
 
         return UpdateAnswerCase.Response.from(answer);
     }
 
     public void deleteAnswer(String id, String answerId, String groupId, Operator operator) {
-        GroupMember member = groupService.getMember(groupId, operator.getUserId());
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
 
-        questionService.deleteAnswer(id, answerId, member);
+        questionService.deleteAnswer(id, answerId, groupOperator);
     }
 }

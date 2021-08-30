@@ -3,6 +3,7 @@ package com.example.business.rest;
 import com.example.TestBase;
 import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;
+import com.example.domain.group.model.GroupOperator;
 import com.example.domain.group.service.GroupService;
 import com.example.domain.question.model.Question;
 import com.example.domain.question.service.QuestionService;
@@ -28,19 +29,20 @@ class QueryControllerTest extends TestBase {
         Operator operator = getOperator(user);
         User otherUser = this.prepareUser("anyOtherName", "anyOtherEmail");
         Group group = groupService.create("anyName", "anyDescription", operator);
-        GroupMember defaultGroupMember = groupService.getMember(Group.DEFAULT, user.getId());
-        GroupMember defaultGroupOtherMember = groupService.getMember(Group.DEFAULT, otherUser.getId());
+        GroupOperator groupOperator = groupService.getOperator(group.getId(), operator.getUserId());
+        GroupOperator defaultGroupOperator = groupService.getOperator(Group.DEFAULT, user.getId());
+        GroupOperator defaultGroupOtherOperator = groupService.getOperator(Group.DEFAULT, otherUser.getId());
 
-        Question question0 = questionService.create("title0", "anyDescription", defaultGroupMember);
-        Question question1 = questionService.create("title1", "anyDescription", group.getMembers().get(0));
-        Question question2 = questionService.create("title2", "anyDescription", defaultGroupMember);
-        Question question3 = questionService.create("title3", "anyDescription", defaultGroupMember);
+        Question question0 = questionService.create("title0", "anyDescription", defaultGroupOperator);
+        Question question1 = questionService.create("title1", "anyDescription", groupOperator);
+        Question question2 = questionService.create("title2", "anyDescription", defaultGroupOperator);
+        Question question3 = questionService.create("title3", "anyDescription", defaultGroupOperator);
 
-        questionService.addAnswer(question0.getId(), "anyContent", defaultGroupMember);
-        questionService.addAnswer(question1.getId(), "anyContent", defaultGroupMember);
-        questionService.addAnswer(question2.getId(), "anyContent", defaultGroupMember);
-        questionService.addAnswer(question2.getId(), "anyContent", defaultGroupOtherMember);
-        questionService.addAnswer(question3.getId(), "anyContent", defaultGroupOtherMember);
+        questionService.addAnswer(question0.getId(), "anyContent", defaultGroupOperator);
+        questionService.addAnswer(question1.getId(), "anyContent", defaultGroupOperator);
+        questionService.addAnswer(question2.getId(), "anyContent", defaultGroupOperator);
+        questionService.addAnswer(question2.getId(), "anyContent", defaultGroupOtherOperator);
+        questionService.addAnswer(question3.getId(), "anyContent", defaultGroupOtherOperator);
 
         Response response = givenWithAuthorize(user)
                 .param("userId", user.getId())

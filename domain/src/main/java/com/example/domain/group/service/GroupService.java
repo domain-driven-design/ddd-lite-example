@@ -3,6 +3,7 @@ package com.example.domain.group.service;
 import com.example.domain.group.exception.GroupException;
 import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;
+import com.example.domain.group.model.GroupOperator;
 import com.example.domain.group.repository.GroupMemberRepository;
 import com.example.domain.group.repository.GroupRepository;
 import com.example.domain.user.model.Operator;
@@ -96,19 +97,26 @@ public class GroupService {
                 .orElseThrow(GroupException::memberNotFound);
     }
 
-    public GroupMember getMember(String id, String userId) {
+    public GroupOperator getOperator(String id, String userId) {
+
         if (id.equals(Group.DEFAULT)) {
-            return GroupMember.builder()
+            return GroupOperator.builder()
                     .groupId(id)
                     .userId(userId)
-                    .role(GroupMember.Role.OWNER)
+                    .role(GroupMember.Role.NORMAL)
                     .build();
         }
-        return groupMemberRepository.findOne(Example.of(GroupMember.builder()
+        GroupMember member = groupMemberRepository.findOne(Example.of(GroupMember.builder()
                 .groupId(id)
                 .userId(userId)
                 .build()))
                 .orElseThrow(GroupException::memberNotFound);
+
+        return GroupOperator.builder()
+                .groupId(id)
+                .userId(userId)
+                .role(member.getRole())
+                .build();
     }
 
     public Page<GroupMember> findAllMembers(Specification<GroupMember> specification, Pageable pageable) {

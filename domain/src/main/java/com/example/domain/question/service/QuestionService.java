@@ -1,6 +1,7 @@
 package com.example.domain.question.service;
 
 import com.example.domain.group.model.GroupMember;
+import com.example.domain.group.model.GroupOperator;
 import com.example.domain.question.exception.QuestionException;
 import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;
@@ -39,7 +40,7 @@ public class QuestionService {
         return repository.findAll(spec);
     }
 
-    public Question create(String title, String description, GroupMember operator) {
+    public Question create(String title, String description, GroupOperator operator) {
         Question question = Question.builder()
                 .title(title)
                 .description(description)
@@ -52,7 +53,7 @@ public class QuestionService {
         return repository.save(question);
     }
 
-    public Question update(String id, String title, String description, GroupMember operator) {
+    public Question update(String id, String title, String description, GroupOperator operator) {
         Question question = this._get(id);
 
         if (!question.getCreatedBy().equals(operator.getUserId())) {
@@ -65,7 +66,7 @@ public class QuestionService {
         return repository.save(question);
     }
 
-    public Question updateStatus(String id, Question.Status status, GroupMember operator) {
+    public Question updateStatus(String id, Question.Status status, GroupOperator operator) {
         Question question = this._get(id);
 
         // TODO admin
@@ -78,7 +79,7 @@ public class QuestionService {
         return repository.save(question);
     }
 
-    public void delete(String id, GroupMember operator) {
+    public void delete(String id, GroupOperator operator) {
         Optional<Question> optionalQuestion = repository.findById(id);
         if (!optionalQuestion.isPresent()) {
             return;
@@ -99,7 +100,7 @@ public class QuestionService {
         return answerRepository.findById(answerId).orElseThrow(QuestionException::answerNotFound);
     }
 
-    public Answer addAnswer(String id, String content, GroupMember operator) {
+    public Answer addAnswer(String id, String content, GroupOperator operator) {
         Question question = _get(id);
 
         // TODO 业务验证：一个operator只能在一个question有一个answer
@@ -118,7 +119,7 @@ public class QuestionService {
         return answerRepository.findAll(spec, pageable);
     }
 
-    public Answer updateAnswer(String id, String answerId, String content, GroupMember operator) {
+    public Answer updateAnswer(String id, String answerId, String content, GroupOperator operator) {
         Question question = _get(id);
 
         // TODO 业务验证 影响answer修改的question状态
@@ -133,7 +134,7 @@ public class QuestionService {
         return answerRepository.save(answer);
     }
 
-    public void deleteAnswer(String id, String answerId, GroupMember operator) {
+    public void deleteAnswer(String id, String answerId, GroupOperator operator) {
         // TODO id 不需要
 
         Optional<Answer> optionalAnswer = answerRepository.findById(answerId);

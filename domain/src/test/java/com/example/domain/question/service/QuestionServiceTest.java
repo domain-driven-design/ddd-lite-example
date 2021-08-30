@@ -3,6 +3,7 @@ package com.example.domain.question.service;
 import com.example.domain.common.BaseException;
 import com.example.domain.group.exception.GroupException;
 import com.example.domain.group.model.GroupMember;
+import com.example.domain.group.model.GroupOperator;
 import com.example.domain.group.repository.GroupMemberRepository;
 import com.example.domain.group.repository.GroupRepository;
 import com.example.domain.group.service.GroupService;
@@ -36,7 +37,7 @@ class QuestionServiceTest {
 
         BaseException exception = assertThrows(QuestionException.class, () -> {
             questionService.delete(
-                    "test-id", GroupMember.builder().role(GroupMember.Role.NORMAL).userId("test-other-user-id").build()
+                    "test-id", GroupOperator.builder().role(GroupMember.Role.NORMAL).userId("test-other-user-id").build()
             );
         });
 
