@@ -4,11 +4,9 @@ import com.example.admin.service.UserManagementApplicationService;
 import com.example.admin.usecases.CreateUserCase;
 import com.example.admin.usecases.GetUserDetailCase;
 import com.example.admin.usecases.GetUsersCase;
-import com.example.admin.usecases.SuggestUsersCase;
 import com.example.admin.usecases.UpdateUserStatusCase;
 import com.example.domain.auth.service.AuthorizeService;
 import com.example.domain.user.model.Operator;
-import com.example.domain.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,15 +33,9 @@ public class UserManagementController {
     private AuthorizeService authorizeService;
 
     @GetMapping
-    public Page<GetUsersCase.Response> getUsers(Pageable pageable) {
-        return applicationService.getUsers(pageable);
-    }
-
-    // TODO 要不要和上面的query合并？
-    @GetMapping("/suggest")
-    public Page<SuggestUsersCase.Response> suggestUsers(@RequestParam(required = false) String keyword,
-                                                        Pageable pageable) {
-        return applicationService.suggestUsers(keyword, pageable);
+    public Page<GetUsersCase.Response> getUsers(@RequestParam(required = false) String keyword,
+                                                Pageable pageable) {
+        return applicationService.getUsers(keyword, pageable);
     }
 
     @GetMapping("/{id}")

@@ -43,30 +43,12 @@ class UserManagementControllerTest extends TestBase {
         userService.create("anyName", "anyEmail0", "anyPassword");
         userService.create("anyName", "anyEmail1", "anyPassword");
 
-        Response response = given()
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + authorize.getId())
-                .when()
-                .get("/management/users");
-        response.then().statusCode(200)
-                .body("content.size", is(2))
-                .body("content.name", hasItems("anyName", "anyName"))
-                .body("content.email", hasItems("anyEmail0", "anyEmail1"));
-    }
-
-
-    @Test
-    void should_suggest_users() {
-        // Given
-        userService.create("anyName", "anyEmail0", "anyPassword");
-        userService.create("anyName", "anyEmail1", "anyPassword");
-
         Response response0 = given()
                 .contentType("application/json")
                 .header("Authorization", "Bearer " + authorize.getId())
                 .param("keyword", "any")
                 .when()
-                .get("/management/users/suggest");
+                .get("/management/users");
         response0.then().statusCode(200)
                 .body("content.size", is(2))
                 .body("content.name", hasItems("anyName", "anyName"))
@@ -77,13 +59,12 @@ class UserManagementControllerTest extends TestBase {
                 .header("Authorization", "Bearer " + authorize.getId())
                 .param("keyword", "Email0")
                 .when()
-                .get("/management/users/suggest");
+                .get("/management/users");
         response1.then().statusCode(200)
                 .body("content.size", is(1))
                 .body("content.name", hasItems("anyName"))
                 .body("content.email", hasItems("anyEmail0"));
     }
-
 
     @Test
     void should_get_user_detail() {

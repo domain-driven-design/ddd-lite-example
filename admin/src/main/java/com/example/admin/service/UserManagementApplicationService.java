@@ -3,7 +3,6 @@ package com.example.admin.service;
 import com.example.admin.usecases.CreateUserCase;
 import com.example.admin.usecases.GetUserDetailCase;
 import com.example.admin.usecases.GetUsersCase;
-import com.example.admin.usecases.SuggestUsersCase;
 import com.example.admin.usecases.UpdateUserStatusCase;
 import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
@@ -23,14 +22,7 @@ public class UserManagementApplicationService {
     @Autowired
     private UserService userService;
 
-    public Page<GetUsersCase.Response> getUsers(Pageable pageable) {
-        Specification<User> spec = (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get(User.Fields.role), User.Role.USER);
-        return userService.findAll(spec, pageable)
-                .map(GetUsersCase.Response::from);
-    }
-
-    public Page<SuggestUsersCase.Response> suggestUsers(String keyword, Pageable pageable) {
+    public Page<GetUsersCase.Response> getUsers(String keyword, Pageable pageable) {
         Specification<User> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicateList = new ArrayList<>();
             predicateList.add(criteriaBuilder.equal(root.get(User.Fields.role), User.Role.USER));
@@ -45,7 +37,7 @@ public class UserManagementApplicationService {
             return criteriaBuilder.and(predicateList.toArray(new Predicate[0]));
         };
         return userService.findAll(spec, pageable)
-                .map(SuggestUsersCase.Response::from);
+                .map(GetUsersCase.Response::from);
     }
 
     public GetUserDetailCase.Response getUserDetail(String id) {
