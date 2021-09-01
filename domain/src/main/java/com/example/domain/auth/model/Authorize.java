@@ -16,6 +16,6 @@ import lombok.Setter;
 public class Authorize {
     private String id;
     private String userId;
-    private User.UserRole role;
+    private User.Role role;
     private Long expire;
 }

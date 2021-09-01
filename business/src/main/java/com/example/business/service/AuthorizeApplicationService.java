@@ -21,7 +21,7 @@ public class AuthorizeApplicationService {
     public LoginCase.Response login(LoginCase.Request request) {
         User user = userService.get(Example.of(User.builder()
                 .email(request.getEmail())
-                .role(User.UserRole.USER)
+                .role(User.Role.USER)
                 .build()));
 
         Authorize authorize = service.create(user, request.getPassword());

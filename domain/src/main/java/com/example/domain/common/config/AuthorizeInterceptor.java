@@ -35,7 +35,7 @@ public class AuthorizeInterceptor implements HandlerInterceptor {
         AuthorizeContextHolder.setContext(authorize);
 
         if (request.getRequestURI().startsWith("/management")) {
-            if (authorize == null || !User.UserRole.ADMIN.equals(authorize.getRole())) {
+            if (authorize == null || !User.Role.ADMIN.equals(authorize.getRole())) {
                 throw AuthorizeException.Unauthorized();
             }
         }

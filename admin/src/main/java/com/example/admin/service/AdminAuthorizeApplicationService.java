@@ -20,7 +20,7 @@ public class AdminAuthorizeApplicationService {
     public LoginCase.Response login(LoginCase.Request request) {
         User user = userService.get(Example.of(User.builder()
                 .name(request.getName())
-                .role(User.UserRole.ADMIN)
+                .role(User.Role.ADMIN)
                 .build()));
 
         Authorize authorize = service.create(user, request.getPassword());

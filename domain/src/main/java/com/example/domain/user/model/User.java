@@ -41,12 +41,12 @@ public class User {
     private Instant updatedAt;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private Role role;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public enum UserRole {
+    public enum Role {
         ADMIN, USER
     }
 

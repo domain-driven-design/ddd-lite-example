@@ -32,7 +32,7 @@ class AuthorizeServiceTest {
         User user = User.builder()
                 .password("testPassword")
                 .id("test-user-id")
-                .role(User.UserRole.ADMIN)
+                .role(User.Role.ADMIN)
                 .build();
         String password = "wrongTestPassword";
         Mockito.when(bCryptPasswordEncoder.matches(anyString(), anyString())).thenReturn(false);

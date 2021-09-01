@@ -47,7 +47,7 @@ public class UserService {
                 .password(bCryptPasswordEncoder.encode(password))
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
-                .role(User.UserRole.USER)
+                .role(User.Role.USER)
                 .status(User.Status.NORMAL)
                 .build();
         validateConflicted(user);
@@ -80,7 +80,7 @@ public class UserService {
 
     // TODO 是否将冻结/解冻分开处理？现阶段只是对status进行更改，并且对status的更改权限检查是一致的
     public User updateStatus(String id, User.Status status, Operator operator) {
-        if (!operator.getRole().equals(User.UserRole.ADMIN)) {
+        if (!operator.getRole().equals(User.Role.ADMIN)) {
             // TODO 权限异常区分粒度？status，message
             throw UserException.noPermissionUpdate();
         }

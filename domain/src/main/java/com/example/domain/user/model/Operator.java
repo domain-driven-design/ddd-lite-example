@@ -15,5 +15,5 @@ import lombok.experimental.FieldNameConstants;
 @FieldNameConstants
 public class Operator {
     private String userId;
-    private User.UserRole role;
+    private User.Role role;
 }

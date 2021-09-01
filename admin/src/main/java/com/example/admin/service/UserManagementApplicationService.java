@@ -25,7 +25,7 @@ public class UserManagementApplicationService {
 
     public Page<GetUsersCase.Response> getUsers(Pageable pageable) {
         Specification<User> spec = (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get(User.Fields.role), User.UserRole.USER);
+                criteriaBuilder.equal(root.get(User.Fields.role), User.Role.USER);
         return userService.findAll(spec, pageable)
                 .map(GetUsersCase.Response::from);
     }
@@ -33,7 +33,7 @@ public class UserManagementApplicationService {
     public Page<SuggestUsersCase.Response> suggestUsers(String keyword, Pageable pageable) {
         Specification<User> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicateList = new ArrayList<>();
-            predicateList.add(criteriaBuilder.equal(root.get(User.Fields.role), User.UserRole.USER));
+            predicateList.add(criteriaBuilder.equal(root.get(User.Fields.role), User.Role.USER));
 
             if (keyword != null) {
                 List<Predicate> keywordPredicateList = new ArrayList<>();
