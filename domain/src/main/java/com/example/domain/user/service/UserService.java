@@ -24,7 +24,16 @@ public class UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public User get(String id) {
-        return _get(id);
+        return _getAvailable(id);
+    }
+
+    private User _getAvailable(String id) {
+        User user = _get(id);
+        if (user.getStatus().equals(User.Status.FROZEN)) {
+            throw UserException.frozen();
+        }
+
+        return user;
     }
 
     private User _get(String id) {
@@ -32,7 +41,12 @@ public class UserService {
     }
 
     public User get(Example<User> example) {
-        return repository.findOne(example).orElseThrow(UserException::notFound);
+        User user = repository.findOne(example).orElseThrow(UserException::notFound);
+        if (user.getStatus().equals(User.Status.FROZEN)) {
+            throw UserException.frozen();
+        }
+
+        return user;
     }
 
     public Page<User> findAll(Specification<User> spec, Pageable pageable) {
@@ -55,7 +69,7 @@ public class UserService {
     }
 
     public User update(String id, String name, Operator operator) {
-        User user = _get(id);
+        User user = _getAvailable(id);
 
         if (!id.equals(operator.getUserId())) {
             throw UserException.noPermissionUpdate();
@@ -67,7 +81,7 @@ public class UserService {
     }
 
     public User resetPassword(String id, String password, Operator operator) {
-        User user = _get(id);
+        User user = _getAvailable(id);
 
         if (!id.equals(operator.getUserId())) {
             throw UserException.noPermissionUpdate();

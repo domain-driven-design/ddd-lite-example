@@ -79,6 +79,11 @@ ps：
 - 异步任务
 
 ## 待讨论
+- 用户被冻结后，有哪些影响？
+    - 无法登录，即无法创建Authorize，已有Authorize是否失效？
+    - Operator是由Authorize转换得到，当被冻结后，无法创建Authorize，若已有Authorize已失效，没有问题，若已有Authorize未失效，除非重新查一次user，不然无法check是否被冻结
+    - GroupOperator由Operator转换得到，若Operator在用户冻结后无法获取，那么GroupOperator也不会被获取
+
 - 对于管理/搜索资源，本身属于对资源定位的快捷方式，如何组织查询接口？
 - 前端如何判断一个question，一个user只能有一个answer？性能考虑
 - 对于查询，查询的维度和筛选条件，比如：对answer的查询，以question，以group，以group member
