@@ -17,7 +17,6 @@ public class QueryController {
     @Autowired
     private QueryApplicationService applicationService;
 
-    // TODO 这个查询是有问题的，查询的维度不应当是以user，而是group member
     @GetMapping("/answers")
     public Page<QueryAnswersCase.Response> queryAnswers(@RequestParam String userId,
                                                         @PageableDefault Pageable pageable) {

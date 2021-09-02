@@ -36,6 +36,6 @@ public class UserApplicationService {
 
     public void resetPassword(ResetPasswordCase.Request request, Operator operator) {
         service.resetPassword(operator.getUserId(), request.getPassword(), operator);
-        // TODO 是否清理authorize？
+        // TODO clear authorize？
     }
 }

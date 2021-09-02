@@ -109,7 +109,6 @@ class UserManagementControllerTest extends TestBase {
         assertTrue(exists);
     }
 
-    // TODO 统一场景的不同请求值，写在一起？还是分开？
     @Test
     void should_update_user_status() {
         User user = userService.create("anyName", "anyEmail0", "anyPassword");

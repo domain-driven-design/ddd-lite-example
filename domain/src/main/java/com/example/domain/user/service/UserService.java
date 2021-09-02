@@ -39,7 +39,6 @@ public class UserService {
         return repository.findAll(spec, pageable);
     }
 
-    // TODO 保留创建者信息，区分创建来源
     public User create(String name, String email, String password) {
         User user = User.builder()
                 .name(name)
@@ -78,10 +77,9 @@ public class UserService {
         return repository.save(user);
     }
 
-    // TODO 是否将冻结/解冻分开处理？现阶段只是对status进行更改，并且对status的更改权限检查是一致的
     public User updateStatus(String id, User.Status status, Operator operator) {
         if (!operator.getRole().equals(User.Role.ADMIN)) {
-            // TODO 权限异常区分粒度？status，message
+            // TODO exception status message?
             throw UserException.noPermissionUpdate();
         }
 
@@ -92,7 +90,6 @@ public class UserService {
         return repository.save(user);
     }
 
-    // TODO 是否在domain service检查唯一性？
     private void validateConflicted(User user) {
         if (repository.exists(Example.of(User.builder().email(user.getEmail()).build()))) {
             throw UserException.emailConflicted();

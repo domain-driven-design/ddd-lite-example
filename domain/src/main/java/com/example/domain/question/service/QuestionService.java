@@ -103,7 +103,7 @@ public class QuestionService {
     public Answer addAnswer(String id, String content, GroupOperator operator) {
         Question question = _get(id);
 
-        // TODO 业务验证：一个operator只能在一个question有一个answer
+        // TODO one operator one question one answer
         Answer answer = Answer.builder()
                 .questionId(id)
                 .content(content)
@@ -122,7 +122,6 @@ public class QuestionService {
     public Answer updateAnswer(String id, String answerId, String content, GroupOperator operator) {
         Question question = _get(id);
 
-        // TODO 业务验证 影响answer修改的question状态
         Answer answer = _getAnswer(answerId);
         if (!answer.getCreatedBy().equals(operator.getUserId())) {
             throw QuestionException.answerForbidden();
@@ -135,8 +134,6 @@ public class QuestionService {
     }
 
     public void deleteAnswer(String id, String answerId, GroupOperator operator) {
-        // TODO id 不需要
-
         Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
         if (!optionalAnswer.isPresent()) {
             return;

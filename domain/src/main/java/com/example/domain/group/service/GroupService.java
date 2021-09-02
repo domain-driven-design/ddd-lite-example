@@ -126,8 +126,6 @@ public class GroupService {
     public GroupMember addNormalMember(String id, Operator operator) {
         Group group = _get(id);
 
-        // TODO 根据以后的业务规则调整，被管理员移除后不得加入
-
         Optional<GroupMember> optionalGroupMember = findMember(id, operator.getUserId());
         if (optionalGroupMember.isPresent()) {
             throw GroupException.memberConflict();
