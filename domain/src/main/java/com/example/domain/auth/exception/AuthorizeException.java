@@ -14,4 +14,8 @@ public class AuthorizeException extends BaseException {
     public static AuthorizeException invalidCredential() {
         return new AuthorizeException(BaseException.Type.UNAUTHORIZED, "invalid_credential");
     }
+
+    public static AuthorizeException userFrozen() {
+        return new AuthorizeException(Type.BAD_REQUEST, "user_frozen");
+    }
 }

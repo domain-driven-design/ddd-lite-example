@@ -18,8 +18,4 @@ public class UserException extends BaseException {
     public static UserException noPermissionUpdate() {
         return new UserException(Type.FORBIDDEN, "no_permission_update_user");
     }
-
-    public static UserException frozen() {
-        return new UserException(Type.BAD_REQUEST, "user_frozen");
-    }
 }

@@ -27,18 +27,18 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @Test
-    void should_throw_frozen_when_get_user_as_frozen() {
+    void should_throw_not_found_when_get_not_exists_user() {
         // given
         Mockito.when(userRepository.findById(eq("test-user-id")))
-                .thenReturn(Optional.of(User.builder().id("test-user-id").status(User.Status.FROZEN).build()));
+                .thenReturn(Optional.empty());
         // when
         BaseException exception = assertThrows(UserException.class, () -> {
             //when
             userService.get("test-user-id");
         });
 
-        assertEquals("user_frozen", exception.getMessage());
-        assertEquals(BaseException.Type.BAD_REQUEST, exception.getType());
+        assertEquals("user_not_found", exception.getMessage());
+        assertEquals(BaseException.Type.NOT_FOUND, exception.getType());
     }
 
 }

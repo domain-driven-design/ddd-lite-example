@@ -83,6 +83,7 @@ ps：
     - 无法登录，即无法创建Authorize，已有Authorize是否失效？
     - Operator是由Authorize转换得到，当被冻结后，无法创建Authorize，若已有Authorize已失效，没有问题，若已有Authorize未失效，除非重新查一次user，不然无法check是否被冻结
     - GroupOperator由Operator转换得到，若Operator在用户冻结后无法获取，那么GroupOperator也不会被获取
+    - 被冻结的 User 是否可以被操作？比如被更改信息，重置密码？
 
 - 对于管理/搜索资源，本身属于对资源定位的快捷方式，如何组织查询接口？
 - 前端如何判断一个question，一个user只能有一个answer？性能考虑

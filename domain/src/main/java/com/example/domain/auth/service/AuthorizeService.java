@@ -24,6 +24,10 @@ public class AuthorizeService {
             throw AuthorizeException.invalidCredential();
         }
 
+        if (user.getStatus().equals(User.Status.FROZEN)) {
+            throw AuthorizeException.userFrozen();
+        }
+
         Authorize authorize = Authorize.builder()
                 .userId(user.getId())
                 .role(user.getRole())
