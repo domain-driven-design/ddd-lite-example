@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.example.business.common.UserCriteria.getUsersIn;
 import static java.util.stream.Collectors.toMap;
 
 @Service
@@ -101,10 +102,7 @@ public class QuestionApplicationService {
         Page<Question> page = questionService.findAll(specification, pageable);
 
         Set<String> userIds = page.getContent().stream().map(Question::getCreatedBy).collect(Collectors.toSet());
-        Specification<User> userSpecification = (root, query, criteriaBuilder) ->
-                criteriaBuilder.in(root.get(User.Fields.id)).value(userIds);
-
-        Map<String, User> userMap = userService.findAll(userSpecification, Pageable.unpaged()).getContent().stream()
+        Map<String, User> userMap = userService.findAll(getUsersIn(userIds), Pageable.unpaged()).getContent().stream()
                 .collect(toMap(User::getId, Function.identity()));
         return page.map(question -> GetManagementQuestionCase.Response
                 .from(question, userMap.get(question.getCreatedBy())));
@@ -147,9 +145,12 @@ public class QuestionApplicationService {
     public Page<GetAnswerCase.Response> getAnswersByPage(String id, Pageable pageable) {
         Specification<Answer> specification = (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get(Answer.Fields.questionId), id);
-        Page<Answer> answerPage = questionService.findAllAnswers(specification, pageable);
+        Page<Answer> page = questionService.findAllAnswers(specification, pageable);
 
-        return answerPage.map(GetAnswerCase.Response::from);
+        Set<String> userIds = page.getContent().stream().map(Answer::getCreatedBy).collect(Collectors.toSet());
+        Map<String, User> userMap = userService.findAll(getUsersIn(userIds), Pageable.unpaged()).getContent().stream()
+                .collect(toMap(User::getId, Function.identity()));
+        return page.map(answer -> GetAnswerCase.Response.from(answer, userMap.get(answer.getCreatedBy())));
     }
 
     public UpdateAnswerCase.Response updateAnswer(String id, String answerId, UpdateAnswerCase.Request request,

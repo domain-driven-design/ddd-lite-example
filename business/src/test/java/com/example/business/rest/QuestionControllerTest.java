@@ -457,7 +457,9 @@ class QuestionControllerTest extends TestBase {
 
         response.then().statusCode(200)
                 .body("content.size", is(2))
-                .body("content.content", hasItems(answer0.getContent(), answer1.getContent()));
+                .body("content.content", hasItems(answer0.getContent(), answer1.getContent()))
+                .body("content.creator.name", hasItems(user.getName(), otherUser.getName()));
+
     }
 
     @Test

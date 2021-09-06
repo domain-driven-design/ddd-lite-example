@@ -1,7 +1,9 @@
 package com.example.business.usecase.question;
 
+import com.example.business.usecase.common.CreatorResponse;
 import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;
+import com.example.domain.user.model.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,15 +17,15 @@ public class GetAnswerCase {
     public static class Response {
         private String id;
         private String content;
-        private String createdBy;
+        private CreatorResponse creator;
         private Instant createdAt;
         private Instant updatedAt;
 
-        public static Response from(Answer answer) {
+        public static Response from(Answer answer, User creator) {
             return Response.builder()
                     .id(answer.getId())
                     .content(answer.getContent())
-                    .createdBy(answer.getCreatedBy())
+                    .creator(CreatorResponse.from(creator))
                     .createdAt(answer.getCreatedAt())
                     .updatedAt(answer.getUpdatedAt())
                     .build();
