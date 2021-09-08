@@ -28,7 +28,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.Is.isA;
 
 class QuestionControllerTest extends TestBase {
-    public static final String DEFAULT_PATH = "/groups/" + Group.DEFAULT + "/questions";
+    public static final String MAIN_PATH = "/questions";
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -45,7 +45,7 @@ class QuestionControllerTest extends TestBase {
         String title = "title";
         String description = "description";
 
-        Response response = givenWithAuthorize(user)
+        Response response = givenWithAuthorize(user, Group.DEFAULT)
                 .body(new HashMap<String, Object>() {
                     {
                         put("title", title);
@@ -53,7 +53,7 @@ class QuestionControllerTest extends TestBase {
                     }
                 })
                 .when()
-                .post(DEFAULT_PATH);
+                .post(MAIN_PATH);
         response.then().statusCode(201)
                 .body("id", isA(String.class))
                 .body("title", is(title))
@@ -79,7 +79,7 @@ class QuestionControllerTest extends TestBase {
 
         Response response = givenDefault()
                 .when()
-                .get(DEFAULT_PATH + "/" + question.getId());
+                .get(MAIN_PATH + "/" + question.getId());
         response.then().statusCode(200)
                 .body("id", is(question.getId()))
                 .body("title", is(question.getTitle()))
@@ -98,12 +98,12 @@ class QuestionControllerTest extends TestBase {
         questionService.create("anyTitle2", "anyDescription2", groupOperator);
         Question question3 = questionService.create("anyTitle3", "anyDescription3", otherGroupOperator);
 
-        givenDefault()
+        givenDefault(Group.DEFAULT)
                 .param("sort", "createdAt")
                 .param("sort", "title")
                 .param("size", 2)
                 .when()
-                .get(DEFAULT_PATH)
+                .get(MAIN_PATH)
                 .then()
                 .statusCode(200)
                 .body("content.size", is(2))
@@ -111,26 +111,26 @@ class QuestionControllerTest extends TestBase {
                 .body("content.description", hasItems(question0.getDescription(), question1.getDescription()));
 
 
-        givenDefault()
+        givenDefault(Group.DEFAULT)
                 .param("sort", "createdAt")
                 .param("sort", "title")
                 .param("keyword", "Title1")
                 .param("size", 2)
                 .when()
-                .get(DEFAULT_PATH)
+                .get(MAIN_PATH)
                 .then()
                 .statusCode(200)
                 .body("content.size", is(1))
                 .body("content[0].title", is(question1.getTitle()))
                 .body("content[0].description", is(question1.getDescription()));
 
-        givenDefault()
+        givenDefault(Group.DEFAULT)
                 .param("sort", "createdAt")
                 .param("sort", "title")
                 .param("createdBy", otherUser.getId())
                 .param("size", 1)
                 .when()
-                .get(DEFAULT_PATH)
+                .get(MAIN_PATH)
                 .then()
                 .statusCode(200)
                 .body("content.size", is(1))
@@ -149,12 +149,12 @@ class QuestionControllerTest extends TestBase {
         questionService.create("anyTitle2", "anyDescription2", groupOperator);
         Question question3 = questionService.create("anyTitle3", "anyDescription3", otherGroupOperator);
 
-        givenDefault()
+        givenDefault(Group.DEFAULT)
                 .param("sort", "createdAt")
                 .param("sort", "title")
                 .param("size", 2)
                 .when()
-                .get(DEFAULT_PATH + "/management")
+                .get(MAIN_PATH + "/management")
                 .then()
                 .statusCode(200)
                 .body("content.size", is(2))
@@ -164,26 +164,26 @@ class QuestionControllerTest extends TestBase {
                 .body("content[0].creator.name", is(user.getName()));
 
 
-        givenDefault()
+        givenDefault(Group.DEFAULT)
                 .param("sort", "createdAt")
                 .param("sort", "title")
                 .param("keyword", "Title1")
                 .param("size", 2)
                 .when()
-                .get(DEFAULT_PATH + "/management")
+                .get(MAIN_PATH + "/management")
                 .then()
                 .statusCode(200)
                 .body("content.size", is(1))
                 .body("content[0].title", is(question1.getTitle()))
                 .body("content[0].description", is(question1.getDescription()));
 
-        givenDefault()
+        givenDefault(Group.DEFAULT)
                 .param("sort", "createdAt")
                 .param("sort", "title")
                 .param("createdBy", otherUser.getId())
                 .param("size", 1)
                 .when()
-                .get(DEFAULT_PATH + "/management")
+                .get(MAIN_PATH + "/management")
                 .then()
                 .statusCode(200)
                 .body("content.size", is(1))
@@ -199,7 +199,7 @@ class QuestionControllerTest extends TestBase {
         String newTitle = "newTitle";
         String newDescription = "newDescription";
 
-        Response response = givenWithAuthorize(user)
+        Response response = givenWithAuthorize(user, Group.DEFAULT)
                 .body(new HashMap<String, Object>() {
                     {
                         put("title", newTitle);
@@ -208,7 +208,7 @@ class QuestionControllerTest extends TestBase {
                     }
                 })
                 .when()
-                .put(DEFAULT_PATH + "/" + question.getId());
+                .put(MAIN_PATH + "/" + question.getId());
         response.then().statusCode(200)
                 .body("id", is(question.getId()))
                 .body("title", is(newTitle))
@@ -225,14 +225,14 @@ class QuestionControllerTest extends TestBase {
         GroupOperator groupOperator = groupService.getOperator(Group.DEFAULT, user.getId());
         Question question = questionService.create("anyTitle", "anyDescription", groupOperator);
 
-        Response response = givenWithAuthorize(user)
+        Response response = givenWithAuthorize(user, Group.DEFAULT)
                 .body(new HashMap<String, Object>() {
                     {
                         put("status", Question.Status.CLOSED);
                     }
                 })
                 .when()
-                .put(DEFAULT_PATH + "/" + question.getId() + "/status");
+                .put(MAIN_PATH + "/" + question.getId() + "/status");
         response.then().statusCode(200)
                 .body("id", is(question.getId()))
                 .body("status", is(Question.Status.CLOSED.name()));
@@ -240,14 +240,14 @@ class QuestionControllerTest extends TestBase {
         Question updatedQuestion = questionRepository.findById(question.getId()).get();
         assertThat(updatedQuestion.getStatus(), is(Question.Status.CLOSED));
 
-        givenWithAuthorize(user)
+        givenWithAuthorize(user, Group.DEFAULT)
                 .body(new HashMap<String, Object>() {
                     {
                         put("status", Question.Status.OPENED);
                     }
                 })
                 .when()
-                .put(DEFAULT_PATH + "/" + question.getId() + "/status");
+                .put(MAIN_PATH + "/" + question.getId() + "/status");
         updatedQuestion = questionRepository.findById(question.getId()).get();
         assertThat(updatedQuestion.getStatus(), is(Question.Status.OPENED));
 
@@ -264,14 +264,14 @@ class QuestionControllerTest extends TestBase {
 
         Question question = questionService.create("anyTitle", "anyDescription", groupOperator);
 
-        Response response = givenWithAuthorize(otherUser)
+        Response response = givenWithAuthorize(otherUser, group.getId())
                 .body(new HashMap<String, Object>() {
                     {
                         put("status", Question.Status.CLOSED);
                     }
                 })
                 .when()
-                .put("/groups/" + group.getId() + "/questions/" + question.getId() + "/status");
+                .put("/questions/" + question.getId() + "/status");
         response.then().statusCode(200)
                 .body("id", is(question.getId()))
                 .body("status", is(Question.Status.CLOSED.name()));
@@ -279,14 +279,14 @@ class QuestionControllerTest extends TestBase {
         Question updatedQuestion = questionRepository.findById(question.getId()).get();
         assertThat(updatedQuestion.getStatus(), is(Question.Status.CLOSED));
 
-        givenWithAuthorize(user)
+        givenWithAuthorize(user, group.getId())
                 .body(new HashMap<String, Object>() {
                     {
                         put("status", Question.Status.OPENED);
                     }
                 })
                 .when()
-                .put("/groups/" + group.getId() + "/questions/" + question.getId() + "/status");
+                .put("/questions/" + question.getId() + "/status");
         updatedQuestion = questionRepository.findById(question.getId()).get();
         assertThat(updatedQuestion.getStatus(), is(Question.Status.OPENED));
 
@@ -304,14 +304,14 @@ class QuestionControllerTest extends TestBase {
 
         Question question = questionService.create("anyTitle", "anyDescription", adminGroupOperator);
 
-        Response response = givenWithAuthorize(user)
+        Response response = givenWithAuthorize(user, group.getId())
                 .body(new HashMap<String, Object>() {
                     {
                         put("status", Question.Status.CLOSED);
                     }
                 })
                 .when()
-                .put("/groups/" + group.getId() + "/questions/" + question.getId() + "/status");
+                .put(MAIN_PATH + "/" + question.getId() + "/status");
         response.then().statusCode(200)
                 .body("id", is(question.getId()))
                 .body("status", is(Question.Status.CLOSED.name()));
@@ -319,14 +319,14 @@ class QuestionControllerTest extends TestBase {
         Question updatedQuestion = questionRepository.findById(question.getId()).get();
         assertThat(updatedQuestion.getStatus(), is(Question.Status.CLOSED));
 
-        givenWithAuthorize(user)
+        givenWithAuthorize(user, group.getId())
                 .body(new HashMap<String, Object>() {
                     {
                         put("status", Question.Status.OPENED);
                     }
                 })
                 .when()
-                .put("/groups/" + group.getId() + "/questions/" + question.getId() + "/status");
+                .put("/questions/" + question.getId() + "/status");
         updatedQuestion = questionRepository.findById(question.getId()).get();
         assertThat(updatedQuestion.getStatus(), is(Question.Status.OPENED));
 
@@ -345,9 +345,9 @@ class QuestionControllerTest extends TestBase {
         questionService.addAnswer(questionId, "content0", groupOperator);
         questionService.addAnswer(questionId, "content1", otherGroupOperator);
 
-        Response response = givenWithAuthorize(user)
+        Response response = givenWithAuthorize(user, Group.DEFAULT)
                 .when()
-                .delete(DEFAULT_PATH + "/" + questionId);
+                .delete(MAIN_PATH + "/" + questionId);
         response.then().statusCode(200);
 
         assertThat(questionRepository.existsById(questionId), is(false));
@@ -372,9 +372,9 @@ class QuestionControllerTest extends TestBase {
         questionService.addAnswer(questionId, "content0", groupOperator);
         questionService.addAnswer(questionId, "content1", adminOperator);
 
-        Response response = givenWithAuthorize(otherUser)
+        Response response = givenWithAuthorize(otherUser, group.getId())
                 .when()
-                .delete("/groups/" + group.getId() + "/questions/" + questionId);
+                .delete("/questions/" + questionId);
         response.then().statusCode(200);
 
         assertThat(questionRepository.existsById(questionId), is(false));
@@ -399,9 +399,9 @@ class QuestionControllerTest extends TestBase {
         questionService.addAnswer(questionId, "content0", groupOperator);
         questionService.addAnswer(questionId, "content1", adminGroupOperator);
 
-        Response response = givenWithAuthorize(user)
+        Response response = givenWithAuthorize(user, group.getId())
                 .when()
-                .delete("/groups/" + group.getId() + "/questions/" + questionId);
+                .delete("/questions/" + questionId);
         response.then().statusCode(200);
 
         assertThat(questionRepository.existsById(questionId), is(false));
@@ -417,14 +417,14 @@ class QuestionControllerTest extends TestBase {
         Question question = questionService.create("anyTitle", "anyDescription", groupOperator);
         String content = "content";
 
-        Response response = givenWithAuthorize(user)
+        Response response = givenWithAuthorize(user, Group.DEFAULT)
                 .body(new HashMap<String, Object>() {
                     {
                         put("content", content);
                     }
                 })
                 .when()
-                .post(DEFAULT_PATH + "/" + question.getId() + "/answers");
+                .post(MAIN_PATH + "/" + question.getId() + "/answers");
         response.then().statusCode(201)
                 .body("id", isA(String.class))
                 .body("content", is(content));
@@ -453,7 +453,7 @@ class QuestionControllerTest extends TestBase {
         Response response = givenDefault()
                 .param("sort", "createdAt")
                 .when()
-                .get(DEFAULT_PATH + "/" + question.getId() + "/answers");
+                .get(MAIN_PATH + "/" + question.getId() + "/answers");
 
         response.then().statusCode(200)
                 .body("content.size", is(2))
@@ -470,14 +470,14 @@ class QuestionControllerTest extends TestBase {
         Answer answer = questionService.addAnswer(question.getId(), "content", groupOperator);
         String newContent = "newContent";
 
-        Response response = givenWithAuthorize(user)
+        Response response = givenWithAuthorize(user, Group.DEFAULT)
                 .body(new HashMap<String, Object>() {
                     {
                         put("content", newContent);
                     }
                 })
                 .when()
-                .put(DEFAULT_PATH + "/" + question.getId() + "/answers/" + answer.getId());
+                .put(MAIN_PATH + "/" + question.getId() + "/answers/" + answer.getId());
         response.then().statusCode(200)
                 .body("id", isA(String.class))
                 .body("content", is(newContent));
@@ -494,9 +494,9 @@ class QuestionControllerTest extends TestBase {
         Question question = questionService.create("anyTitle", "anyDescription", groupOperator);
         Answer answer = questionService.addAnswer(question.getId(), "content", groupOperator);
 
-        Response response = givenWithAuthorize(user)
+        Response response = givenWithAuthorize(user, Group.DEFAULT)
                 .when()
-                .delete(DEFAULT_PATH + "/" + question.getId() + "/answers/" + answer.getId());
+                .delete(MAIN_PATH + "/" + question.getId() + "/answers/" + answer.getId());
         response.then().statusCode(200);
 
         assertThat(answerRepository.findById(answer.getId()).isPresent(), is(false));
@@ -516,9 +516,9 @@ class QuestionControllerTest extends TestBase {
         Question question = questionService.create("anyTitle", "anyDescription", adminGroupOperator);
         Answer answer = questionService.addAnswer(question.getId(), "content", adminGroupOperator);
 
-        Response response = givenWithAuthorize(otherUser)
+        Response response = givenWithAuthorize(otherUser, Group.DEFAULT)
                 .when()
-                .delete(DEFAULT_PATH + "/" + question.getId() + "/answers/" + answer.getId());
+                .delete(MAIN_PATH + "/" + question.getId() + "/answers/" + answer.getId());
         response.then().statusCode(200);
 
         assertThat(answerRepository.findById(answer.getId()).isPresent(), is(false));
@@ -537,9 +537,9 @@ class QuestionControllerTest extends TestBase {
         Question question = questionService.create("anyTitle", "anyDescription", adminGroupOperator);
         Answer answer = questionService.addAnswer(question.getId(), "content", adminGroupOperator);
 
-        Response response = givenWithAuthorize(user)
+        Response response = givenWithAuthorize(user, group.getId())
                 .when()
-                .delete("/groups/" + group.getId() + "/questions/" + question.getId() + "/answers/" + answer.getId());
+                .delete("/questions/" + question.getId() + "/answers/" + answer.getId());
         response.then().statusCode(200);
 
         assertThat(answerRepository.findById(answer.getId()).isPresent(), is(false));

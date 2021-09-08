@@ -10,8 +10,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private AuthorizeInterceptor authorizeInterceptor;
 
+    @Autowired
+    private GroupInterceptor groupInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authorizeInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(groupInterceptor).addPathPatterns("/**");
     }
 }

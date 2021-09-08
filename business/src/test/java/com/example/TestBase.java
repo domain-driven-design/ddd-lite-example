@@ -56,11 +56,21 @@ public abstract class TestBase {
         return given()
                 .header("Authorization", "Bearer " + authorize.getId())
                 .contentType("application/json");
+    }
 
+
+    public RequestSpecification givenWithAuthorize(User user, String groupId) {
+        return givenWithAuthorize(user)
+                .header("Group-ID", groupId);
     }
 
     public RequestSpecification givenDefault() {
         return given()
                 .contentType("application/json");
+    }
+
+    public RequestSpecification givenDefault(String groupId) {
+        return givenDefault()
+                .header("Group-ID", groupId);
     }
 }

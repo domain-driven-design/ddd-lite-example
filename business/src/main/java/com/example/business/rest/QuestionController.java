@@ -11,6 +11,7 @@ import com.example.business.usecase.question.UpdateAnswerCase;
 import com.example.business.usecase.question.UpdateQuestionCase;
 import com.example.business.usecase.question.UpdateQuestionStatusCase;
 import com.example.domain.auth.service.AuthorizeService;
+import com.example.domain.group.GroupContextHolder;
 import com.example.domain.user.model.Operator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,7 +33,7 @@ import javax.validation.Valid;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@RequestMapping("/groups/{groupId}/questions")
+@RequestMapping("/questions")
 public class QuestionController {
     @Autowired
     private QuestionApplicationService applicationService;
@@ -41,9 +42,9 @@ public class QuestionController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public CreateQuestionCase.Response createQuestion(@PathVariable String groupId,
-                                                      @RequestBody @Valid CreateQuestionCase.Request request) {
+    public CreateQuestionCase.Response createQuestion(@RequestBody @Valid CreateQuestionCase.Request request) {
         Operator operator = authorizeService.getOperator();
+        String groupId = GroupContextHolder.getContext();
         return applicationService.create(request, groupId, operator);
     }
 
@@ -53,52 +54,53 @@ public class QuestionController {
     }
 
     @GetMapping
-    public Page<GetQuestionCase.Response> getQuestionsByPage(@PathVariable String groupId,
-                                                             @RequestParam(required = false) String keyword,
+    public Page<GetQuestionCase.Response> getQuestionsByPage(@RequestParam(required = false) String keyword,
                                                              @RequestParam(required = false) String createdBy,
                                                              @PageableDefault Pageable pageable) {
+        String groupId = GroupContextHolder.getContext();
         return applicationService.getByPage(groupId, keyword, createdBy, pageable);
     }
 
     @GetMapping("/management")
-    public Page<GetManagementQuestionCase.Response> getManagementQuestions(@PathVariable String groupId,
-                                                                           @RequestParam(required = false)
+    public Page<GetManagementQuestionCase.Response> getManagementQuestions(@RequestParam(required = false)
                                                                                    String keyword,
                                                                            @RequestParam(required = false)
                                                                                    String createdBy,
                                                                            @PageableDefault Pageable pageable) {
+        String groupId = GroupContextHolder.getContext();
         return applicationService.getManagementQuestions(groupId, keyword, createdBy, pageable);
     }
 
     @PutMapping("/{id}")
-    public UpdateQuestionCase.Response updateQuestion(@PathVariable String groupId,
-                                                      @PathVariable String id,
+    public UpdateQuestionCase.Response updateQuestion(@PathVariable String id,
                                                       @RequestBody @Valid UpdateQuestionCase.Request request) {
         Operator operator = authorizeService.getOperator();
+        String groupId = GroupContextHolder.getContext();
         return applicationService.update(id, request, groupId, operator);
     }
 
     @PutMapping("/{id}/status")
-    public UpdateQuestionStatusCase.Response updateQuestionStatus(@PathVariable String groupId,
-                                                                  @PathVariable String id,
+    public UpdateQuestionStatusCase.Response updateQuestionStatus(@PathVariable String id,
                                                                   @RequestBody
                                                                   @Valid UpdateQuestionStatusCase.Request request) {
         Operator operator = authorizeService.getOperator();
+        String groupId = GroupContextHolder.getContext();
         return applicationService.updateStatus(id, request, groupId, operator);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteQuestion(@PathVariable String groupId, @PathVariable String id) {
+    public void deleteQuestion(@PathVariable String id) {
         Operator operator = authorizeService.getOperator();
+        String groupId = GroupContextHolder.getContext();
         applicationService.delete(id, groupId, operator);
     }
 
     @PostMapping("/{id}/answers")
     @ResponseStatus(CREATED)
-    public CreateAnswerCase.Response createAnswer(@PathVariable String groupId,
-                                                  @PathVariable String id,
+    public CreateAnswerCase.Response createAnswer(@PathVariable String id,
                                                   @RequestBody @Valid CreateAnswerCase.Request request) {
         Operator operator = authorizeService.getOperator();
+        String groupId = GroupContextHolder.getContext();
         return applicationService.createAnswer(id, request, groupId, operator);
     }
 
@@ -109,19 +111,19 @@ public class QuestionController {
     }
 
     @PutMapping("/{id}/answers/{answerId}")
-    public UpdateAnswerCase.Response createAnswer(@PathVariable String groupId,
-                                                  @PathVariable String id,
+    public UpdateAnswerCase.Response createAnswer(@PathVariable String id,
                                                   @PathVariable String answerId,
                                                   @RequestBody @Valid UpdateAnswerCase.Request request) {
         Operator operator = authorizeService.getOperator();
+        String groupId = GroupContextHolder.getContext();
         return applicationService.updateAnswer(id, answerId, request, groupId, operator);
     }
 
     @DeleteMapping("/{id}/answers/{answerId}")
-    public void deleteAnswer(@PathVariable String groupId,
-                             @PathVariable String id,
+    public void deleteAnswer(@PathVariable String id,
                              @PathVariable String answerId) {
         Operator operator = authorizeService.getOperator();
+        String groupId = GroupContextHolder.getContext();
         applicationService.deleteAnswer(id, answerId, groupId, operator);
     }
 }
