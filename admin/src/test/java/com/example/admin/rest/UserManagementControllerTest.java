@@ -63,7 +63,8 @@ class UserManagementControllerTest extends TestBase {
         response1.then().statusCode(200)
                 .body("content.size", is(1))
                 .body("content.name", hasItems("anyName"))
-                .body("content.email", hasItems("anyEmail0"));
+                .body("content.email", hasItems("anyEmail0"))
+                .body("content.status", hasItems(User.Status.NORMAL.name()));
     }
 
     @Test

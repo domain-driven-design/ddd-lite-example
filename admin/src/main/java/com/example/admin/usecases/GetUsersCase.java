@@ -15,6 +15,7 @@ public class GetUsersCase {
         private String id;
         private String name;
         private String email;
+        private User.Status status;
         private Instant createdAt;
 
         public static Response from(User user) {
@@ -22,6 +23,7 @@ public class GetUsersCase {
                     .id(user.getId())
                     .name(user.getName())
                     .email(user.getEmail())
+                    .status(user.getStatus())
                     .createdAt(user.getCreatedAt())
                     .build();
         }
