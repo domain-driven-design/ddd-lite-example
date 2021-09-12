@@ -29,6 +29,7 @@ public class GetQuestionsCase {
                     .title(question.getTitle())
                     .description(question.getDescription())
                     .status(question.getStatus())
+                    .createdAt(question.getCreatedAt())
                     .creator(CreatorResponse.from(creator))
                     .group(question.getGroupId().equals(Group.DEFAULT)
                             ? GroupResponse.defaultGroup()
