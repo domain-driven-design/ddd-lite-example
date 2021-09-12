@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 
 // TODO user status check
 @Service
@@ -37,6 +38,10 @@ public class UserService {
 
     public Page<User> findAll(Specification<User> spec, Pageable pageable) {
         return repository.findAll(spec, pageable);
+    }
+
+    public List<User> findAll(Specification<User> spec) {
+        return repository.findAll(spec);
     }
 
     public User create(String name, String email, String password) {

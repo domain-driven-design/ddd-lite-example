@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,6 +37,10 @@ public class GroupService {
 
     public Page<Group> findAll(Specification<Group> spec, Pageable pageable) {
         return groupRepository.findAll(spec, pageable);
+    }
+
+    public List<Group> findAll(Specification<Group> spec) {
+        return groupRepository.findAll(spec);
     }
 
     public Group create(String name, String description, Operator operator) {
