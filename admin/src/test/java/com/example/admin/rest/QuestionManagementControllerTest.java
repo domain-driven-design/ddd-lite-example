@@ -5,7 +5,9 @@ import com.example.domain.auth.model.Authorize;
 import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupOperator;
 import com.example.domain.group.service.GroupService;
+import com.example.domain.question.model.Answer;
 import com.example.domain.question.model.Question;
+import com.example.domain.question.repository.AnswerRepository;
 import com.example.domain.question.repository.QuestionRepository;
 import com.example.domain.question.service.QuestionService;
 import com.example.domain.user.model.Operator;
@@ -14,12 +16,15 @@ import com.example.domain.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 
 import java.util.HashMap;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 
 class QuestionManagementControllerTest extends TestBase {
@@ -37,6 +42,9 @@ class QuestionManagementControllerTest extends TestBase {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private AnswerRepository answerRepository;
 
     @Override
     @BeforeEach
@@ -131,6 +139,31 @@ class QuestionManagementControllerTest extends TestBase {
         updatedQuestion = questionRepository.findById(question.getId()).get();
         assertThat(updatedQuestion.getStatus(), is(Question.Status.OPENED));
 
+    }
+
+    @Test
+    void should_delete_question() {
+        User user = userService.create("anyName1", "anyEmail1", "anyPassword");
+        Operator operator = getOperator(user);
+        GroupOperator groupOperator = groupService.getOperator(Group.DEFAULT, operator);
+
+        Question question = questionService.create("anyTitle", "anyDescription", groupOperator);
+        String questionId = question.getId();
+
+        questionService.addAnswer(questionId, "content0", groupOperator);
+
+        given()
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + authorize.getId())
+                .header("Group-ID", Group.DEFAULT)
+                .when()
+                .delete("/management/questions/" + question.getId())
+                .then().statusCode(200);
+
+        assertThat(questionRepository.existsById(questionId), is(false));
+
+        List<Answer> answers = answerRepository.findAll(Example.of(Answer.builder().questionId(questionId).build()));
+        assertThat(answers, hasSize(0));
     }
 
     private Operator getOperator(User user) {

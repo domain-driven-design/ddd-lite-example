@@ -9,6 +9,7 @@ import com.example.domain.user.model.Operator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,5 +41,12 @@ public class QuestionManagementController {
         Operator operator = authorizeService.getOperator();
         String groupId = GroupContextHolder.getContext();
         return applicationService.updateStatus(id, request, groupId, operator);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteQuestion(@PathVariable String id) {
+        Operator operator = authorizeService.getOperator();
+        String groupId = GroupContextHolder.getContext();
+        applicationService.delete(id, groupId, operator);
     }
 }

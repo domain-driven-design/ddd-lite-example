@@ -75,4 +75,10 @@ public class QuestionManagementApplicationService {
 
         return UpdateQuestionStatusCase.Response.from(question);
     }
+
+    public void delete(String id, String groupId, Operator operator) {
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator);
+
+        questionService.delete(id, groupOperator);
+    }
 }
