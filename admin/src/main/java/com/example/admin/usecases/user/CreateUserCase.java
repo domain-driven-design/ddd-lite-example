@@ -1,4 +1,4 @@
-package com.example.admin.usecases;
+package com.example.admin.usecases.user;
 
 import com.example.domain.user.model.User;
 import lombok.AllArgsConstructor;
@@ -7,16 +7,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
-public class UpdateUserStatusCase {
+public class CreateUserCase {
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
-        @NotNull(message = "status_required")
-        private User.Status status;
+        @NotBlank(message = "name_required")
+        private String name;
+        @NotBlank(message = "email_required")
+        private String email;
+        @NotBlank(message = "password_required")
+        private String password;
     }
 
     @Getter
@@ -24,12 +28,14 @@ public class UpdateUserStatusCase {
     @Builder
     public static class Response {
         private String id;
-        private User.Status status;
+        private String name;
+        private String email;
 
         public static Response from(User user) {
             return Response.builder()
                     .id(user.getId())
-                    .status(user.getStatus())
+                    .name(user.getName())
+                    .email(user.getEmail())
                     .build();
         }
     }

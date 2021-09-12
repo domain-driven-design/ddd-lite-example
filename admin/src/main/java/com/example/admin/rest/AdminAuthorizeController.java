@@ -1,7 +1,7 @@
 package com.example.admin.rest;
 
 import com.example.admin.service.AdminAuthorizeApplicationService;
-import com.example.admin.usecases.LoginCase;
+import com.example.admin.usecases.authorize.LoginCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;

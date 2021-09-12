@@ -1,4 +1,4 @@
-package com.example.admin.usecases;
+package com.example.admin.usecases.question;
 
 import com.example.admin.usecases.common.CreatorResponse;
 import com.example.domain.group.model.Group;

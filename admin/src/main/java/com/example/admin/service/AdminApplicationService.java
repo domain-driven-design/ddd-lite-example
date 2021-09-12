@@ -1,6 +1,6 @@
 package com.example.admin.service;
 
-import com.example.admin.usecases.ResetPasswordCase;
+import com.example.admin.usecases.authorize.ResetPasswordCase;
 import com.example.domain.user.model.Operator;
 import com.example.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

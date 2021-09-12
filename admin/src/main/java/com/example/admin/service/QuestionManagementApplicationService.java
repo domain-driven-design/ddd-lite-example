@@ -2,7 +2,7 @@ package com.example.admin.service;
 
 import com.example.admin.common.GroupCriteria;
 import com.example.admin.common.UserCriteria;
-import com.example.admin.usecases.GetQuestionsCase;
+import com.example.admin.usecases.question.GetQuestionsCase;
 import com.example.domain.group.model.Group;
 import com.example.domain.group.service.GroupService;
 import com.example.domain.question.model.Question;

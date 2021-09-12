@@ -1,10 +1,10 @@
 package com.example.admin.rest;
 
 import com.example.admin.service.UserManagementApplicationService;
-import com.example.admin.usecases.CreateUserCase;
-import com.example.admin.usecases.GetUserDetailCase;
-import com.example.admin.usecases.GetUsersCase;
-import com.example.admin.usecases.UpdateUserStatusCase;
+import com.example.admin.usecases.user.CreateUserCase;
+import com.example.admin.usecases.user.GetUserDetailCase;
+import com.example.admin.usecases.user.GetUsersCase;
+import com.example.admin.usecases.user.UpdateUserStatusCase;
 import com.example.domain.auth.service.AuthorizeService;
 import com.example.domain.user.model.Operator;
 import org.springframework.beans.factory.annotation.Autowired;

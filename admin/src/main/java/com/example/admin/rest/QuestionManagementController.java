@@ -1,7 +1,7 @@
 package com.example.admin.rest;
 
 import com.example.admin.service.QuestionManagementApplicationService;
-import com.example.admin.usecases.GetQuestionsCase;
+import com.example.admin.usecases.question.GetQuestionsCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,9 +1,9 @@
 package com.example.admin.service;
 
-import com.example.admin.usecases.CreateUserCase;
-import com.example.admin.usecases.GetUserDetailCase;
-import com.example.admin.usecases.GetUsersCase;
-import com.example.admin.usecases.UpdateUserStatusCase;
+import com.example.admin.usecases.user.CreateUserCase;
+import com.example.admin.usecases.user.GetUserDetailCase;
+import com.example.admin.usecases.user.GetUsersCase;
+import com.example.admin.usecases.user.UpdateUserStatusCase;
 import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import com.example.domain.user.service.UserService;
