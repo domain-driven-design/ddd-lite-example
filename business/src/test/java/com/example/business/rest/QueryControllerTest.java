@@ -28,10 +28,11 @@ class QueryControllerTest extends TestBase {
         User user = this.prepareUser("anyName", "anyEmail");
         Operator operator = getOperator(user);
         User otherUser = this.prepareUser("anyOtherName", "anyOtherEmail");
+        Operator otherOperator = getOperator(otherUser);
         Group group = groupService.create("anyName", "anyDescription", operator);
-        GroupOperator groupOperator = groupService.getOperator(group.getId(), operator.getUserId());
-        GroupOperator defaultGroupOperator = groupService.getOperator(Group.DEFAULT, user.getId());
-        GroupOperator defaultGroupOtherOperator = groupService.getOperator(Group.DEFAULT, otherUser.getId());
+        GroupOperator groupOperator = groupService.getOperator(group.getId(), operator);
+        GroupOperator defaultGroupOperator = groupService.getOperator(Group.DEFAULT, operator);
+        GroupOperator defaultGroupOtherOperator = groupService.getOperator(Group.DEFAULT, otherOperator);
 
         Question question0 = questionService.create("title0", "anyDescription", defaultGroupOperator);
         Question question1 = questionService.create("title1", "anyDescription", groupOperator);

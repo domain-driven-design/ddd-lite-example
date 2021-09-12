@@ -3,10 +3,13 @@ package com.example.admin.service;
 import com.example.admin.common.GroupCriteria;
 import com.example.admin.common.UserCriteria;
 import com.example.admin.usecases.question.GetQuestionsCase;
+import com.example.admin.usecases.question.UpdateQuestionStatusCase;
 import com.example.domain.group.model.Group;
+import com.example.domain.group.model.GroupOperator;
 import com.example.domain.group.service.GroupService;
 import com.example.domain.question.model.Question;
 import com.example.domain.question.service.QuestionService;
+import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import com.example.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +64,15 @@ public class QuestionManagementApplicationService {
                 .map(question -> GetQuestionsCase.Response.from(
                         question, creatorMap.get(question.getCreatedBy()), groupMap.get(question.getGroupId()))
                 );
+    }
+
+    public UpdateQuestionStatusCase.Response updateStatus(String id, UpdateQuestionStatusCase.Request request,
+                                                          String groupId,
+                                                          Operator operator) {
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator);
+
+        Question question = questionService.updateStatus(id, request.getStatus(), groupOperator);
+
+        return UpdateQuestionStatusCase.Response.from(question);
     }
 }

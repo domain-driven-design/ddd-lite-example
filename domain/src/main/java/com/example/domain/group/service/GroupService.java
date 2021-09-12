@@ -7,6 +7,7 @@ import com.example.domain.group.model.GroupOperator;
 import com.example.domain.group.repository.GroupMemberRepository;
 import com.example.domain.group.repository.GroupRepository;
 import com.example.domain.user.model.Operator;
+import com.example.domain.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -102,24 +103,31 @@ public class GroupService {
                 .orElseThrow(GroupException::memberNotFound);
     }
 
-    public GroupOperator getOperator(String id, String userId) {
+    public GroupOperator getOperator(String id, Operator operator) {
+        if (operator.getRole().equals(User.Role.ADMIN)) {
+            return GroupOperator.builder()
+                    .groupId(id)
+                    .userId(operator.getUserId())
+                    .role(GroupMember.Role.OWNER)
+                    .build();
+        }
 
         if (id.equals(Group.DEFAULT)) {
             return GroupOperator.builder()
                     .groupId(id)
-                    .userId(userId)
+                    .userId(operator.getUserId())
                     .role(GroupMember.Role.NORMAL)
                     .build();
         }
         GroupMember member = groupMemberRepository.findOne(Example.of(GroupMember.builder()
                 .groupId(id)
-                .userId(userId)
+                .userId(operator.getUserId())
                 .build()))
                 .orElseThrow(GroupException::memberNotFound);
 
         return GroupOperator.builder()
                 .groupId(id)
-                .userId(userId)
+                .userId(operator.getUserId())
                 .role(member.getRole())
                 .build();
     }

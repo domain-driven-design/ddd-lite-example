@@ -44,7 +44,7 @@ public class QuestionApplicationService {
     private UserService userService;
 
     public CreateQuestionCase.Response create(CreateQuestionCase.Request request, String groupId, Operator operator) {
-        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator);
 
         Question question = questionService.create(request.getTitle(), request.getDescription(), groupOperator);
 
@@ -110,7 +110,7 @@ public class QuestionApplicationService {
 
     public UpdateQuestionCase.Response update(String id, UpdateQuestionCase.Request request, String groupId,
                                               Operator operator) {
-        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator);
 
         Question question =
                 questionService.update(id, request.getTitle(), request.getDescription(), groupOperator);
@@ -120,7 +120,7 @@ public class QuestionApplicationService {
 
     public UpdateQuestionStatusCase.Response updateStatus(String id, UpdateQuestionStatusCase.Request request,
                                                           String groupId, Operator operator) {
-        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator);
 
         Question question = questionService.updateStatus(id, request.getStatus(), groupOperator);
 
@@ -128,14 +128,14 @@ public class QuestionApplicationService {
     }
 
     public void delete(String id, String groupId, Operator operator) {
-        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator);
 
         questionService.delete(id, groupOperator);
     }
 
     public CreateAnswerCase.Response createAnswer(String id, CreateAnswerCase.Request request, String groupId,
                                                   Operator operator) {
-        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator);
 
         Answer answer = questionService.addAnswer(id, request.getContent(), groupOperator);
 
@@ -155,7 +155,7 @@ public class QuestionApplicationService {
 
     public UpdateAnswerCase.Response updateAnswer(String id, String answerId, UpdateAnswerCase.Request request,
                                                   String groupId, Operator operator) {
-        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator);
 
         Answer answer = questionService.updateAnswer(id, answerId, request.getContent(), groupOperator);
 
@@ -163,7 +163,7 @@ public class QuestionApplicationService {
     }
 
     public void deleteAnswer(String id, String answerId, String groupId, Operator operator) {
-        GroupOperator groupOperator = groupService.getOperator(groupId, operator.getUserId());
+        GroupOperator groupOperator = groupService.getOperator(groupId, operator);
 
         questionService.deleteAnswer(id, answerId, groupOperator);
     }
