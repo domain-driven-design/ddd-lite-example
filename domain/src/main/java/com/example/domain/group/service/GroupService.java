@@ -70,6 +70,32 @@ public class GroupService {
         return createdGroup;
     }
 
+    public Group create(String name, String description, String ownerId, Operator operator) {
+        Group group = Group.builder()
+                .name(name)
+                .description(description)
+                .createdBy(operator.getUserId())
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+
+        Group createdGroup = groupRepository.save(group);
+
+        GroupMember owner = GroupMember.builder()
+                .role(GroupMember.Role.OWNER)
+                .groupId(createdGroup.getId())
+                .userId(ownerId)
+                .createdBy(operator.getUserId())
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+        groupMemberRepository.save(owner);
+
+        createdGroup.setMembers(Collections.singletonList(owner));
+
+        return createdGroup;
+    }
+
     public Group update(String id, String name, String description, Operator operator) {
         Group group = _get(id);
 

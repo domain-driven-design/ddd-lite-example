@@ -1,5 +1,6 @@
 package com.example.domain.group.service;
 
+import com.example.domain.group.exception.GroupRequestException;
 import com.example.domain.group.model.GroupRequest;
 import com.example.domain.group.repository.GroupRequestRepository;
 import com.example.domain.user.model.Operator;
@@ -12,6 +13,10 @@ import java.time.Instant;
 public class GroupRequestService {
     @Autowired
     private GroupRequestRepository repository;
+
+    public GroupRequest get(String id) {
+        return repository.findById(id).orElseThrow(GroupRequestException::notFound);
+    }
 
     public GroupRequest create(String name, String description, Operator operator) {
         GroupRequest groupRequest = GroupRequest.builder()

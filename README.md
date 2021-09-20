@@ -65,6 +65,8 @@ This is an example of a Java project with limited use of DDD style.
 - API tests. API testing is implemented using E2E tests. The goal of API testing is to verify that the overall process is smooth, and only test the normal process.
 
 ## TODO
+- connect GroupRequest and Group(one GroupRequest one Group)
+- define the group creator
 - format of time in response
 - name of GroupApplication or GroupRequest
 - set Authorization in admin test
