@@ -21,7 +21,6 @@ public class RegisterCase {
         private String email;
         @NotBlank(message = "password_required")
         private String password;
-        // TODO verificationCode
     }
 
     @Getter

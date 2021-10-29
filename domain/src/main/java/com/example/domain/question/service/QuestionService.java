@@ -17,7 +17,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-// TODO check groupId
 @Service
 public class QuestionService {
     @Autowired
@@ -70,7 +69,6 @@ public class QuestionService {
     public Question updateStatus(String id, Question.Status status, GroupOperator operator) {
         Question question = this._get(id);
 
-        // TODO admin
         if (operator.getRole().compareTo(GroupMember.Role.ADMIN) < 0 && !question.getCreatedBy().equals(operator.getUserId())) {
             throw QuestionException.forbidden();
         }
@@ -87,7 +85,6 @@ public class QuestionService {
         }
 
         Question question = optionalQuestion.get();
-        // TODO admin
         if (operator.getRole().compareTo(GroupMember.Role.ADMIN) < 0 && !question.getCreatedBy().equals(operator.getUserId())) {
             throw QuestionException.forbidden();
         }
@@ -104,7 +101,6 @@ public class QuestionService {
     public Answer addAnswer(String id, String content, GroupOperator operator) {
         Question question = _get(id);
 
-        // TODO one operator one question one answer
         Answer answer = Answer.builder()
                 .questionId(id)
                 .content(content)
@@ -139,7 +135,6 @@ public class QuestionService {
         if (!optionalAnswer.isPresent()) {
             return;
         }
-        // TODO admin
         if (operator.getRole().compareTo(GroupMember.Role.ADMIN) < 0 && !optionalAnswer.get().getCreatedBy().equals(operator.getUserId())) {
             throw QuestionException.answerForbidden();
         }

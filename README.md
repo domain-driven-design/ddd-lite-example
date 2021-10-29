@@ -63,18 +63,3 @@ This is an example of a Java project with limited use of DDD style.
 
 - Unit tests. Covering the underlying components, utility classes, and domain services, unit tests need to validate various branching conditions. Only service exceptions are tested. Happy Path is not required.
 - API tests. API testing is implemented using E2E tests. The goal of API testing is to verify that the overall process is smooth, and only test the normal process.
-
-## TODO
-- connect GroupRequest and Group(one GroupRequest one Group)
-- define the group creator
-- format of time in response
-- name of GroupApplication or GroupRequest
-- set Authorization in admin test
-- Escape character when search
-- the cache
-- Security audit (Important operation records)
-- Code specification: checkStyle
-- The REST interface is automatically generated
-- Application Service and usecase are stored together
-- External system connection (e.g. Wechat/Alipay)
-- Asynchronous task

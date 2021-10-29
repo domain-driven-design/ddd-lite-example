@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 
-// TODO user status check
 @Service
 public class UserService {
     @Autowired
@@ -84,7 +83,6 @@ public class UserService {
 
     public User updateStatus(String id, User.Status status, Operator operator) {
         if (!operator.getRole().equals(User.Role.ADMIN)) {
-            // TODO exception status message?
             throw UserException.noPermissionUpdate();
         }
 

@@ -184,7 +184,6 @@ public class GroupService {
     }
 
     public void deleteNormalMember(String id, Operator operator) {
-        // TODO check operator
         Optional<GroupMember> optionalGroupMember = findMember(id, operator.getUserId());
         if (!optionalGroupMember.isPresent()) {
             return;

@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-// TODO move
 @Slf4j
 @Component
 public class AuthorizeInterceptor implements HandlerInterceptor {

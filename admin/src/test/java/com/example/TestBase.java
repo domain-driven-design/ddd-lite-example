@@ -53,5 +53,4 @@ public abstract class TestBase {
         return authorizeService.create(admin, "password");
     }
 
-    // TODO set authorize in api
 }

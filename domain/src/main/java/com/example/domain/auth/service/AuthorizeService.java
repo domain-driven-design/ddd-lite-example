@@ -39,7 +39,6 @@ public class AuthorizeService {
         return AuthorizeContextHolder.getContext();
     }
 
-    // TODO move
     public Operator getOperator() {
         Authorize authorize = getCurrent();
         if (authorize == null || authorize.getUserId() == null) {

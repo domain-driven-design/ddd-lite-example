@@ -61,7 +61,6 @@ public class QuestionApplicationService {
                                                     Pageable pageable) {
         Specification<Question> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicateList = new ArrayList<>();
-            // TODO use null / ALL ignore group filter?
             predicateList.add(criteriaBuilder.equal(root.get(Question.Fields.groupId), groupId));
 
             if (keyword != null) {

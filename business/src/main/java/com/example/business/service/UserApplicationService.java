@@ -17,7 +17,6 @@ public class UserApplicationService {
     private UserService service;
 
     public RegisterCase.Response register(RegisterCase.Request request) {
-        // TODO verificationCode
         User user = service.create(request.getName(), request.getEmail(), request.getPassword());
 
         return RegisterCase.Response.from(user);
@@ -36,6 +35,5 @@ public class UserApplicationService {
 
     public void resetPassword(ResetPasswordCase.Request request, Operator operator) {
         service.resetPassword(operator.getUserId(), request.getPassword(), operator);
-        // TODO clear authorize？
     }
 }

@@ -41,7 +41,6 @@ public class QuestionManagementApplicationService {
         Specification<Question> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicateList = new ArrayList<>();
 
-            // TODO keyword of creator name / group name
             if (keyword != null) {
                 List<Predicate> keywordPredicateList = new ArrayList<>();
                 keywordPredicateList.add(criteriaBuilder.like(root.get(Question.Fields.title), '%' + keyword + '%'));
