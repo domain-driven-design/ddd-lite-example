@@ -114,7 +114,7 @@ public class GroupService {
         return groupRepository.save(group);
     }
 
-    private Optional<GroupMember> findMember(String id, String userId) {
+    private Optional<GroupMember> _findMember(String id, String userId) {
         return groupMemberRepository.findOne(Example.of(GroupMember.builder()
                 .groupId(id)
                 .userId(userId)
@@ -122,10 +122,7 @@ public class GroupService {
     }
 
     private GroupMember _getMember(String id, String userId) {
-        return groupMemberRepository.findOne(Example.of(GroupMember.builder()
-                .groupId(id)
-                .userId(userId)
-                .build()))
+        return  _findMember(id, userId)
                 .orElseThrow(GroupException::memberNotFound);
     }
 
@@ -145,11 +142,7 @@ public class GroupService {
                     .role(GroupMember.Role.NORMAL)
                     .build();
         }
-        GroupMember member = groupMemberRepository.findOne(Example.of(GroupMember.builder()
-                .groupId(id)
-                .userId(operator.getUserId())
-                .build()))
-                .orElseThrow(GroupException::memberNotFound);
+        GroupMember member = _getMember(id, operator.getUserId());
 
         return GroupOperator.builder()
                 .groupId(id)
@@ -165,7 +158,7 @@ public class GroupService {
     public GroupMember addNormalMember(String id, Operator operator) {
         Group group = _get(id);
 
-        Optional<GroupMember> optionalGroupMember = findMember(id, operator.getUserId());
+        Optional<GroupMember> optionalGroupMember = _findMember(id, operator.getUserId());
         if (optionalGroupMember.isPresent()) {
             throw GroupException.memberConflict();
         }
@@ -184,7 +177,7 @@ public class GroupService {
     }
 
     public void deleteNormalMember(String id, Operator operator) {
-        Optional<GroupMember> optionalGroupMember = findMember(id, operator.getUserId());
+        Optional<GroupMember> optionalGroupMember = _findMember(id, operator.getUserId());
         if (!optionalGroupMember.isPresent()) {
             return;
         }
@@ -200,7 +193,7 @@ public class GroupService {
     }
 
     private GroupMember checkMemberRole(String id, String userId, GroupMember.Role role) {
-        Optional<GroupMember> optionalOperator = findMember(id, userId);
+        Optional<GroupMember> optionalOperator = _findMember(id, userId);
 
         if (!optionalOperator.isPresent() || optionalOperator.get().getRole().compareTo(role) < 0) {
             throw GroupException.forbidden();
