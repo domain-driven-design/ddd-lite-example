@@ -192,19 +192,11 @@ public class GroupService {
 
     }
 
-    private GroupMember checkMemberRole(String id, String userId, GroupMember.Role role) {
-        Optional<GroupMember> optionalOperator = _findMember(id, userId);
-
-        if (!optionalOperator.isPresent() || optionalOperator.get().getRole().compareTo(role) < 0) {
+    public GroupMember changeMemberRole(String id, String userId,
+                                        GroupMember.Role role, GroupOperator operator) {
+        if (!operator.getRole().equals(GroupMember.Role.OWNER)) {
             throw GroupException.forbidden();
         }
-
-        return optionalOperator.get();
-    }
-
-    public GroupMember changeMemberRole(String id, String userId,
-                                        GroupMember.Role role, Operator operator) {
-        checkMemberRole(id, operator.getUserId(), GroupMember.Role.OWNER);
 
         GroupMember groupMember = _getMember(id, userId);
 
@@ -220,26 +212,31 @@ public class GroupService {
     }
 
     @Transactional
-    public GroupMember changeOwner(String id, String userId, Operator operator) {
-        GroupMember owner = checkMemberRole(id, operator.getUserId(), GroupMember.Role.OWNER);
+    public GroupMember changeOwner(String id, String userId, GroupOperator operator) {
+        if (!operator.getRole().equals(GroupMember.Role.OWNER)) {
+            throw GroupException.forbidden();
+        }
 
+        GroupMember groupOwner = _getMember(id, operator.getUserId());
         GroupMember groupMember = _getMember(id, userId);
 
-        owner.setRole(GroupMember.Role.ADMIN);
-        owner.setUpdatedAt(Instant.now());
-        groupMemberRepository.save(owner);
+        groupOwner.setRole(GroupMember.Role.ADMIN);
+        groupOwner.setUpdatedAt(Instant.now());
+        groupMemberRepository.save(groupOwner);
 
         groupMember.setRole(GroupMember.Role.OWNER);
         groupMember.setUpdatedAt(Instant.now());
         return groupMemberRepository.save(groupMember);
     }
 
-    public void deleteMember(String id, String userId, Operator operator) {
-        GroupMember groupMemberOperator = checkMemberRole(id, operator.getUserId(), GroupMember.Role.ADMIN);
+    public void deleteMember(String id, String userId, GroupOperator operator) {
+        if (!operator.getRole().equals(GroupMember.Role.ADMIN)) {
+            throw GroupException.forbidden();
+        }
 
         GroupMember groupMember = _getMember(id, userId);
 
-        if (groupMemberOperator.getRole().compareTo(groupMember.getRole()) <= 0) {
+        if (operator.getRole().compareTo(groupMember.getRole()) <= 0) {
             throw GroupException.forbidden();
         }
 

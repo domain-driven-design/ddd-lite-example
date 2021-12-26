@@ -568,7 +568,7 @@ class QuestionControllerTest extends TestBase {
     private GroupMember addGroupAdmin(Group group, User user, GroupOperator operator) {
         GroupMember otherMember = groupService.addNormalMember(group.getId(), getOperator(user));
         return groupService.changeMemberRole(group.getId(), otherMember.getUserId(),
-                GroupMember.Role.ADMIN, getOperator(User.builder().id(operator.getUserId()).build())
+                GroupMember.Role.ADMIN, operator
         );
     }
 

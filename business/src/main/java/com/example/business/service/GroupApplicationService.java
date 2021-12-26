@@ -11,6 +11,7 @@ import com.example.business.usecase.group.UpdateGroupCase;
 import com.example.business.usecase.group.UpdateGroupMemberCase;
 import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;
+import com.example.domain.group.model.GroupOperator;
 import com.example.domain.group.service.GroupService;
 import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
@@ -121,7 +122,8 @@ public class GroupApplicationService {
     public UpdateGroupMemberCase.Response updateMember(String id, String userId,
                                                        UpdateGroupMemberCase.Request request,
                                                        Operator operator) {
-        GroupMember groupMember = groupService.changeMemberRole(id, userId, request.getRole(), operator);
+        GroupOperator groupOperator = groupService.getOperator(id, operator);
+        GroupMember groupMember = groupService.changeMemberRole(id, userId, request.getRole(), groupOperator);
 
         return UpdateGroupMemberCase.Response.from(groupMember);
     }
@@ -129,11 +131,13 @@ public class GroupApplicationService {
     public ChangeGroupOwnerCase.Response changeOwner(String id,
                                                      ChangeGroupOwnerCase.Request request,
                                                      Operator operator) {
-        GroupMember groupMember = groupService.changeOwner(id, request.getUserId(), operator);
+        GroupOperator groupOperator = groupService.getOperator(id, operator);
+        GroupMember groupMember = groupService.changeOwner(id, request.getUserId(), groupOperator);
         return ChangeGroupOwnerCase.Response.from(groupMember);
     }
 
     public void removeMember(String id, String userId, Operator operator) {
-        groupService.deleteMember(id, userId, operator);
+        GroupOperator groupOperator = groupService.getOperator(id, operator);
+        groupService.deleteMember(id, userId, groupOperator);
     }
 }
