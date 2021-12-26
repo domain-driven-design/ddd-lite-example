@@ -80,7 +80,7 @@ public class QuestionService {
 
     public void delete(String id, GroupOperator operator) {
         Optional<Question> optionalQuestion = repository.findById(id);
-        if (!optionalQuestion.isPresent()) {
+        if (optionalQuestion.isEmpty()) {
             return;
         }
 
@@ -94,13 +94,13 @@ public class QuestionService {
         repository.deleteById(id);
     }
 
-    private Answer _getAnswer(String answerId) {
-        return answerRepository.findById(answerId).orElseThrow(QuestionException::answerNotFound);
+    private Answer _getAnswer(String id, String answerId) {
+        return answerRepository.findById(answerId)
+                .filter(answer -> answer.getQuestionId().equals(id))
+                .orElseThrow(QuestionException::answerNotFound);
     }
 
     public Answer addAnswer(String id, String content, GroupOperator operator) {
-        Question question = _get(id);
-
         Answer answer = Answer.builder()
                 .questionId(id)
                 .content(content)
@@ -117,9 +117,7 @@ public class QuestionService {
     }
 
     public Answer updateAnswer(String id, String answerId, String content, GroupOperator operator) {
-        Question question = _get(id);
-
-        Answer answer = _getAnswer(answerId);
+        Answer answer = _getAnswer(id, answerId);
         if (!answer.getCreatedBy().equals(operator.getUserId())) {
             throw QuestionException.answerForbidden();
         }
@@ -131,8 +129,9 @@ public class QuestionService {
     }
 
     public void deleteAnswer(String id, String answerId, GroupOperator operator) {
-        Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
-        if (!optionalAnswer.isPresent()) {
+        Optional<Answer> optionalAnswer = answerRepository.findById(answerId)
+                .filter(answer -> answer.getQuestionId().equals(id));
+        if (optionalAnswer.isEmpty()) {
             return;
         }
         if (operator.getRole().compareTo(GroupMember.Role.ADMIN) < 0 && !optionalAnswer.get().getCreatedBy().equals(operator.getUserId())) {
