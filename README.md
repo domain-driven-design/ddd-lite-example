@@ -59,7 +59,7 @@ This is an example of a Java project with limited use of DDD style.
 - The operator of a resource is a member of the resource or upper-layer resource. For example, a question belongs to a group, and the operator of a question is groupMember
 - In the unified understanding, User is also a kind of member, is a site member
 
-## The test strategy
+## test strategy
 
 - Unit tests. Covering the underlying components, utility classes, and domain services, unit tests need to validate various branching conditions. Only service exceptions are tested. Happy Path is not required.
 - API tests. API testing is implemented using E2E tests. The goal of API testing is to verify that the overall process is smooth, and only test the normal process.
