@@ -230,7 +230,7 @@ public class GroupService {
     }
 
     public void deleteMember(String id, String userId, GroupOperator operator) {
-        if (!operator.getRole().equals(GroupMember.Role.ADMIN)) {
+        if (operator.getRole().compareTo(GroupMember.Role.ADMIN) < 0) {
             throw GroupException.forbidden();
         }
 
