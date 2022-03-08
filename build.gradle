@@ -47,6 +47,7 @@ subprojects {
         annotationProcessor 'org.projectlombok:lombok'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         runtime 'mysql:mysql-connector-java'
+        testImplementation 'com.tngtech.archunit:archunit:0.23.1'
     }
 
     test {
