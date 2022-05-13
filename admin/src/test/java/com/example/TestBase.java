@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.admin.common.AdminCriteria;
 import com.example.config.ResetDbListener;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.service.AuthorizeService;
@@ -48,7 +49,7 @@ public abstract class TestBase {
     }
 
     public Authorize prepareAuthorize() {
-        User admin = userRepository.findOne(Example.of(User.builder().name("admin").role(User.Role.ADMIN).build()))
+        User admin = userRepository.findOne(AdminCriteria.ofName("admin"))
                 .get();
         return authorizeService.create(admin, "password");
     }

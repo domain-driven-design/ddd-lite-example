@@ -10,4 +10,11 @@ public class UserCriteria {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.in(root.get(User.Fields.id)).value(userIds);
     }
+
+    public static Specification<User> ofEmail(String email) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                criteriaBuilder.equal(root.get(User.Fields.email), email),
+                criteriaBuilder.equal(root.get(User.Fields.role), User.Role.USER)
+        );
+    }
 }

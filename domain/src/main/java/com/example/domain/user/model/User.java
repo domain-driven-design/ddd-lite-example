@@ -1,9 +1,6 @@
 package com.example.domain.user.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -16,9 +13,6 @@ import javax.persistence.Table;
 import java.time.Instant;
 
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "user")
 @FieldNameConstants
@@ -68,15 +62,14 @@ public class User {
     }
 
     public static User build(String name, String email, String password) {
-        return User.builder()
-                .name(name)
-                .email(email)
-                .password(password)
-                .role(User.Role.USER)
-                .status(User.Status.NORMAL)
-                .createdAt(Instant.now())
-                .updatedAt(Instant.now())
-                .build();
-    }
+        User user = new User();
 
+        user.name = name;
+        user.email = email;
+        user.password = password;
+        user.role = Role.USER;
+        user.status = Status.NORMAL;
+
+        return user;
+    }
 }

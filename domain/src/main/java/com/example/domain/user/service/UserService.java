@@ -5,7 +5,6 @@ import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,16 +29,16 @@ public class UserService {
         return repository.findById(id).orElseThrow(UserException::notFound);
     }
 
-    public User get(Example<User> example) {
-        return repository.findOne(example).orElseThrow(UserException::notFound);
+    public User get(Specification<User> specification) {
+        return repository.findOne(specification).orElseThrow(UserException::notFound);
     }
 
-    public Page<User> findAll(Specification<User> spec, Pageable pageable) {
-        return repository.findAll(spec, pageable);
+    public Page<User> findAll(Specification<User> specification, Pageable pageable) {
+        return repository.findAll(specification, pageable);
     }
 
-    public List<User> findAll(Specification<User> spec) {
-        return repository.findAll(spec);
+    public List<User> findAll(Specification<User> specification) {
+        return repository.findAll(specification);
     }
 
     public User create(String name, String email, String password) {
@@ -47,7 +46,9 @@ public class UserService {
 
         User user = User.build(name, email, encodedPassword);
 
-        if (repository.exists(Example.of(User.builder().email(user.getEmail()).build()))) {
+        Specification<User> specification = (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get(User.Fields.email), email);
+        if (repository.count(specification) > 0) {
             throw UserException.emailConflicted();
         }
 

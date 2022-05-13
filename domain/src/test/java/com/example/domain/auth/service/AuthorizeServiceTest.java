@@ -29,11 +29,7 @@ class AuthorizeServiceTest {
     @Test
     void should_create_authorize_failed_when_password_is_wrong() {
         //given
-        User user = User.builder()
-                .password("testPassword")
-                .id("test-user-id")
-                .role(User.Role.ADMIN)
-                .build();
+        User user = User.build("any", "any", "password");
         String password = "wrongTestPassword";
         Mockito.when(bCryptPasswordEncoder.matches(anyString(), anyString())).thenReturn(false);
 

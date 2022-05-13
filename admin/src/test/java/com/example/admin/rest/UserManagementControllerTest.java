@@ -9,7 +9,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.HashMap;
 
@@ -18,7 +18,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UserManagementControllerTest extends TestBase {
 
@@ -106,8 +105,12 @@ class UserManagementControllerTest extends TestBase {
                 .body("name", is(name))
                 .body("email", is(email));
 
-        boolean exists = userRepository.exists(Example.of(User.builder().name(name).email(email).build()));
-        assertTrue(exists);
+        Specification<User> specification = (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                criteriaBuilder.equal(root.get(User.Fields.email), email)
+        );
+        User user = userRepository.findOne(specification).get();
+        assertThat(user.getName(), is(name));
+        assertThat(user.getRole(), is(User.Role.USER));
     }
 
     @Test
