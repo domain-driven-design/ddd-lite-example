@@ -28,10 +28,7 @@ public class AuthorizeService {
             throw AuthorizeException.userFrozen();
         }
 
-        Authorize authorize = Authorize.builder()
-                .userId(user.getId())
-                .role(user.getRole())
-                .build();
+        Authorize authorize = Authorize.build(user.getId(), user.getRole());
         return repository.create(authorize);
     }
 

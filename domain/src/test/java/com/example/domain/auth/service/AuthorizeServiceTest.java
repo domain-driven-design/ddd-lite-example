@@ -45,13 +45,12 @@ class AuthorizeServiceTest {
     @Test
     void should_fetch_authorize_when_authorize_exist() {
         //given
-        AuthorizeContextHolder.setContext(
-                Authorize.builder().id("test-authorize").userId("test-user-id").build()
-        );
+        Authorize authorize = Authorize.build("test-user-id", User.Role.USER);
+        AuthorizeContextHolder.setContext(authorize);
         //when
         Authorize current = authorizeService.getCurrent();
         //then
-        assertEquals("test-authorize", current.getId());
+        assertEquals(authorize.getId(), current.getId());
         AuthorizeContextHolder.setContext(null);
     }
 
