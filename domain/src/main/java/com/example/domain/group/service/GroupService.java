@@ -45,13 +45,7 @@ public class GroupService {
     }
 
     public Group create(String name, String description, Operator operator) {
-        Group group = Group.builder()
-                .name(name)
-                .description(description)
-                .createdBy(operator.getUserId())
-                .createdAt(Instant.now())
-                .updatedAt(Instant.now())
-                .build();
+        Group group = Group.build(name, description, operator.getUserId());
 
         Group createdGroup = groupRepository.save(group);
 
@@ -71,13 +65,7 @@ public class GroupService {
     }
 
     public Group create(String name, String description, String ownerId, Operator operator) {
-        Group group = Group.builder()
-                .name(name)
-                .description(description)
-                .createdBy(operator.getUserId())
-                .createdAt(Instant.now())
-                .updatedAt(Instant.now())
-                .build();
+        Group group = Group.build(name, description, operator.getUserId());
 
         Group createdGroup = groupRepository.save(group);
 
@@ -109,7 +97,6 @@ public class GroupService {
 
         group.setName(name);
         group.setDescription(description);
-        group.setUpdatedAt(Instant.now());
 
         return groupRepository.save(group);
     }

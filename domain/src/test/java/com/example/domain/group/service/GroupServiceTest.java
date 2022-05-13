@@ -52,16 +52,14 @@ class GroupServiceTest {
 
     @Test
     void should_update_failed_if_no_permission() {
-        Group group = Group.builder()
-                .id("test-group-id").name("test group").description("test group description")
-                .members(Collections.emptyList())
-                .build();
-        Mockito.when(groupRepository.findById(eq("test-group-id"))).thenReturn(Optional.of(group));
+        Group group = Group.build("any", "any", "any");
+        group.setMembers(Collections.emptyList());
+        Mockito.when(groupRepository.findById(eq(group.getId()))).thenReturn(Optional.of(group));
 
         BaseException exception = assertThrows(GroupException.class, () -> {
             //when
             groupService.update(
-                    "test-group-id", "test new group", "test new group description",
+                    group.getId(), "test new group", "test new group description",
                     Operator.builder().userId("test-user-id").build()
             );
         });
@@ -73,16 +71,14 @@ class GroupServiceTest {
     @Test
     void should_add_normal_member_failed_if_already_exist() {
         // given
-        Group group = Group.builder()
-                .id("test-group-id").name("test group").description("test group description")
-                .build();
-        Mockito.when(groupRepository.findById(eq("test-group-id"))).thenReturn(Optional.of(group));
+        Group group = Group.build("any", "any", "any");
+        Mockito.when(groupRepository.findById(eq(group.getId()))).thenReturn(Optional.of(group));
         Mockito.when(groupMemberRepository.findOne(any(Example.class)))
                 .thenReturn(Optional.of(GroupMember.builder().build()));
 
         BaseException exception = assertThrows(GroupException.class, () -> {
             //when
-            groupService.addNormalMember("test-group-id", Operator.builder().userId("test-user-id").build());
+            groupService.addNormalMember(group.getId(), Operator.builder().userId("test-user-id").build());
         });
 
         assertEquals("group_member_conflict", exception.getMessage());

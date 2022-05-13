@@ -1,10 +1,6 @@
 package com.example.domain.group.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -18,10 +14,6 @@ import java.time.Instant;
 import java.util.List;
 
 @Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "`group`")
 @FieldNameConstants
@@ -46,4 +38,30 @@ public class Group {
     @OneToMany
     @JoinColumn(name = "group_id")
     private List<GroupMember> members;
+
+    public static Group build(String name, String description, String createdBy) {
+        Group group = new Group();
+
+        group.name = name;
+        group.description = description;
+        group.createdBy = createdBy;
+        group.createdAt = Instant.now();
+        group.updatedAt = Instant.now();
+
+        return group;
+    }
+
+    public void setMembers(List<GroupMember> members) {
+        this.members = members;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        this.updatedAt = Instant.now();
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+        this.updatedAt = Instant.now();
+    }
 }

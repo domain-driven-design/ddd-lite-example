@@ -12,6 +12,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,11 +52,9 @@ class GroupControllerTest extends TestBase {
                 .body("name", is(name))
                 .body("description", is(description));
 
-        Optional<Group> optionalGroup = groupRepository.findOne(Example.of(Group
-                .builder()
-                .createdBy(user.getId())
-                .build()
-        ));
+        Specification<Group> specification = (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get(Group.Fields.createdBy), user.getId());
+        Optional<Group> optionalGroup = groupRepository.findOne(specification);
 
         assertThat(optionalGroup.isPresent(), is(true));
 
