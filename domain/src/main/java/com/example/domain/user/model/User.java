@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -17,7 +16,6 @@ import javax.persistence.Table;
 import java.time.Instant;
 
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -46,6 +44,21 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    public void setName(String name) {
+        this.name = name;
+        this.updatedAt = Instant.now();
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+        this.updatedAt = Instant.now();
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+        this.updatedAt = Instant.now();
+    }
+
     public enum Role {
         ADMIN, USER
     }
@@ -53,4 +66,17 @@ public class User {
     public enum Status {
         NORMAL, FROZEN
     }
+
+    public static User build(String name, String email, String password) {
+        return User.builder()
+                .name(name)
+                .email(email)
+                .password(password)
+                .role(User.Role.USER)
+                .status(User.Status.NORMAL)
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+    }
+
 }

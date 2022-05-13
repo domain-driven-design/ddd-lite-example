@@ -12,7 +12,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -44,16 +43,14 @@ public class UserService {
     }
 
     public User create(String name, String email, String password) {
-        User user = User.builder()
-                .name(name)
-                .email(email)
-                .password(bCryptPasswordEncoder.encode(password))
-                .createdAt(Instant.now())
-                .updatedAt(Instant.now())
-                .role(User.Role.USER)
-                .status(User.Status.NORMAL)
-                .build();
-        validateConflicted(user);
+        String encodedPassword = bCryptPasswordEncoder.encode(password);
+
+        User user = User.build(name, email, encodedPassword);
+
+        if (repository.exists(Example.of(User.builder().email(user.getEmail()).build()))) {
+            throw UserException.emailConflicted();
+        }
+
         return repository.save(user);
     }
 
@@ -65,7 +62,6 @@ public class UserService {
         }
 
         user.setName(name);
-        user.setUpdatedAt(Instant.now());
         return repository.save(user);
     }
 
@@ -77,7 +73,6 @@ public class UserService {
         }
 
         user.setPassword(bCryptPasswordEncoder.encode(password));
-        user.setUpdatedAt(Instant.now());
         return repository.save(user);
     }
 
@@ -88,14 +83,7 @@ public class UserService {
 
         User user = _get(id);
         user.setStatus(status);
-        user.setUpdatedAt(Instant.now());
 
         return repository.save(user);
-    }
-
-    private void validateConflicted(User user) {
-        if (repository.exists(Example.of(User.builder().email(user.getEmail()).build()))) {
-            throw UserException.emailConflicted();
-        }
     }
 }
