@@ -15,7 +15,7 @@ import com.example.domain.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.HashMap;
 import java.util.List;
@@ -122,9 +122,11 @@ class GroupManagementControllerTest extends TestBase {
                 .body("description", is(groupRequest.getDescription()))
         ;
 
-        List<GroupMember> groupMembers = groupMemberRepository.findAll(
-                Example.of(GroupMember.builder().userId(user.getId()).role(GroupMember.Role.OWNER).build())
+        Specification<GroupMember> specification = (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                criteriaBuilder.equal(root.get(GroupMember.Fields.userId), user.getId()),
+                criteriaBuilder.equal(root.get(GroupMember.Fields.role), GroupMember.Role.OWNER)
         );
+        List<GroupMember> groupMembers = groupMemberRepository.findAll(specification);
         assertThat(groupMembers, hasSize(1));
 
         Group group = groupRepository.findById(groupMembers.get(0).getGroupId()).get();

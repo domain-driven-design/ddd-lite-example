@@ -1,10 +1,6 @@
 package com.example.domain.group.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -18,10 +14,6 @@ import javax.persistence.Table;
 import java.time.Instant;
 
 @Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "group_member")
 @FieldNameConstants
@@ -45,7 +37,25 @@ public class GroupMember {
 
     private Instant updatedAt;
 
+    public void setRole(Role role) {
+        this.role = role;
+        this.updatedAt = Instant.now();
+    }
+
     public enum Role {
         NORMAL, ADMIN, OWNER
+    }
+
+    public static GroupMember build(String groupId, String userId, Role role, String createdBy) {
+        GroupMember groupMember = new GroupMember();
+
+        groupMember.groupId = groupId;
+        groupMember.userId = userId;
+        groupMember.role = role;
+        groupMember.createdBy = createdBy;
+        groupMember.createdAt = Instant.now();
+        groupMember.updatedAt = Instant.now();
+
+        return groupMember;
     }
 }

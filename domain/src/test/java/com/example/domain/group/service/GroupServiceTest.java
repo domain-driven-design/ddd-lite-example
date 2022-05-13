@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -73,8 +74,9 @@ class GroupServiceTest {
         // given
         Group group = Group.build("any", "any", "any");
         Mockito.when(groupRepository.findById(eq(group.getId()))).thenReturn(Optional.of(group));
-        Mockito.when(groupMemberRepository.findOne(any(Example.class)))
-                .thenReturn(Optional.of(GroupMember.builder().build()));
+        Mockito.when(groupMemberRepository.findOne(any(Specification.class)))
+                .thenReturn(Optional.of(
+                        GroupMember.build(group.getId(), "test-user-id", GroupMember.Role.OWNER, "test-user-id")));
 
         BaseException exception = assertThrows(GroupException.class, () -> {
             //when
@@ -91,12 +93,8 @@ class GroupServiceTest {
         String groupId = "test-group-id";
         String userId = "test-user-id";
 
-        GroupMember groupMember = GroupMember.builder()
-                .groupId(groupId)
-                .userId(userId)
-                .role(GroupMember.Role.OWNER)
-                .build();
-        Mockito.when(groupMemberRepository.findOne(any(Example.class)))
+        GroupMember groupMember = GroupMember.build(groupId, userId, GroupMember.Role.OWNER, userId);
+        Mockito.when(groupMemberRepository.findOne(any(Specification.class)))
                 .thenReturn(Optional.of(groupMember));
 
         // Then

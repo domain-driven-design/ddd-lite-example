@@ -9,14 +9,12 @@ import com.example.domain.group.repository.GroupRepository;
 import com.example.domain.user.model.Operator;
 import com.example.domain.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -49,14 +47,8 @@ public class GroupService {
 
         Group createdGroup = groupRepository.save(group);
 
-        GroupMember owner = GroupMember.builder()
-                .role(GroupMember.Role.OWNER)
-                .groupId(createdGroup.getId())
-                .userId(operator.getUserId())
-                .createdBy(operator.getUserId())
-                .createdAt(Instant.now())
-                .updatedAt(Instant.now())
-                .build();
+        GroupMember owner =
+                GroupMember.build(group.getId(), operator.getUserId(), GroupMember.Role.OWNER, operator.getUserId());
         groupMemberRepository.save(owner);
 
         createdGroup.setMembers(Collections.singletonList(owner));
@@ -69,14 +61,7 @@ public class GroupService {
 
         Group createdGroup = groupRepository.save(group);
 
-        GroupMember owner = GroupMember.builder()
-                .role(GroupMember.Role.OWNER)
-                .groupId(createdGroup.getId())
-                .userId(ownerId)
-                .createdBy(operator.getUserId())
-                .createdAt(Instant.now())
-                .updatedAt(Instant.now())
-                .build();
+        GroupMember owner = GroupMember.build(group.getId(), ownerId, GroupMember.Role.OWNER, operator.getUserId());
         groupMemberRepository.save(owner);
 
         createdGroup.setMembers(Collections.singletonList(owner));
@@ -102,14 +87,15 @@ public class GroupService {
     }
 
     private Optional<GroupMember> _findMember(String id, String userId) {
-        return groupMemberRepository.findOne(Example.of(GroupMember.builder()
-                .groupId(id)
-                .userId(userId)
-                .build()));
+        Specification<GroupMember> specification = (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                criteriaBuilder.equal(root.get(GroupMember.Fields.groupId), id),
+                criteriaBuilder.equal(root.get(GroupMember.Fields.userId), userId)
+        );
+        return groupMemberRepository.findOne(specification);
     }
 
     private GroupMember _getMember(String id, String userId) {
-        return  _findMember(id, userId)
+        return _findMember(id, userId)
                 .orElseThrow(GroupException::memberNotFound);
     }
 
@@ -150,15 +136,8 @@ public class GroupService {
             throw GroupException.memberConflict();
         }
 
-        GroupMember member = GroupMember.builder()
-                .groupId(id)
-                .userId(operator.getUserId())
-                .role(GroupMember.Role.NORMAL)
-                .createdBy(operator.getUserId())
-                .createdAt(Instant.now())
-                .updatedAt(Instant.now())
-                .build();
-
+        GroupMember member =
+                GroupMember.build(group.getId(), operator.getUserId(), GroupMember.Role.NORMAL, operator.getUserId());
 
         return groupMemberRepository.save(member);
     }
@@ -193,7 +172,6 @@ public class GroupService {
         }
 
         groupMember.setRole(role);
-        groupMember.setUpdatedAt(Instant.now());
 
         return groupMemberRepository.save(groupMember);
     }
@@ -208,11 +186,9 @@ public class GroupService {
         GroupMember groupMember = _getMember(id, userId);
 
         groupOwner.setRole(GroupMember.Role.ADMIN);
-        groupOwner.setUpdatedAt(Instant.now());
         groupMemberRepository.save(groupOwner);
 
         groupMember.setRole(GroupMember.Role.OWNER);
-        groupMember.setUpdatedAt(Instant.now());
         return groupMemberRepository.save(groupMember);
     }
 

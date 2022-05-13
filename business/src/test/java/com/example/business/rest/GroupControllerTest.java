@@ -11,7 +11,6 @@ import com.example.domain.user.model.User;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.HashMap;
@@ -31,6 +30,17 @@ class GroupControllerTest extends TestBase {
     private GroupMemberRepository groupMemberRepository;
     @Autowired
     private GroupService groupService;
+
+    private Specification<GroupMember> groupMemberOfGroupIdAndUserId(String groupId, String userId) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                criteriaBuilder.equal(root.get(GroupMember.Fields.groupId), groupId),
+                criteriaBuilder.equal(root.get(GroupMember.Fields.userId), userId)
+        );
+    }
+
+    private Specification<GroupMember> groupMemberOfGroupId(String groupId) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(GroupMember.Fields.groupId), groupId);
+    }
 
     @Test
     void should_create_group() {
@@ -58,8 +68,7 @@ class GroupControllerTest extends TestBase {
 
         assertThat(optionalGroup.isPresent(), is(true));
 
-        List<GroupMember> members = groupMemberRepository
-                .findAll(Example.of(GroupMember.builder().groupId(optionalGroup.get().getId()).build()));
+        List<GroupMember> members = groupMemberRepository.findAll(groupMemberOfGroupId(optionalGroup.get().getId()));
         assertThat(members.size(), is(1));
         assertThat(members.get(0).getUserId(), is(user.getId()));
         assertThat(members.get(0).getRole(), is(GroupMember.Role.OWNER));
@@ -242,10 +251,8 @@ class GroupControllerTest extends TestBase {
                 .body("userId", is(user.getId()))
                 .body("role", is(GroupMember.Role.NORMAL.name()));
 
-        Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
-                .groupId(group.getId())
-                .userId(user.getId())
-                .build()));
+        Optional<GroupMember> optionalGroupMember =
+                groupMemberRepository.findOne(groupMemberOfGroupIdAndUserId(group.getId(), user.getId()));
         assertThat(optionalGroupMember.isPresent(), is(true));
         assertThat(optionalGroupMember.get().getRole(), is(GroupMember.Role.NORMAL));
     }
@@ -264,10 +271,8 @@ class GroupControllerTest extends TestBase {
                 .delete("/groups/" + group.getId() + "/members/me");
         response.then().statusCode(200);
 
-        Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
-                .groupId(group.getId())
-                .userId(user.getId())
-                .build()));
+        Optional<GroupMember> optionalGroupMember =
+                groupMemberRepository.findOne(groupMemberOfGroupIdAndUserId(group.getId(), user.getId()));
         assertThat(optionalGroupMember.isPresent(), is(false));
     }
 
@@ -288,17 +293,15 @@ class GroupControllerTest extends TestBase {
                     {
                         put("role", GroupMember.Role.ADMIN);
                     }
-                })                .when()
+                }).when()
                 .put("/groups/" + group.getId() + "/members/" + groupMember.getUserId());
         response.then().statusCode(200)
                 .body("groupId", is(group.getId()))
                 .body("userId", is(user.getId()))
                 .body("role", is(GroupMember.Role.ADMIN.name()));
 
-        Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
-                .groupId(group.getId())
-                .userId(user.getId())
-                .build()));
+        Optional<GroupMember> optionalGroupMember =
+                groupMemberRepository.findOne(groupMemberOfGroupIdAndUserId(group.getId(), user.getId()));
         assertThat(optionalGroupMember.isPresent(), is(true));
         assertThat(optionalGroupMember.get().getRole(), is(GroupMember.Role.ADMIN));
 
@@ -307,17 +310,14 @@ class GroupControllerTest extends TestBase {
                     {
                         put("role", GroupMember.Role.NORMAL);
                     }
-                })                .when()
+                }).when()
                 .put("/groups/" + group.getId() + "/members/" + groupMember.getUserId());
         response.then().statusCode(200)
                 .body("groupId", is(group.getId()))
                 .body("userId", is(user.getId()))
                 .body("role", is(GroupMember.Role.NORMAL.name()));
 
-        optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
-                .groupId(group.getId())
-                .userId(user.getId())
-                .build()));
+        optionalGroupMember = groupMemberRepository.findOne(groupMemberOfGroupIdAndUserId(group.getId(), user.getId()));
         assertThat(optionalGroupMember.isPresent(), is(true));
         assertThat(optionalGroupMember.get().getRole(), is(GroupMember.Role.NORMAL));
     }
@@ -339,24 +339,20 @@ class GroupControllerTest extends TestBase {
                     {
                         put("userId", groupMember.getUserId());
                     }
-                })                .when()
+                }).when()
                 .put("/groups/" + group.getId() + "/owner");
         response.then().statusCode(200)
                 .body("groupId", is(group.getId()))
                 .body("userId", is(user.getId()))
                 .body("role", is(GroupMember.Role.OWNER.name()));
 
-        Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
-                .groupId(group.getId())
-                .userId(user.getId())
-                .build()));
+        Optional<GroupMember> optionalGroupMember =
+                groupMemberRepository.findOne(groupMemberOfGroupIdAndUserId(group.getId(), user.getId()));
         assertThat(optionalGroupMember.isPresent(), is(true));
         assertThat(optionalGroupMember.get().getRole(), is(GroupMember.Role.OWNER));
 
-        Optional<GroupMember> optionalCreator = groupMemberRepository.findOne(Example.of(GroupMember.builder()
-                .groupId(group.getId())
-                .userId(creator.getId())
-                .build()));
+        Optional<GroupMember> optionalCreator =
+                groupMemberRepository.findOne(groupMemberOfGroupIdAndUserId(group.getId(), creator.getId()));
         assertThat(optionalCreator.isPresent(), is(true));
         assertThat(optionalCreator.get().getRole(), is(GroupMember.Role.ADMIN));
 
@@ -378,10 +374,8 @@ class GroupControllerTest extends TestBase {
                 .delete("/groups/" + group.getId() + "/members/" + groupMember.getUserId());
         response.then().statusCode(200);
 
-        Optional<GroupMember> optionalGroupMember = groupMemberRepository.findOne(Example.of(GroupMember.builder()
-                .groupId(group.getId())
-                .userId(user.getId())
-                .build()));
+        Optional<GroupMember> optionalGroupMember =
+                groupMemberRepository.findOne(groupMemberOfGroupIdAndUserId(group.getId(), user.getId()));
         assertThat(optionalGroupMember.isPresent(), is(false));
     }
 
