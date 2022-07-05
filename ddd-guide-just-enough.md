@@ -56,3 +56,20 @@ Domain-Driven Design
 - 决策者。
 
 ## 值得注意的几个使用点
+#### 维护 Domain Model
+- 充血还是贫血？
+- 充血的主体是是什么？
+- 贫的血去了哪？
+
+#### 维护 Service
+- Service 的服务粒度是多大？
+- Service 调度了什么？
+- Application Sercive or Domain Service？
+
+#### Repository 实现
+- JPA 是具体实现？还是抽象接口？
+- 尝试下内存实现下数据库接口，是否真正做到屏蔽具体实现？
+- 面向领域建模 or 面向数据库建模？
+
+#### 测试测什么？
+
