@@ -1,5 +1,5 @@
 
-# ddd-lite-example111111
+# ddd-lite-example
 
 This is an example of a Java project with limited use of DDD style.
 
