@@ -69,3 +69,9 @@ This is an example of a Java project with limited use of DDD style.
 https://5kebz3.axshare.com/
 
 https://smapxy.axshare.com/#id=0p6yeg&p=%E7%99%BB%E5%BD%95
+
+## Divide into microservices
+[ ] split domain
+[ ] start up as module
+[ ] split database
+[ ] add api getway

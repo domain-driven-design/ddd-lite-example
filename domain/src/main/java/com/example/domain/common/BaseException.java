@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+// todo move ?
 public class BaseException extends RuntimeException {
     private Type type;
     private String message;

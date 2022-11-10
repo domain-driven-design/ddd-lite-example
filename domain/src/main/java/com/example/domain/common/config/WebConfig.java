@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+// todo move to admin or business
 public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private AuthorizeInterceptor authorizeInterceptor;

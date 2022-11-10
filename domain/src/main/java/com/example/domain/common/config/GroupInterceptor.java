@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @Component
+// todo move to business
 public class GroupInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

@@ -12,6 +12,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+// todo move to infrastructure
 public class RedisConfiguration {
 
     @Bean

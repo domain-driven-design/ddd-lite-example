@@ -19,6 +19,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Slf4j
 @Component
+// todo move to admin or business
 public class AuthorizeInterceptor implements HandlerInterceptor {
     @Autowired
     private AuthorizeRepository authorizeRepository;
