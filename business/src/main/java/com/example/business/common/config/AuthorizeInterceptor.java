@@ -1,11 +1,9 @@
-package com.example.domain.common.config;
+package com.example.business.common.config;
 
 
 import com.example.domain.auth.AuthorizeContextHolder;
-import com.example.domain.auth.exception.AuthorizeException;
 import com.example.domain.auth.model.Authorize;
 import com.example.domain.auth.repository.AuthorizeRepository;
-import com.example.domain.user.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Slf4j
 @Component
-// todo move to admin or business
 public class AuthorizeInterceptor implements HandlerInterceptor {
     @Autowired
     private AuthorizeRepository authorizeRepository;
@@ -34,12 +31,6 @@ public class AuthorizeInterceptor implements HandlerInterceptor {
         }
 
         AuthorizeContextHolder.setContext(authorize);
-
-        if (request.getRequestURI().startsWith("/management")) {
-            if (authorize == null || !User.Role.ADMIN.equals(authorize.getRole())) {
-                throw AuthorizeException.Unauthorized();
-            }
-        }
 
         return true;
     }

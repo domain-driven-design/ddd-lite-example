@@ -1,4 +1,4 @@
-package com.example.domain.common.config;
+package com.example.business.common.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -6,7 +6,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-// todo move to admin or business
 public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private AuthorizeInterceptor authorizeInterceptor;
