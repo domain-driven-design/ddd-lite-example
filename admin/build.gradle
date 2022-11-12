@@ -4,6 +4,7 @@ repositories {
 
 dependencies {
     implementation project(':domain')
+    implementation project(':infrastructure')
 
     // test
     testCompile "ch.vorburger.mariaDB4j:mariaDB4j:2.4.0"
