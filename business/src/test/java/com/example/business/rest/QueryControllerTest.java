@@ -2,13 +2,12 @@ package com.example.business.rest;
 
 import com.example.TestBase;
 import com.example.domain.group.model.Group;
-import com.example.domain.group.model.GroupMember;
 import com.example.domain.group.model.GroupOperator;
 import com.example.domain.group.service.GroupService;
 import com.example.domain.question.model.Question;
 import com.example.domain.question.service.QuestionService;
-import com.example.domain.user.model.Operator;
-import com.example.domain.user.model.User;
+import com.example.domain.iam.user.model.Operator;
+import com.example.domain.iam.user.model.User;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

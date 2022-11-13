@@ -1,10 +1,11 @@
 package com.example.domain.auth.service;
 
-import com.example.domain.auth.AuthorizeContextHolder;
-import com.example.domain.auth.exception.AuthorizeException;
-import com.example.domain.auth.model.Authorize;
+import com.example.domain.iam.auth.AuthorizeContextHolder;
+import com.example.domain.iam.auth.exception.AuthorizeException;
+import com.example.domain.iam.auth.model.Authorize;
 import com.example.domain.common.BaseException;
-import com.example.domain.user.model.User;
+import com.example.domain.iam.auth.service.AuthorizeService;
+import com.example.domain.iam.user.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

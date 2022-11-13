@@ -1,7 +1,7 @@
 package com.example.admin.rest;
 
 import com.example.TestBase;
-import com.example.domain.auth.model.Authorize;
+import com.example.domain.iam.auth.model.Authorize;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

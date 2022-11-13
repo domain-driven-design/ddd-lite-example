@@ -2,8 +2,8 @@ package com.example.business.rest;
 
 import com.example.business.service.GroupRequestApplicationService;
 import com.example.business.usecase.group.CreateGroupRequestCase;
-import com.example.domain.auth.service.AuthorizeService;
-import com.example.domain.user.model.Operator;
+import com.example.domain.iam.auth.service.AuthorizeService;
+import com.example.domain.iam.user.model.Operator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,7 +1,7 @@
 package com.example.infrastructure;
 
-import com.example.domain.auth.model.Authorize;
-import com.example.domain.auth.repository.AuthorizeRepository;
+import com.example.domain.iam.auth.model.Authorize;
+import com.example.domain.iam.auth.repository.AuthorizeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

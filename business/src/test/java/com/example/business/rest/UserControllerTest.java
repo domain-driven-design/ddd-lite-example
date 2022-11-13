@@ -1,8 +1,8 @@
 package com.example.business.rest;
 
 import com.example.TestBase;
-import com.example.domain.user.model.User;
-import com.example.domain.user.service.UserService;
+import com.example.domain.iam.user.model.User;
+import com.example.domain.iam.user.service.UserService;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

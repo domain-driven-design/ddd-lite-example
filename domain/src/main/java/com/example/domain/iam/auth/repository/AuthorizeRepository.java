@@ -1,6 +1,6 @@
-package com.example.domain.auth.repository;
+package com.example.domain.iam.auth.repository;
 
-import com.example.domain.auth.model.Authorize;
+import com.example.domain.iam.auth.model.Authorize;
 import org.springframework.stereotype.Repository;
 
 @Repository

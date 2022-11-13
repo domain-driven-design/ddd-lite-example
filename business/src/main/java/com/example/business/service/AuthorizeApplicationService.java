@@ -3,10 +3,10 @@ package com.example.business.service;
 import com.example.business.common.UserCriteria;
 import com.example.business.usecase.authorize.GetUserProfileCase;
 import com.example.business.usecase.authorize.LoginCase;
-import com.example.domain.auth.model.Authorize;
-import com.example.domain.auth.service.AuthorizeService;
-import com.example.domain.user.model.User;
-import com.example.domain.user.service.UserService;
+import com.example.domain.iam.auth.model.Authorize;
+import com.example.domain.iam.auth.service.AuthorizeService;
+import com.example.domain.iam.user.model.User;
+import com.example.domain.iam.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

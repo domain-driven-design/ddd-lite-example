@@ -1,7 +1,7 @@
 package com.example.admin.rest;
 
 import com.example.TestBase;
-import com.example.domain.auth.model.Authorize;
+import com.example.domain.iam.auth.model.Authorize;
 import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupMember;
 import com.example.domain.group.model.GroupRequest;
@@ -9,9 +9,9 @@ import com.example.domain.group.repository.GroupMemberRepository;
 import com.example.domain.group.repository.GroupRepository;
 import com.example.domain.group.service.GroupRequestService;
 import com.example.domain.group.service.GroupService;
-import com.example.domain.user.model.Operator;
-import com.example.domain.user.model.User;
-import com.example.domain.user.service.UserService;
+import com.example.domain.iam.user.model.Operator;
+import com.example.domain.iam.user.model.User;
+import com.example.domain.iam.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

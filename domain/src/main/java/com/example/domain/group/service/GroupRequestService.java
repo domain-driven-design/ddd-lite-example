@@ -3,7 +3,7 @@ package com.example.domain.group.service;
 import com.example.domain.group.exception.GroupRequestException;
 import com.example.domain.group.model.GroupRequest;
 import com.example.domain.group.repository.GroupRequestRepository;
-import com.example.domain.user.model.Operator;
+import com.example.domain.iam.user.model.Operator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

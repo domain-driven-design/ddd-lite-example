@@ -3,7 +3,7 @@ package com.example.business.rest;
 import com.example.TestBase;
 import com.example.domain.group.model.GroupRequest;
 import com.example.domain.group.repository.GroupRequestRepository;
-import com.example.domain.user.model.User;
+import com.example.domain.iam.user.model.User;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

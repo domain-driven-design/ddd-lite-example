@@ -1,4 +1,4 @@
-package com.example.domain.common.config;
+package com.example.domain.iam;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

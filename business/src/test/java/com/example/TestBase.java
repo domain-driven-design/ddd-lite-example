@@ -1,10 +1,10 @@
 package com.example;
 
 import com.example.config.ResetDbListener;
-import com.example.domain.auth.model.Authorize;
-import com.example.domain.auth.service.AuthorizeService;
-import com.example.domain.user.model.User;
-import com.example.domain.user.service.UserService;
+import com.example.domain.iam.auth.model.Authorize;
+import com.example.domain.iam.auth.service.AuthorizeService;
+import com.example.domain.iam.user.model.User;
+import com.example.domain.iam.user.service.UserService;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;

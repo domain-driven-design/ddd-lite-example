@@ -1,9 +1,9 @@
-package com.example.domain.user.service;
+package com.example.domain.iam.user.service;
 
-import com.example.domain.user.exception.UserException;
-import com.example.domain.user.model.Operator;
-import com.example.domain.user.model.User;
-import com.example.domain.user.repository.UserRepository;
+import com.example.domain.iam.user.exception.UserException;
+import com.example.domain.iam.user.model.Operator;
+import com.example.domain.iam.user.model.User;
+import com.example.domain.iam.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,6 +1,6 @@
-package com.example.domain.auth.model;
+package com.example.domain.iam.auth.model;
 
-import com.example.domain.user.model.User;
+import com.example.domain.iam.user.model.User;
 import lombok.Getter;
 
 import java.util.UUID;

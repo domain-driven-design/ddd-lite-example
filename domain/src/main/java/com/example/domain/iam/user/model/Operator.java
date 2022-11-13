@@ -1,4 +1,4 @@
-package com.example.domain.user.model;
+package com.example.domain.iam.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

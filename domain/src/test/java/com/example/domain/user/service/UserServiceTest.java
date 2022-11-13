@@ -1,10 +1,9 @@
 package com.example.domain.user.service;
 
 import com.example.domain.common.BaseException;
-import com.example.domain.group.exception.GroupException;
-import com.example.domain.user.exception.UserException;
-import com.example.domain.user.model.User;
-import com.example.domain.user.repository.UserRepository;
+import com.example.domain.iam.user.exception.UserException;
+import com.example.domain.iam.user.repository.UserRepository;
+import com.example.domain.iam.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

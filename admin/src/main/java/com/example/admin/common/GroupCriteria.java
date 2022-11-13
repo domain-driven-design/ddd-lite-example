@@ -1,7 +1,6 @@
 package com.example.admin.common;
 
 import com.example.domain.group.model.Group;
-import com.example.domain.user.model.User;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collection;

@@ -1,11 +1,11 @@
 package com.example.admin.common.config;
 
 
-import com.example.domain.auth.AuthorizeContextHolder;
-import com.example.domain.auth.exception.AuthorizeException;
-import com.example.domain.auth.model.Authorize;
-import com.example.domain.auth.repository.AuthorizeRepository;
-import com.example.domain.user.model.User;
+import com.example.domain.iam.auth.AuthorizeContextHolder;
+import com.example.domain.iam.auth.exception.AuthorizeException;
+import com.example.domain.iam.auth.model.Authorize;
+import com.example.domain.iam.auth.repository.AuthorizeRepository;
+import com.example.domain.iam.user.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

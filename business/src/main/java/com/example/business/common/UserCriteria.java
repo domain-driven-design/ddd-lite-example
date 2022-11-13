@@ -1,6 +1,6 @@
 package com.example.business.common;
 
-import com.example.domain.user.model.User;
+import com.example.domain.iam.user.model.User;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collection;

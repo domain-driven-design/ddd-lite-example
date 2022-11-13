@@ -3,7 +3,7 @@ package com.example.admin.usecases.question;
 import com.example.admin.usecases.common.CreatorResponse;
 import com.example.domain.group.model.Group;
 import com.example.domain.question.model.Question;
-import com.example.domain.user.model.User;
+import com.example.domain.iam.user.model.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,10 +1,10 @@
 package com.example.admin.rest;
 
 import com.example.TestBase;
-import com.example.domain.auth.model.Authorize;
-import com.example.domain.user.model.User;
-import com.example.domain.user.repository.UserRepository;
-import com.example.domain.user.service.UserService;
+import com.example.domain.iam.auth.model.Authorize;
+import com.example.domain.iam.user.model.User;
+import com.example.domain.iam.user.repository.UserRepository;
+import com.example.domain.iam.user.service.UserService;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

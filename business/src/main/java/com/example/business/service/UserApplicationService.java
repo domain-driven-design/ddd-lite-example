@@ -1,9 +1,8 @@
 package com.example.business.service;
 
-import com.example.domain.auth.model.Authorize;
-import com.example.domain.user.model.Operator;
-import com.example.domain.user.model.User;
-import com.example.domain.user.service.UserService;
+import com.example.domain.iam.user.model.Operator;
+import com.example.domain.iam.user.model.User;
+import com.example.domain.iam.user.service.UserService;
 import com.example.business.usecase.user.GetUserDetailCase;
 import com.example.business.usecase.user.RegisterCase;
 import com.example.business.usecase.user.ResetPasswordCase;

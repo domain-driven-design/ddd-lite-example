@@ -6,7 +6,7 @@ import com.example.domain.group.model.Group;
 import com.example.domain.group.model.GroupRequest;
 import com.example.domain.group.service.GroupRequestService;
 import com.example.domain.group.service.GroupService;
-import com.example.domain.user.model.Operator;
+import com.example.domain.iam.user.model.Operator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

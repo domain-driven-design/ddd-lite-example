@@ -2,7 +2,7 @@ package com.example.business.usecase.question;
 
 import com.example.business.usecase.common.CreatorResponse;
 import com.example.domain.question.model.Question;
-import com.example.domain.user.model.User;
+import com.example.domain.iam.user.model.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

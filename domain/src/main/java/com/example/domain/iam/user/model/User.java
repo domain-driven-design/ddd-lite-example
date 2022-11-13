@@ -1,4 +1,4 @@
-package com.example.domain.user.model;
+package com.example.domain.iam.user.model;
 
 import lombok.Getter;
 import lombok.experimental.FieldNameConstants;

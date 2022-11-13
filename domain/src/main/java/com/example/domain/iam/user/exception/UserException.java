@@ -1,4 +1,4 @@
-package com.example.domain.user.exception;
+package com.example.domain.iam.user.exception;
 
 import com.example.domain.common.BaseException;
 

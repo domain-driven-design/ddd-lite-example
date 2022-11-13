@@ -1,6 +1,6 @@
-package com.example.domain.auth;
+package com.example.domain.iam.auth;
 
-import com.example.domain.auth.model.Authorize;
+import com.example.domain.iam.auth.model.Authorize;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

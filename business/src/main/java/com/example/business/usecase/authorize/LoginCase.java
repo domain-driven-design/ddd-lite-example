@@ -1,6 +1,6 @@
 package com.example.business.usecase.authorize;
 
-import com.example.domain.auth.model.Authorize;
+import com.example.domain.iam.auth.model.Authorize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
