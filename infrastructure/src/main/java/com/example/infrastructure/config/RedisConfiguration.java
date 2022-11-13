@@ -1,4 +1,4 @@
-package com.example.domain.common.config;
+package com.example.infrastructure.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -12,7 +12,6 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-// todo move to infrastructure
 public class RedisConfiguration {
 
     @Bean
