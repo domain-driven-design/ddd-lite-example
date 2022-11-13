@@ -6,7 +6,8 @@ plugins {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
+targetCompatibility = '11'
 
 configurations {
     compileOnly {
@@ -15,7 +16,7 @@ configurations {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 subprojects {
@@ -40,14 +41,17 @@ subprojects {
         implementation "org.springframework.boot:spring-boot-starter-data-redis"
         implementation 'org.apache.commons:commons-lang3:3.0'
         implementation 'org.springframework.security:spring-security-core:5.4.6'
+        implementation 'mysql:mysql-connector-java'
 
         compileOnly 'org.projectlombok:lombok'
         developmentOnly 'org.springframework.boot:spring-boot-devtools'
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
         annotationProcessor 'org.projectlombok:lombok'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
-        runtime 'mysql:mysql-connector-java'
         testImplementation 'com.tngtech.archunit:archunit:0.23.1'
+        testImplementation "ch.vorburger.mariaDB4j:mariaDB4j:2.4.0"
+        testImplementation 'io.rest-assured:rest-assured:3.0.5'
+        testImplementation 'org.dbunit:dbunit:2.7.0'
     }
 
     test {
